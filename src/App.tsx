@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "./common/App.css";
+import { GetCurrentUserWrapper } from "common/HOC/GetCurrentUser";
+import Routes from "core/routes/Routes";
+import { BrowserRouter } from "react-router-dom";
 
+const queryClient = new QueryClient();
+const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import("@tanstack/react-query-devtools/build/lib/index.prod.js").then(
+    (d) => ({
+      default: d.ReactQueryDevtools,
+    })
+  )
+);
 function App() {
+  const [showDevtools, setShowDevtools] = React.useState(false);
+  React.useEffect(() => {
+    // @ts-ignore
+    window.toggleDevtools = () => setShowDevtools((old) => !old);
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <GetCurrentUserWrapper>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </GetCurrentUserWrapper>
+      <ReactQueryDevtoolsProduction initialIsOpen />
+      {showDevtools && (
+        <React.Suspense fallback={null}>
+          <ReactQueryDevtoolsProduction />
+        </React.Suspense>
+      )}
+    </QueryClientProvider>
   );
 }
 
