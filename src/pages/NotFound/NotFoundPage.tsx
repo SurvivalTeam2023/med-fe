@@ -1,19 +1,18 @@
+// eslint-disable-next-line
 import { Box, Button, Typography } from "@mui/material";
 import { FC, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { notFoundPageText } from "core/constant";
 import { buttonText } from "core/constant/button";
-import { ROLE_ADMIN, ROLE_SUBCRIBER, ROLE_ARTIST } from "core/constant/role";
 import { useAppSelector } from "core/store";
-import { selectUserRoleNames, selectUserStore } from "core/store/selector";
-
+import { selectUserStore } from "core/store/selector";
 const NotFoundPage: FC = () => {
   const { user } = useAppSelector(selectUserStore);
-  const userRoles = useAppSelector(selectUserRoleNames);
+  // const userRoles = useAppSelector(selectUserRoleNames);
   const navigate = useNavigate();
   const navigateCheck = useCallback(() => {
     if (!user?.id) return navigate("/auth/login");
-  }, [navigate, user?.id, userRoles]);
+  }, [navigate, user?.id]);
 
   return (
     <Box
