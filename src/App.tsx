@@ -1,7 +1,9 @@
 import * as React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./common/App.css";
-import HomePage from "./pages/HomePage";
+import { GetCurrentUserWrapper } from "common/HOC/GetCurrentUser";
+import Routes from "core/routes/Routes";
+import { BrowserRouter } from "react-router-dom";
 
 const queryClient = new QueryClient();
 const ReactQueryDevtoolsProduction = React.lazy(() =>
@@ -19,7 +21,11 @@ function App() {
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <HomePage />
+      <GetCurrentUserWrapper>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </GetCurrentUserWrapper>
       <ReactQueryDevtoolsProduction initialIsOpen />
       {showDevtools && (
         <React.Suspense fallback={null}>

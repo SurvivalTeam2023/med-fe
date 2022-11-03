@@ -1,0 +1,19 @@
+import { CallAPI } from "core/api";
+import { ApiResponse } from "core/interface/api";
+import { TokenResponse } from "core/interface/redux";
+
+export const getTokenApi = (code: string): ApiResponse<TokenResponse> => {
+  const url = "/get-token";
+  return CallAPI.post(url, {
+    code,
+  });
+};
+
+export const getRefreshTokenApi = (
+  refreshToken: string
+): ApiResponse<TokenResponse> => {
+  const url = "/update-token";
+  return CallAPI.post(url, {
+    refresh_token: refreshToken,
+  });
+};
