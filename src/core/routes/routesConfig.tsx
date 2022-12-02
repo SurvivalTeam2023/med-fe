@@ -2,11 +2,12 @@ import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { NOT_FOUND_PAGE, AUTH_LOGIN, LOGIN } from "core/constant";
 import NotFoundPage from "pages/NotFound/NotFoundPage";
-import { AUTH } from "../constant/routes";
+import { AUTH, REGISTER } from "core/constant/routes";
 import EmptyLayout from "core/layout/EmptyLayout";
 import UnAuthGuard from "core/guard/UnAuth";
 // import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constant/role";
-import LoginPage from "../../pages/LoginPage/LoginPage";
+import LoginPage from "pages/LoginPage/LoginPage";
+import RegisterPage from "pages/RegisterPage/RegisterPage";
 
 export interface SingleRoute {
   path?: string;
@@ -27,6 +28,10 @@ export const ROUTES: SingleRoute[] = [
       {
         path: LOGIN,
         component: <LoginPage />,
+      },
+      {
+        path: REGISTER,
+        component: <RegisterPage />,
       },
     ],
   },

@@ -1,6 +1,7 @@
 export const HOME = "/";
 export const LOGIN = "login";
 export const AUTH = "/auth";
+export const REGISTER = "signup";
 export const AUTH_LOGIN = "/auth/login";
 export const DASHBOARD = "/dashboard";
 export const PROJECT = "/projects";

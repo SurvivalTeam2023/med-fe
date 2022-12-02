@@ -1,6 +1,222 @@
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+  Stack,
+  Link as MuiLink,
+} from "@mui/material";
+import FormInput from "components/LoginInput/LoginInput";
 import { FunctionComponent } from "react";
+import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
+import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
+import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
+import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
+import { LoadingButton } from "@mui/lab";
 
+export const LinkItem = styled(Link)`
+  text-decoration: none;
+  color: #3683dc;
+  &:hover {
+    text-decoration: underline;
+    color: #5ea1b6;
+  }
+`;
+
+// 👇 Styled Material UI Link Component
+export const OauthMuiLink = styled(MuiLink)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f6f7;
+  border-radius: 1;
+  padding: 0.6rem 0;
+  column-gap: 1rem;
+  text-decoration: none;
+  color: #393e45;
+  font-weight: 500;
+  cursor: pointer;
+  &:hover {
+    background-color: #fff;
+    box-shadow: 0 1px 13px 0 rgb(0 0 0 / 15%);
+  }
+`;
+type ILogin = {
+  email: string;
+  password: string;
+};
 const LoginPage: FunctionComponent = () => {
-  return <h1>This is Login Page</h1>;
+  const defaultValues: ILogin = {
+    email: "",
+    password: "",
+  };
+
+  const methods = useForm<ILogin>({
+    defaultValues,
+  });
+
+  const onSubmitHandler: SubmitHandler<ILogin> = (values: ILogin) => {
+    console.log(values);
+  };
+
+  return (
+    <Container
+      maxWidth={false}
+      sx={{ height: "100vh", backgroundColor: { xs: "#fff", md: "#f4f4f4" } }}
+    >
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        sx={{ width: "100%", height: "100%" }}
+      >
+        <Grid
+          item
+          sx={{ maxWidth: "70rem", width: "100%", backgroundColor: "#fff" }}
+        >
+          <FormProvider {...methods}>
+            <Grid
+              container
+              sx={{
+                boxShadow: { sm: "0 0 5px #ddd" },
+                py: "6rem",
+                px: "1rem",
+              }}
+            >
+              <Grid
+                item
+                container
+                justifyContent="space-between"
+                rowSpacing={5}
+                sx={{
+                  maxWidth: { sm: "45rem" },
+                  marginInline: "auto",
+                }}
+              >
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{ borderRight: { sm: "1px solid #ddd" } }}
+                >
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    component="form"
+                    noValidate
+                    autoComplete="off"
+                    sx={{ paddingRight: { sm: "3rem" } }}
+                    onSubmit={methods.handleSubmit(onSubmitHandler)}
+                  >
+                    <Typography
+                      variant="h6"
+                      component="h1"
+                      sx={{ textAlign: "center", mb: "1.5rem" }}
+                    >
+                      Log into your account
+                    </Typography>
+
+                    <FormInput
+                      label="Enter your email"
+                      type="email"
+                      name="email"
+                      focused
+                      required
+                    />
+                    <FormInput
+                      type="password"
+                      label="Password"
+                      name="password"
+                      required
+                      focused
+                    />
+
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          size="small"
+                          aria-label="trust this device checkbox"
+                          required
+                          // {...methods.register("persistUser")}
+                        />
+                      }
+                      label={
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontSize: "0.8rem",
+                            fontWeight: 400,
+                            color: "#5e5b5d",
+                          }}
+                        >
+                          Accept policy
+                        </Typography>
+                      }
+                    />
+
+                    <LoadingButton
+                      loading={false}
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        py: "0.8rem",
+                        mt: 2,
+                        width: "80%",
+                        marginInline: "auto",
+                      }}
+                    >
+                      Login
+                    </LoadingButton>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography
+                    variant="h6"
+                    component="p"
+                    sx={{
+                      paddingLeft: { sm: "3rem" },
+                      mb: "1.5rem",
+                      textAlign: "center",
+                    }}
+                  >
+                    Log in with another provider:
+                  </Typography>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    sx={{ paddingLeft: { sm: "3rem" }, rowGap: "1rem" }}
+                  >
+                    <OauthMuiLink href="">
+                      <GoogleLogo style={{ height: "2rem" }} />
+                      Google
+                    </OauthMuiLink>
+                    <OauthMuiLink href="">
+                      <MicrosoftLogo style={{ height: "2rem" }} />
+                      {/* GitHub */}
+                    </OauthMuiLink>
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid container justifyContent="center">
+                <Stack sx={{ mt: "3rem", textAlign: "center" }}>
+                  <Typography sx={{ fontSize: "0.9rem", mb: "1rem" }}>
+                    Need an account?{" "}
+                    <LinkItem to="/auth/signup">Sign up here</LinkItem>
+                  </Typography>
+                  <Typography sx={{ fontSize: "0.9rem" }}>
+                    Forgot your{" "}
+                    <LinkItem to="/forgotPassword">password?</LinkItem>
+                  </Typography>
+                </Stack>
+              </Grid>
+            </Grid>
+          </FormProvider>
+        </Grid>
+      </Grid>
+    </Container>
+  );
 };
 export default LoginPage;
