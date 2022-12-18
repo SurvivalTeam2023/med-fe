@@ -1,0 +1,78 @@
+.auth-one-bg-position {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 380px;
+  }
+  @media (max-width: 575.98px) {
+    .auth-one-bg-position {
+      height: 280px;
+    }
+  }
+  .auth-one-bg {
+    background-image: url(../images/auth-one-bg.jpg);
+    background-position: center;
+    background-size: cover;
+  }
+  .auth-one-bg .bg-overlay {
+    background: -webkit-gradient(
+      linear,
+      left top,
+      right top,
+      from(#364574),
+      to(#405189)
+    );
+    background: linear-gradient(to right, #364574, #405189);
+    opacity: 0.9;
+  }
+  .auth-one-bg .shape {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .auth-one-bg .shape > svg {
+    width: 100%;
+    height: auto;
+    fill: var(--vz-body-bg);
+  }
+  .auth-pass-inputgroup input[type="text"] + .btn .ri-eye-fill:before {
+    content: "\ecb6";
+  }
+  .particles-js-canvas-el {
+    position: relative;
+  }
+  .signin-other-title {
+    position: relative;
+  }
+  .signin-other-title:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    left: 0;
+    right: 0;
+    border-top: 1px dashed var(--vz-border-color);
+    top: 10px;
+  }
+  .signin-other-title .title {
+    display: inline-block;
+    position: relative;
+    z-index: 9;
+    background-color: var(--vz-card-bg);
+    padding: 2px 16px;
+  }
+  .auth-bg-cover {
+    background: linear-gradient(-45deg, #405189 50%, #0ab39c);
+  }
+  .auth-bg-cover > .bg-overlay {
+    background-image: url(../images/cover-pattern.png);
+    background-position: center;
+    background-size: cover;
+    opacity: 1;
+    background-color: transparent;
+  }

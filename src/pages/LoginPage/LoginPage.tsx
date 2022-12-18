@@ -195,7 +195,6 @@ const LoginPage: FunctionComponent = () => {
                     </OauthMuiLink>
                     <OauthMuiLink href="">
                       <MicrosoftLogo style={{ height: "2rem" }} />
-                      {/* GitHub */}
                     </OauthMuiLink>
                   </Box>
                 </Grid>
