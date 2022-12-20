@@ -28,7 +28,7 @@ export const ROUTES: SingleRoute[] = [
       { path: "", component: <Navigate to={NOT_FOUND_PAGE} replace={true} /> },
       {
         path: LOGIN,
-        component: <LoginPage1 />,
+        component: <LoginPage />,
       },
       {
         path: REGISTER,

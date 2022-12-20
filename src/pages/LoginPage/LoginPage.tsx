@@ -7,15 +7,25 @@ import {
   Checkbox,
   Stack,
   Link as MuiLink,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
+  InputAdornment,
+  IconButton,
+  FormGroup,
 } from "@mui/material";
 import FormInput from "components/LoginInput/LoginInput";
-import { FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
 import { LoadingButton } from "@mui/lab";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import 'assets/css/app.min.css';
+import 'assets/css/bootstrap.min.css';
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
@@ -49,6 +59,15 @@ type ILogin = {
   password: string;
 };
 const LoginPage: FunctionComponent = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
   const defaultValues: ILogin = {
     email: "",
     password: "",
@@ -63,159 +82,184 @@ const LoginPage: FunctionComponent = () => {
   };
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{ height: "100vh", backgroundColor: { xs: "#fff", md: "#f4f4f4" } }}
-    >
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ width: "100%", height: "100%" }}
-      >
-        <Grid
-          item
-          sx={{ maxWidth: "70rem", width: "100%", backgroundColor: "#fff" }}
-        >
-          <FormProvider {...methods}>
-            <Grid
-              container
-              sx={{
-                boxShadow: { sm: "0 0 5px #ddd" },
-                py: "6rem",
-                px: "1rem",
-              }}
-            >
-              <Grid
-                item
-                container
-                justifyContent="space-between"
-                rowSpacing={5}
-                sx={{
-                  maxWidth: { sm: "45rem" },
-                  marginInline: "auto",
-                }}
-              >
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  sx={{ borderRight: { sm: "1px solid #ddd" } }}
-                >
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    component="form"
-                    noValidate
-                    autoComplete="off"
-                    sx={{ paddingRight: { sm: "3rem" } }}
-                    onSubmit={methods.handleSubmit(onSubmitHandler)}
-                  >
-                    <Typography
-                      variant="h6"
-                      component="h1"
-                      sx={{ textAlign: "center", mb: "1.5rem" }}
+    <>
+      <div className="auth-page-wrapper pt-5">
+        <div className="auth-one-bg-position auth-one-bg" id="auth-particles">
+          <div className="bg-overlay"></div>
+
+          <div className="shape">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 120">
+                <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
+            </svg> */}
+          </div>
+        </div>
+
+        <div className="auth-page-content">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12">
+                <div className="text-center mt-sm-5 mb-4 text-white-50">
+                  <div>
+                    <a href="index.html" className="d-inline-block auth-logo">
+                      <img
+                        src="assets/images/logo-light.png"
+                        alt=""
+                        height="20"
+                      />
+                    </a>
+                  </div>
+                  <p className="mt-3 fs-15 fw-medium">
+                    Premium Admin & Dashboard Template
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="row justify-content-center">
+              <div className="col-md-8 col-lg-6 col-xl-5">
+                <div className="card mt-4">
+                  <div className="card-body p-4">
+                    <div className="text-center mt-2">
+                      <h5 className="text-primary">Welcome Back !</h5>
+                      <p className="text-muted">
+                        Sign in to continue to Velzon.
+                      </p>
+                    </div>
+                    <div className="p-2 mt-4">
+                      <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
+                        <div className="mb-3">
+                          {/* <label for="username" className="form-label">Username</label> */}
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="username"
+                            placeholder="Enter username"
+                          />
+                        </div>
+
+                        <div className="mb-3">
+                          <div className="float-end">
+                            <a
+                              href="auth-pass-reset-basic.html"
+                              className="text-muted"
+                            >
+                              Forgot password?
+                            </a>
+                          </div>
+                          {/* <label className="form-label" for="password-input">
+                            Password
+                          </label> */}
+                          <div className="position-relative auth-pass-inputgroup mb-3">
+                            <FormControl
+                              sx={{ m: 1, width: "25ch" }}
+                              variant="outlined"
+                            >
+                              <InputLabel htmlFor="outlined-adornment-password">
+                                Password
+                              </InputLabel>
+                              <OutlinedInput
+                                id="outlined-adornment-password"
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                  <InputAdornment position="end">
+                                    <IconButton
+                                      aria-label="toggle password visibility"
+                                      onClick={handleClickShowPassword}
+                                      onMouseDown={handleMouseDownPassword}
+                                      edge="end"
+                                    >
+                                      {showPassword ? (
+                                        <VisibilityOff />
+                                      ) : (
+                                        <Visibility />
+                                      )}
+                                    </IconButton>
+                                  </InputAdornment>
+                                }
+                                label="Password"
+                              />
+                            </FormControl>
+                          </div>
+                        </div>
+
+                        <div className="form-check">
+                          <FormGroup>
+                            <FormControlLabel
+                              control={<Checkbox defaultChecked />}
+                              label="Label"
+                            />
+                            <FormControlLabel
+                              disabled
+                              control={<Checkbox />}
+                              label="Remember me"
+                            />
+                          </FormGroup>
+                        </div>
+
+                        <div className="mt-4">
+                          <button
+                            className="btn btn-success w-100"
+                            type="submit"
+                          >
+                            Sign In
+                          </button>
+                        </div>
+
+                        <div className="mt-4 text-center">
+                          <div className="signin-other-title">
+                            <h5 className="fs-13 mb-4 title">Sign In with</h5>
+                          </div>
+                          <div>
+                            <button
+                              type="button"
+                              className="btn btn-primary btn-icon waves-effect waves-light"
+                            >
+                              <i className="ri-facebook-fill fs-16"></i>
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-icon waves-effect waves-light"
+                            >
+                              <i className="ri-google-fill fs-16"></i>
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-dark btn-icon waves-effect waves-light"
+                            >
+                              <i className="ri-github-fill fs-16"></i>
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-info btn-icon waves-effect waves-light"
+                            >
+                              <i className="ri-twitter-fill fs-16"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <p className="mb-0">
+                    Don't have an account ?{" "}
+                    <a
+                      href="auth-signup-basic.html"
+                      className="fw-semibold text-primary text-decoration-underline"
                     >
-                      Log into your account
-                    </Typography>
-
-                    <FormInput
-                      label="Enter your email"
-                      type="email"
-                      name="email"
-                      focused
-                      required
-                    />
-                    <FormInput
-                      type="password"
-                      label="Password"
-                      name="password"
-                      required
-                      focused
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          size="small"
-                          aria-label="trust this device checkbox"
-                          required
-                          // {...methods.register("persistUser")}
-                        />
-                      }
-                      label={
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontSize: "0.8rem",
-                            fontWeight: 400,
-                            color: "#5e5b5d",
-                          }}
-                        >
-                          Accept policy
-                        </Typography>
-                      }
-                    />
-
-                    <LoadingButton
-                      loading={false}
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        py: "0.8rem",
-                        mt: 2,
-                        width: "80%",
-                        marginInline: "auto",
-                      }}
-                    >
-                      Login
-                    </LoadingButton>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography
-                    variant="h6"
-                    component="p"
-                    sx={{
-                      paddingLeft: { sm: "3rem" },
-                      mb: "1.5rem",
-                      textAlign: "center",
-                    }}
-                  >
-                    Log in with another provider:
-                  </Typography>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    sx={{ paddingLeft: { sm: "3rem" }, rowGap: "1rem" }}
-                  >
-                    <OauthMuiLink href="">
-                      <GoogleLogo style={{ height: "2rem" }} />
-                      Google
-                    </OauthMuiLink>
-                    <OauthMuiLink href="">
-                      <MicrosoftLogo style={{ height: "2rem" }} />
-                    </OauthMuiLink>
-                  </Box>
-                </Grid>
-              </Grid>
-              <Grid container justifyContent="center">
-                <Stack sx={{ mt: "3rem", textAlign: "center" }}>
-                  <Typography sx={{ fontSize: "0.9rem", mb: "1rem" }}>
-                    Need an account?{" "}
-                    <LinkItem to="/auth/signup">Sign up here</LinkItem>
-                  </Typography>
-                  <Typography sx={{ fontSize: "0.9rem" }}>
-                    Forgot your{" "}
-                    <LinkItem to="/forgotPassword">password?</LinkItem>
-                  </Typography>
-                </Stack>
-              </Grid>
-            </Grid>
-          </FormProvider>
-        </Grid>
-      </Grid>
-    </Container>
+                      {" "}
+                      Signup{" "}
+                    </a>{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
+
 export default LoginPage;
