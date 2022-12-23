@@ -1,31 +1,25 @@
-import {
-  Container,
-  Grid,
-  Box,
-  Typography,
-  FormControlLabel,
-  Checkbox,
-  Stack,
-  Link as MuiLink,
-  OutlinedInput,
-  InputLabel,
-  FormControl,
-  InputAdornment,
-  IconButton,
-  FormGroup,
-} from "@mui/material";
-import FormInput from "components/LoginInput/LoginInput";
-import React, { FunctionComponent } from "react";
-import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
-import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
-import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
-import { LoadingButton } from "@mui/lab";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import 'assets/css/app.min.css';
-import 'assets/css/bootstrap.min.css';
+import {
+  Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, Link as MuiLink,
+  OutlinedInput, TextField
+} from "@mui/material";
+import "assets/css/app.min.css";
+import "assets/css/bootstrap.min.css";
+import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
+import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
+import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
+import { particles } from "constants/particles";
+import { AppDispatch } from "core/store";
+import { thunkLogin } from "core/store/thunk";
+import React, { FunctionComponent, useCallback } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import type { Container, Engine } from "tsparticles-engine";
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
@@ -55,12 +49,12 @@ export const OauthMuiLink = styled(MuiLink)`
   }
 `;
 type ILogin = {
-  email: string;
+  username: string;
   password: string;
 };
 const LoginPage: FunctionComponent = () => {
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const dispatch: AppDispatch = useDispatch();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (
@@ -68,8 +62,21 @@ const LoginPage: FunctionComponent = () => {
   ) => {
     event.preventDefault();
   };
+
+  const particlesInit = useCallback(async (engine: Engine) => {
+    // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
+    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+    // starting from v2 you can add only the features you need reducing the bundle size
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(
+    async (container: Container | undefined) => {
+    },
+    []
+  );
   const defaultValues: ILogin = {
-    email: "",
+    username: "",
     password: "",
   };
 
@@ -78,7 +85,8 @@ const LoginPage: FunctionComponent = () => {
   });
 
   const onSubmitHandler: SubmitHandler<ILogin> = (values: ILogin) => {
-    console.log(values);
+    console.log("form", values);
+    dispatch(thunkLogin(values.username, values.password));
   };
 
   return (
@@ -88,10 +96,13 @@ const LoginPage: FunctionComponent = () => {
           <div className="bg-overlay"></div>
 
           <div className="shape">
-            {/* <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 120">
-                <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
-            </svg> */}
+            <AuthBackGroundSvg />
           </div>
+          <Particles
+            options={particles}
+            init={particlesInit}
+            loaded={particlesLoaded}
+          />
         </div>
 
         <div className="auth-page-content">
@@ -108,9 +119,6 @@ const LoginPage: FunctionComponent = () => {
                       />
                     </a>
                   </div>
-                  <p className="mt-3 fs-15 fw-medium">
-                    Premium Admin & Dashboard Template
-                  </p>
                 </div>
               </div>
             </div>
@@ -121,19 +129,17 @@ const LoginPage: FunctionComponent = () => {
                   <div className="card-body p-4">
                     <div className="text-center mt-2">
                       <h5 className="text-primary">Welcome Back !</h5>
-                      <p className="text-muted">
-                        Sign in to continue to Velzon.
-                      </p>
+                      <p className="text-muted">Sign in to continue to MED.</p>
                     </div>
                     <div className="p-2 mt-4">
                       <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
                         <div className="mb-3">
                           {/* <label for="username" className="form-label">Username</label> */}
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="username"
-                            placeholder="Enter username"
+                          <TextField
+                            sx={{ width: "100%" }}
+                            required
+                            label="User name"
+                            {...methods.register('username')}
                           />
                         </div>
 
@@ -149,16 +155,17 @@ const LoginPage: FunctionComponent = () => {
                           {/* <label className="form-label" for="password-input">
                             Password
                           </label> */}
-                          <div className="position-relative auth-pass-inputgroup mb-3">
+                          <div className="auth-pass-inputgroup mb-3">
                             <FormControl
-                              sx={{ m: 1, width: "25ch" }}
+                              sx={{ width: "100%" }}
                               variant="outlined"
                             >
-                              <InputLabel htmlFor="outlined-adornment-password">
+                              <InputLabel htmlFor="password" size="small">
                                 Password
                               </InputLabel>
                               <OutlinedInput
-                                id="outlined-adornment-password"
+                                size="small"
+                                id="password"
                                 type={showPassword ? "text" : "password"}
                                 endAdornment={
                                   <InputAdornment position="end">
@@ -177,6 +184,7 @@ const LoginPage: FunctionComponent = () => {
                                   </InputAdornment>
                                 }
                                 label="Password"
+                                {...methods.register('password')}
                               />
                             </FormControl>
                           </div>
@@ -186,11 +194,6 @@ const LoginPage: FunctionComponent = () => {
                           <FormGroup>
                             <FormControlLabel
                               control={<Checkbox defaultChecked />}
-                              label="Label"
-                            />
-                            <FormControlLabel
-                              disabled
-                              control={<Checkbox />}
                               label="Remember me"
                             />
                           </FormGroup>
@@ -210,30 +213,13 @@ const LoginPage: FunctionComponent = () => {
                             <h5 className="fs-13 mb-4 title">Sign In with</h5>
                           </div>
                           <div>
-                            <button
-                              type="button"
-                              className="btn btn-primary btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-facebook-fill fs-16"></i>
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-danger btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-google-fill fs-16"></i>
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-dark btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-github-fill fs-16"></i>
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-info btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-twitter-fill fs-16"></i>
-                            </button>
+                            <OauthMuiLink href="" sx={{ mb: 1 }}>
+                              <GoogleLogo style={{ height: "2rem" }} />
+                              Google
+                            </OauthMuiLink>
+                            <OauthMuiLink href="">
+                              <MicrosoftLogo style={{ height: "2rem" }} />
+                            </OauthMuiLink>
                           </div>
                         </div>
                       </form>

@@ -30,6 +30,7 @@ export const selectIsAuthenticated = createSelector(
   selectUserStore,
   (userStore) => {
     const access_token = userStore.token?.access_token;
+    console.log("access_token");
     if (!access_token) return null;
     return access_token;
   }

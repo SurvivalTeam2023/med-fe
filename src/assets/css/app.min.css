@@ -1,37 +1,4 @@
-@charset "UTF-8";@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap);@import url(https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap);@font-face {
-    font-family: hkgrotesk;
-    src: url(../fonts/hkgrotesk-light.eot);
-    src: local("hkgrotesk light"),url(../fonts/hkgrotesk-light.woff) format("woff");
-    font-weight: 300
-}
 
-@font-face {
-    font-family: hkgrotesk;
-    src: url(../fonts/hkgrotesk-regular.eot);
-    src: local("hkgrotesk regular"),url(../fonts/hkgrotesk-regular.woff) format("woff");
-    font-weight: 400
-}
-
-@font-face {
-    font-family: hkgrotesk;
-    src: url(../fonts/hkgrotesk-medium.eot);
-    src: local("hkgrotesk medium"),url(../fonts/hkgrotesk-medium.woff) format("woff");
-    font-weight: 500
-}
-
-@font-face {
-    font-family: hkgrotesk;
-    src: url(../fonts/hkgrotesk-semibold.eot);
-    src: local("hkgrotesk semibold"),url(../fonts/hkgrotesk-semibold.woff) format("woff");
-    font-weight: 600
-}
-
-@font-face {
-    font-family: hkgrotesk;
-    src: url(../fonts/hkgrotesk-bold.eot);
-    src: local("hkgrotesk bold"),url(../fonts/hkgrotesk-bold.woff) format("woff");
-    font-weight: 700
-}
 
 :root {
     --vz-vertical-menu-bg: #fff;
@@ -1905,21 +1872,7 @@
     opacity: .07
 }
 
-[data-sidebar-image=img-1] .sidebar-background {
-    background-image: url(../images/sidebar/img-1.jpg)
-}
 
-[data-sidebar-image=img-2] .sidebar-background {
-    background-image: url(../images/sidebar/img-2.jpg)
-}
-
-[data-sidebar-image=img-3] .sidebar-background {
-    background-image: url(../images/sidebar/img-3.jpg)
-}
-
-[data-sidebar-image=img-4] .sidebar-background {
-    background-image: url(../images/sidebar/img-4.jpg)
-}
 
 [data-layout=horizontal] .main-content {
     margin-left: 0
@@ -3501,10 +3454,6 @@
 .social-list-item:hover {
     color: #878a99;
     background-color: #eff2f7
-}
-
-.bg-pattern {
-    background: url(../images/modal-bg.png) #fff
 }
 
 .w-xs {
@@ -13506,13 +13455,7 @@ span.flatpickr-weekday {
     border-radius: 8px
 }
 
-[data-option-flag-img-name] .flag-input {
-    padding-left: 45px;
-    background-image: url(../images/flags/us.svg);
-    background-repeat: no-repeat;
-    background-position: 14px 8px;
-    background-size: 18px
-}
+
 
 [data-option-flag-img-name]::before,[data-option-flag-name]::before {
     content: "\f0140";
@@ -13560,7 +13503,7 @@ span.flatpickr-weekday {
 }
 
 .auth-one-bg {
-    background-image: url(../images/auth-one-bg.jpg);
+    background-image: url(../img/auth-one-bg.jpg);
     background-position: center;
     background-size: cover
 }
@@ -13621,13 +13564,7 @@ span.flatpickr-weekday {
     background: linear-gradient(-45deg,var(--vz-primary) 50%,var(--vz-success))
 }
 
-.auth-bg-cover>.bg-overlay {
-    background-image: url(../images/cover-pattern.png);
-    background-position: center;
-    background-size: cover;
-    opacity: 1;
-    background-color: transparent
-}
+
 
 .auth-bg-cover .footer {
     color: rgba(255,255,255,.5)
@@ -13775,10 +13712,7 @@ span.flatpickr-weekday {
     max-width: 130px!important
 }
 
-.bg-marketplace {
-    background-image: url(../images/nft/marketplace.png);
-    background-size: cover
-}
+
 
 .dash-countdown .countdownlist .count-num {
     background-color: var(--vz-card-bg-custom);
@@ -15852,13 +15786,6 @@ span.flatpickr-weekday {
     background-color: #f3f6f9
 }
 
-.user-chat {
-    background: url(../images/chat-bg-pattern.png);
-    -webkit-transition: all .4s;
-    transition: all .4s;
-    position: relative;
-    background-color: var(--vz-body-bg)
-}
 
 @media (max-width: 991.98px) {
     .user-chat {
@@ -16863,20 +16790,7 @@ span.flatpickr-weekday {
     position: relative
 }
 
-.tasks.noTask::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    height: 180px;
-    width: 270px;
-    margin: 0 auto;
-    background-image: url(../images/file.png);
-    background-size: cover;
-    background-position: center
-}
+
 
 #tasksList tr .tasks-list-menu {
     opacity: 0
@@ -16994,13 +16908,7 @@ span.flatpickr-weekday {
     fill: var(--vz-card-bg-custom)
 }
 
-.bg-overlay-pattern {
-    background-image: url(../images/landing/bg-pattern.png);
-    background-color: transparent;
-    background-position: center;
-    background-size: cover;
-    opacity: .2
-}
+
 
 .demo-carousel {
     position: relative;
@@ -17179,12 +17087,7 @@ span.flatpickr-weekday {
     padding: 8px
 }
 
-.nft-hero {
-    background-image: url(../images/nft/bg-home.jpg);
-    background-size: cover;
-    background-position: bottom;
-    padding: 222px 0 150px 0
-}
+
 
 .nft-hero .bg-overlay {
     background-color: #05175f;
@@ -17419,11 +17322,7 @@ span.flatpickr-weekday {
     display: none
 }
 
-.bg-job {
-    background-image: url(../images/new.png);
-    background-size: cover;
-    background-position: center
-}
+
 
 .job-list-view-card .background {
     height: 130px
@@ -17649,5 +17548,3 @@ span.flatpickr-weekday {
     bottom: -18px;
     right: -35px
 }
-
-/*# sourceMappingURL=app.min.css.map */
