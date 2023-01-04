@@ -2,8 +2,16 @@ import styled from "@emotion/styled";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
-  Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, Link as MuiLink,
-  OutlinedInput, TextField
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  Link as MuiLink,
+  OutlinedInput,
+  TextField,
 } from "@mui/material";
 import "assets/css/app.min.css";
 import "assets/css/bootstrap.min.css";
@@ -11,6 +19,7 @@ import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
 import { particles } from "constants/particles";
+import { ILogin } from "core/interface/models";
 import { AppDispatch } from "core/store";
 import { thunkLogin } from "core/store/thunk";
 import React, { FunctionComponent, useCallback } from "react";
@@ -48,10 +57,7 @@ export const OauthMuiLink = styled(MuiLink)`
     box-shadow: 0 1px 13px 0 rgb(0 0 0 / 15%);
   }
 `;
-type ILogin = {
-  username: string;
-  password: string;
-};
+
 const LoginPage: FunctionComponent = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const dispatch: AppDispatch = useDispatch();
@@ -71,8 +77,7 @@ const LoginPage: FunctionComponent = () => {
   }, []);
 
   const particlesLoaded = useCallback(
-    async (container: Container | undefined) => {
-    },
+    async (container: Container | undefined) => {},
     []
   );
   const defaultValues: ILogin = {
@@ -139,19 +144,11 @@ const LoginPage: FunctionComponent = () => {
                             sx={{ width: "100%" }}
                             required
                             label="User name"
-                            {...methods.register('username')}
+                            {...methods.register("username")}
                           />
                         </div>
 
                         <div className="mb-3">
-                          <div className="float-end">
-                            <a
-                              href="auth-pass-reset-basic.html"
-                              className="text-muted"
-                            >
-                              Forgot password?
-                            </a>
-                          </div>
                           {/* <label className="form-label" for="password-input">
                             Password
                           </label> */}
@@ -184,7 +181,7 @@ const LoginPage: FunctionComponent = () => {
                                   </InputAdornment>
                                 }
                                 label="Password"
-                                {...methods.register('password')}
+                                {...methods.register("password")}
                               />
                             </FormControl>
                           </div>
@@ -231,7 +228,7 @@ const LoginPage: FunctionComponent = () => {
                   <p className="mb-0">
                     Don't have an account ?{" "}
                     <a
-                      href="auth-signup-basic.html"
+                      href="/auth/signup"
                       className="fw-semibold text-primary text-decoration-underline"
                     >
                       {" "}

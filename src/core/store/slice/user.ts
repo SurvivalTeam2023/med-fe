@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAuthKeyFromLocalStorage } from "util/";
+import { clearAuthKeyFromLocalStorage, getAuthKeyFromLocalStorage } from "util/";
 import { UserState } from "../../interface/redux";
 
 const initialState: UserState = {
@@ -13,7 +13,10 @@ const reducer = createSlice({
   initialState,
   reducers: {
     resetState: () => ({ ...initialState }),
-    setIsTriedLogin: (state, { payload }: PayloadAction<UserState["isTriedLogin"]>) => {
+    setIsTriedLogin: (
+      state,
+      { payload }: PayloadAction<UserState["isTriedLogin"]>
+    ) => {
       state.isTriedLogin = payload;
     },
     setUser: (state, { payload }: PayloadAction<UserState["user"]>) => {
@@ -21,6 +24,10 @@ const reducer = createSlice({
     },
     setToken: (state, { payload }: PayloadAction<UserState["token"]>) => {
       state.token = payload;
+    },
+    removeToken: (state, { payload }: PayloadAction<UserState["token"]>) => {
+      clearAuthKeyFromLocalStorage();
+      state.token = null;
     },
   },
 });

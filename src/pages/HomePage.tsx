@@ -9,7 +9,6 @@ const HomePage: FunctionComponent = () => {
 
   const handleLogoutClick = () => {
     dispathc(userActions.setToken(null));
-    clearAuthKeyFromLocalStorage();
   };
   return (
     <div className="App">
