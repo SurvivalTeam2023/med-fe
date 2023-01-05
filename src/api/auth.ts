@@ -7,16 +7,21 @@ export const getTokenApi = (
   password: string
 ): ApiResponse<TokenResponse> => {
   const url = "/auth/getToken";
-  return CallAPI.post(url, {
-    username,
-    password,
-  });
+  return CallAPI.post(
+    url,
+    {
+      username,
+      password,
+    },
+    // {
+    //   headers: {
+    //     "Content-Type":
+    //       "application/x-www-form-urlencoded, multipart/form-data",
+    //   },
+    // }
+  );
 };
 
-export const registerUserApi = (data: any): ApiResponse<any> => {
-  const url = "/user/user";
-  return CallAPI.post(url, data);
-};
 export const getRefreshTokenApi = (
   refreshToken: string
 ): ApiResponse<TokenResponse> => {

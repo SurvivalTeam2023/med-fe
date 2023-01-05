@@ -25,7 +25,7 @@ export const getCurrentUserThunk =
               updatedAt: new Date().toString(),
               isDeleted: false,
             })
-          );
+          );        
           resolve();
         } else {
           reject(new Error("Token not found"));
@@ -34,7 +34,10 @@ export const getCurrentUserThunk =
     });
 
 export const thunkLogin =
-  (username: string, password: string): AppThunk<void> =>
+  (
+    username: string,
+    password: string
+  ): ThunkAction<void, RootState, unknown, AnyAction> =>
   (dispatch: any, getState) => {
     getTokenApi(username, password).then((token) => {
       dispatch(userActions.setToken(token.data));
@@ -42,11 +45,10 @@ export const thunkLogin =
     });
   };
 
-// export const thunkRegisiter =
-//   (username: string, password: string, repassword: string, email: string): AppThunk<void> =>
-//   (dispatch: any, getState) => {
-//     getTokenApi(username, password).then((token) => {
-//       dispatch(userActions.setToken(token.data));
-//       saveAuthKeyIntoLocalStorage(token.data);
-//     });
-//   };
+// await axios.post(
+//   `${config.SERVER_URL.toString()}auth/getToken`,
+//   {
+//     username,
+//     password,
+//   }
+// );

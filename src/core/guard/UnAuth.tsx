@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import Loading from "components/Loading";
-import { AUTH, DASHBOARD, TIME_SHEET } from "core/constant";
+import { DASHBOARD, TIME_SHEET } from "core/constant";
 import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constant/role";
 
 import { useAppSelector } from "../store";
@@ -22,9 +22,8 @@ const UnAuthGuard: FC = () => {
     // if (userRoles?.includes(ROLE_ADMIN) || userRoles?.includes()) {
     //   return <Navigate to={DASHBOARD} replace />;
     // }
-    return <Navigate to={DASHBOARD} replace />;
-  } else {
-    <Navigate to={AUTH} replace={true} />;
+
+    return <Navigate to={TIME_SHEET} replace />;
   }
 
   return <Outlet />;
