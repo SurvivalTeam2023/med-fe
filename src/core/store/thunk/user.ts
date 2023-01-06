@@ -1,9 +1,6 @@
-import { AnyAction, ThunkAction } from "@reduxjs/toolkit";
 import { getTokenApi } from "api/auth";
-import axios from "axios";
-import { config } from "core/constant";
 import { saveAuthKeyIntoLocalStorage } from "util/";
-import { AppThunk, RootState } from "..";
+import { AppThunk } from "..";
 import { userActions } from "../slice";
 import jwt_decode from "jwt-decode";
 import { TokenDecode } from "core/interface/api";

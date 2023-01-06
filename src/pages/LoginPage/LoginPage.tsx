@@ -39,7 +39,6 @@ export const LinkItem = styled(Link)`
   }
 `;
 
-// 👇 Styled Material UI Link Component
 export const OauthMuiLink = styled(MuiLink)`
   display: flex;
   justify-content: center;
@@ -62,7 +61,6 @@ const LoginPage: FunctionComponent = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const dispatch: AppDispatch = useDispatch();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -70,9 +68,6 @@ const LoginPage: FunctionComponent = () => {
   };
 
   const particlesInit = useCallback(async (engine: Engine) => {
-    // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
-    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-    // starting from v2 you can add only the features you need reducing the bundle size
     await loadFull(engine);
   }, []);
 
@@ -139,7 +134,6 @@ const LoginPage: FunctionComponent = () => {
                     <div className="p-2 mt-4">
                       <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
                         <div className="mb-3">
-                          {/* <label for="username" className="form-label">Username</label> */}
                           <TextField
                             sx={{ width: "100%" }}
                             required

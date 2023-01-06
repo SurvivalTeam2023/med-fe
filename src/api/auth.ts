@@ -6,7 +6,7 @@ export const getTokenApi = (
   username: string,
   password: string
 ): ApiResponse<TokenResponse> => {
-  const url = "/auth/getToken";
+  const url = "/auth/token";
   return CallAPI.post(url, {
     username,
     password,
