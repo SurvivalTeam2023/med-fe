@@ -6,6 +6,8 @@ import { ThemeProvider } from "@mui/material";
 import theme from "config/MUI";
 import { Provider } from "react-redux";
 import { store } from "core/store";
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

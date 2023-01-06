@@ -1,12 +1,14 @@
+import { AUTH_LOGIN, LOGIN, NOT_FOUND_PAGE, HOME } from "core/constant";
+import { AUTH, DASHBOARD, REGISTER } from "core/constant/routes";
+import UnAuthGuard from "core/guard/UnAuth";
+import EmptyLayout from "core/layout/EmptyLayout";
+import NotFoundPage from "pages/NotFound/NotFoundPage";
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { NOT_FOUND_PAGE, AUTH_LOGIN, LOGIN } from "core/constant";
-import NotFoundPage from "pages/NotFound/NotFoundPage";
-import { AUTH } from "../constant/routes";
-import EmptyLayout from "core/layout/EmptyLayout";
-import UnAuthGuard from "core/guard/UnAuth";
 // import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constant/role";
-import LoginPage from "../../pages/LoginPage/LoginPage";
+import LoginPage from "pages/LoginPage/LoginPage";
+import RegisterPage from "pages/RegisterPage/RegisterPage";
+import HomePage from "pages/HomePage";
 
 export interface SingleRoute {
   path?: string;
@@ -28,6 +30,10 @@ export const ROUTES: SingleRoute[] = [
         path: LOGIN,
         component: <LoginPage />,
       },
+      {
+        path: REGISTER,
+        component: <RegisterPage />,
+      },
     ],
   },
   // {
@@ -40,5 +46,10 @@ export const ROUTES: SingleRoute[] = [
   {
     path: "*",
     component: <Navigate to={NOT_FOUND_PAGE} replace={true} />,
+  },
+  { path: DASHBOARD, component: <HomePage /> },
+  {
+    path: DASHBOARD,
+    component: <Navigate to={DASHBOARD} replace={true} />,
   },
 ];
