@@ -8,11 +8,16 @@ import {
   Stack,
   Link as MuiLink,
   OutlinedInput,
+<<<<<<< Updated upstream
   InputLabel,
   FormControl,
   InputAdornment,
   IconButton,
   FormGroup,
+=======
+  TextField,
+  Snackbar
+>>>>>>> Stashed changes
 } from "@mui/material";
 import FormInput from "components/LoginInput/LoginInput";
 import React, { FunctionComponent } from "react";
@@ -21,11 +26,27 @@ import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
+<<<<<<< Updated upstream
 import { LoadingButton } from "@mui/lab";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import 'assets/css/app.min.css';
 import 'assets/css/bootstrap.min.css';
+=======
+import { particles } from "constants/particles";
+import { ILogin } from "core/interface/models";
+import { AppDispatch, useAppDispatch } from "core/store";
+import { thunkLogin } from "core/store/thunk";
+import React, { FunctionComponent, useCallback } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import type { Container, Engine } from "tsparticles-engine";
+import { ThunkDispatch } from "redux-thunk";
+import { UserState } from "core/interface/redux";
+>>>>>>> Stashed changes
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
@@ -60,7 +81,12 @@ type ILogin = {
 };
 const LoginPage: FunctionComponent = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+<<<<<<< Updated upstream
 
+=======
+  const [message, setMessage] = React.useState<string>("");
+  const dispatch: ThunkDispatch<UserState, null, any> = useDispatch();
+>>>>>>> Stashed changes
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (
@@ -77,8 +103,18 @@ const LoginPage: FunctionComponent = () => {
     defaultValues,
   });
 
+<<<<<<< Updated upstream
   const onSubmitHandler: SubmitHandler<ILogin> = (values: ILogin) => {
     console.log(values);
+=======
+  const onSubmitHandler: SubmitHandler<ILogin> = async (values: ILogin) => {
+    try {
+      dispatch(thunkLogin(values.username, values.password));
+      setMessage("Login successful");
+    } catch (error) {
+      setMessage("Login fail");
+    }
+>>>>>>> Stashed changes
   };
 
   return (
@@ -257,6 +293,11 @@ const LoginPage: FunctionComponent = () => {
             </div>
           </div>
         </div>
+        <Snackbar
+          open={message.length > 0}
+          autoHideDuration={3000}
+          message={message}
+        />
       </div>
     </>
   );

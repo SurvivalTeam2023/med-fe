@@ -13,6 +13,7 @@ interface AuthWrapperProps {
 const AuthGuard: FC<AuthWrapperProps> = ({ acceptRoles }) => {
   const userRoles = useAppSelector(selectUserRoleNames);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  console.log('auth', isAuthenticated)
   const { isTriedLogin } = useAppSelector(selectUserStore);
   if (!isTriedLogin) return <Loading />;
 
