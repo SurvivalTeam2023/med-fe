@@ -1,12 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-<<<<<<< Updated upstream
-import { getAuthKeyFromLocalStorage } from "util/";
-=======
 import {
   clearAuthKeyFromLocalStorage,
   getAuthKeyFromLocalStorage,
 } from "util/";
->>>>>>> Stashed changes
 import { UserState } from "../../interface/redux";
 
 const initialState: UserState = {
@@ -30,8 +26,6 @@ const reducer = createSlice({
     setToken: (state, { payload }: PayloadAction<UserState["token"]>) => {
       state.token = payload;
     },
-<<<<<<< Updated upstream
-=======
     removeToken: (state, { payload }: PayloadAction<UserState["token"]>) => {
       clearAuthKeyFromLocalStorage();
       state.token = null;
@@ -47,7 +41,6 @@ const reducer = createSlice({
       state.isTriedLogin = false;
       state.error = action.payload;
     },
->>>>>>> Stashed changes
   },
 });
 export const userActions = {

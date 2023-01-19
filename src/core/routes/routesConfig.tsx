@@ -8,7 +8,6 @@ import UnAuthGuard from "core/guard/UnAuth";
 // import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constant/role";
 import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
-import LoginPage1 from "pages/LoginPage/LoginPage1";
 
 export interface SingleRoute {
   path?: string;

@@ -26,3 +26,11 @@ export interface EditParam<T> {
   id: number;
   data: T;
 }
+
+export interface TokenDecode {
+  sid: string;
+  email: string;
+  name: string;
+  resource_access: Object;
+  realm_access: Object;
+}
