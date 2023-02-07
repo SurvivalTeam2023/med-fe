@@ -11,9 +11,8 @@ export type ILogin = {
 };
 
 export type IRegister = {
-    username: string;
-    password: string;
-    repassword: string;
-    email: string;
-  };
-
+  username: string;
+  password: string;
+  repassword: string;
+  email: string;
+};

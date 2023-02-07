@@ -1,10 +1,14 @@
-import { FC } from "react";
-import { Navigate, Outlet } from "react-router-dom";
 import Loading from "components/Loading";
 import { AUTH_LOGIN, NOT_FOUND_PAGE } from "core/constant";
 import { Role } from "core/interface/role";
 import { useAppSelector } from "core/store";
-import { selectIsAuthenticated, selectUserRoleNames, selectUserStore } from "core/store/selector";
+import {
+  selectIsAuthenticated,
+  selectUserRoleNames,
+  selectUserStore,
+} from "core/store/selector";
+import { FC } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 
 interface AuthWrapperProps {
   acceptRoles: Role[];
@@ -13,8 +17,8 @@ interface AuthWrapperProps {
 const AuthGuard: FC<AuthWrapperProps> = ({ acceptRoles }) => {
   const userRoles = useAppSelector(selectUserRoleNames);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const { isTriedLogin } = useAppSelector(selectUserStore);
-  if (!isTriedLogin) return <Loading />;
+  console.log("auth", isAuthenticated);
+
 
   if (!isAuthenticated) {
     return <Navigate to={AUTH_LOGIN} replace />;

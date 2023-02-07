@@ -34,3 +34,11 @@ export interface TokenDecode {
   resource_access: Object;
   realm_access: Object;
 }
+
+export interface TokenDecode {
+  sid: string;
+  email: string;
+  name: string;
+  resource_access: Object;
+  realm_access: Object;
+}
