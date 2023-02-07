@@ -1,187 +1,370 @@
-import { LoadingButton } from "@mui/lab";
-import { Container, Grid, Typography, Box, Stack } from "@mui/material";
-import FormInput from "components/LoginInput/LoginInput";
-import { OauthMuiLink, LinkItem } from "pages/LoginPage/LoginPage";
-import { FunctionComponent } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import styled from "@emotion/styled";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import LoadingButton from "@mui/lab/LoadingButton";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  Link as MuiLink,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import { registerUserApi } from "api/auth";
+import "assets/css/app.min.css";
+import "assets/css/bootstrap.min.css";
+import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
+import ToastError from "components/Toast";
+import { particles } from "constants/particles";
+import { IRegister } from "core/interface/models";
+import { useAppSelector, useAppThunkDispatch } from "core/store";
+import { selectIsError } from "core/store/selector";
+import React, { FunctionComponent, useCallback } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import type { Engine } from "tsparticles-engine";
 
-type ISignUp = {
-  name: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-};
+export const LinkItem = styled(Link)`
+  text-decoration: none;
+  color: #3683dc;
+  &:hover {
+    text-decoration: underline;
+    color: #5ea1b6;
+  }
+`;
+
+// 👇 Styled Material UI Link Component
+export const OauthMuiLink = styled(MuiLink)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f6f7;
+  border-radius: 1;
+  padding: 0.6rem 0;
+  column-gap: 1rem;
+  text-decoration: none;
+  color: #393e45;
+  font-weight: 500;
+  cursor: pointer;
+  &:hover {
+    background-color: #fff;
+    box-shadow: 0 1px 13px 0 rgb(0 0 0 / 15%);
+  }
+`;
+
 const RegisterPage: FunctionComponent = () => {
-  const defaultValues: ISignUp = {
-    name: "",
-    email: "",
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showRePassword, setShowRePassword] = React.useState(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const navigate = useNavigate();
+  const dispatch = useAppThunkDispatch();
+  const isLoginError = useAppSelector(selectIsError);
+  const particlesInit = useCallback(async (engine: Engine) => {
+    // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
+    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+    // starting from v2 you can add only the features you need reducing the bundle size
+    await loadFull(engine);
+  }, []);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownRePassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+  const handleClickShowRePassword = () => setShowRePassword((show) => !show);
+
+  const defaultValues: IRegister = {
+    username: "",
     password: "",
-    passwordConfirm: "",
+    repassword: "",
+    email: "",
   };
 
-  const methods = useForm<ISignUp>({
+  const methods = useForm<IRegister>({
     defaultValues,
   });
-
-  const onSubmitHandler: SubmitHandler<ISignUp> = (values: ISignUp) => {
-    console.log(JSON.stringify(values, null, 4));
+  const mutation = useMutation({
+    mutationFn: (payload: IRegister) => registerUserApi(payload),
+  });
+  const onSubmitHandler: SubmitHandler<IRegister> = async (
+    values: IRegister
+  ) => {
+    try {
+      setLoading(true);
+      const result = await registerUserApi({
+        username: values["username"],
+        email: values["email"],
+        password: values["password"],
+        repassword: values["repassword"],
+      });
+      if (result) {
+        await toast.success("Signup successful", {
+          autoClose: 8000,
+          toastId: 2,
+        });
+        setLoading(false);
+        setTimeout(() => navigate("/auth/login"), 2000);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      await toast.error(<ToastError message={error.response.data.message} />, {
+        autoClose: 8000,
+      });
+    }
+    // mutation.mutate(
+    //   {
+    //     username: values["username"],
+    //     email: values["email"],
+    //     password: values["password"],
+    //     repassword: values["repassword"],
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       toast.success("Signup successful",{ autoClose: 8000, toastId: 2 });
+    //       navigate("/auth/signin");
+    //     },
+    //     onError: (error: any) => {
+    //       toast.error("Signup fail", { autoClose: 8000, toastId: 2 });
+    //       // console.log("error", error.response);
+    //     },
+    //   }
+    // );
   };
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{ height: "100vh", backgroundColor: { xs: "#fff", md: "#f4f4f4" } }}
-    >
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ width: "100%", height: "100%" }}
-      >
-        <Grid
-          item
-          sx={{ maxWidth: "70rem", width: "100%", backgroundColor: "#fff" }}
-        >
-          <Grid
-            container
-            sx={{
-              boxShadow: { sm: "0 0 5px #ddd" },
-              py: "6rem",
-              px: "1rem",
-            }}
-          >
-            <FormProvider {...methods}>
-              <Typography
-                variant="h4"
-                component="h1"
-                sx={{
-                  textAlign: "center",
-                  width: "100%",
-                  mb: "1.5rem",
-                  pb: { sm: "3rem" },
-                }}
-              >
-                Welcome To MED
-              </Typography>
-              <Grid
-                item
-                container
-                justifyContent="space-between"
-                rowSpacing={5}
-                sx={{
-                  maxWidth: { sm: "45rem" },
-                  marginInline: "auto",
-                }}
-              >
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  sx={{ borderRight: { sm: "1px solid #ddd" } }}
-                >
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    component="form"
-                    noValidate
-                    autoComplete="off"
-                    sx={{ paddingRight: { sm: "3rem" } }}
-                    onSubmit={methods.handleSubmit(onSubmitHandler)}
-                  >
-                    <Typography
-                      variant="h6"
-                      component="h1"
-                      sx={{ textAlign: "center", mb: "1.5rem" }}
-                    >
-                      Create new your account
-                    </Typography>
+    <>
+      <div className="auth-page-wrapper pt-5">
+        <div className="auth-one-bg-position auth-one-bg" id="auth-particles">
+          <div className="bg-overlay"></div>
+          <Particles
+            id="tsparticles"
+            init={particlesInit}
+            options={particles}
+          />
+          <div className="shape">
+            <AuthBackGroundSvg />
+          </div>
+        </div>
 
-                    <FormInput
-                      label="Name"
-                      type="text"
-                      name="name"
-                      focused
-                      required
-                    />
-                    <FormInput
-                      label="Enter your email"
-                      type="email"
-                      name="email"
-                      focused
-                      required
-                    />
-                    <FormInput
-                      type="password"
-                      label="Password"
-                      name="password"
-                      required
-                      focused
-                    />
-                    <FormInput
-                      type="password"
-                      label="Confirm Password"
-                      name="passwordConfirm"
-                      required
-                      focused
-                    />
+        <div className="auth-page-content">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12">
+                <div className="text-center mt-sm-5 mb-4 text-white-50">
+                  <div>
+                    <a href="index.html" className="d-inline-block auth-logo">
+                      <img
+                        src="assets/images/logo-light.png"
+                        alt=""
+                        height="20"
+                      />
+                    </a>
+                  </div>
+                  <p className="mt-3 fs-15 fw-medium">
+                    Premium Admin & Dashboard Template
+                  </p>
+                </div>
+              </div>
+            </div>
 
-                    <LoadingButton
-                      loading={false}
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        py: "0.8rem",
-                        mt: 2,
-                        width: "80%",
-                        marginInline: "auto",
-                      }}
+            <div className="row justify-content-center">
+              <div className="col-md-8 col-lg-6 col-xl-5">
+                <div className="card mt-4">
+                  <div className="card-body p-4">
+                    <div className="text-center mt-2">
+                      <h5 className="text-primary">Create New Account</h5>
+                      <p className="text-muted">
+                        Get your free MED account now
+                      </p>
+                    </div>
+                    <div className="p-2 mt-4">
+                      <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
+                        <div className="mb-3">
+                          {/* <label for="username" className="form-label">Username</label> */}
+                          <TextField
+                            label="User name"
+                            placeholder="Username"
+                            sx={{ width: "100%" }}
+                            {...methods.register("username")}
+                          />
+                        </div>
+                        <div className="mb-3">
+                          {/* <label for="username" className="form-label">Username</label> */}
+                          <TextField
+                            label="Email"
+                            placeholder="Email"
+                            sx={{ width: "100%" }}
+                            {...methods.register("email")}
+                            type="email"
+                          />
+                        </div>
+
+                        <div className="mb-3">
+                          {/* <label className="form-label" for="password-input">
+                            Password
+                          </label> */}
+                          <div className="position-relative auth-pass-inputgroup mb-3">
+                            <FormControl
+                              variant="outlined"
+                              sx={{ width: "100%" }}
+                            >
+                              <InputLabel htmlFor="outlined-adornment-password">
+                                Password
+                              </InputLabel>
+                              <OutlinedInput
+                                id="outlined-adornment-password"
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                  <InputAdornment position="end">
+                                    <IconButton
+                                      aria-label="toggle password visibility"
+                                      onClick={handleClickShowPassword}
+                                      onMouseDown={handleMouseDownPassword}
+                                      edge="end"
+                                      size="small"
+                                    >
+                                      {showPassword ? (
+                                        <VisibilityOff />
+                                      ) : (
+                                        <Visibility />
+                                      )}
+                                    </IconButton>
+                                  </InputAdornment>
+                                }
+                                label="Password"
+                                {...methods.register("password")}
+                              />
+                            </FormControl>
+                          </div>
+                        </div>
+                        <div className="mb-3">
+                          {/* <label className="form-label" for="password-input">
+                            Password
+                          </label> */}
+                          <div className="position-relative auth-pass-inputgroup mb-3">
+                            <FormControl
+                              variant="outlined"
+                              sx={{ width: "100%" }}
+                            >
+                              <InputLabel htmlFor="outlined-adornment-repassword">
+                                Password
+                              </InputLabel>
+                              <OutlinedInput
+                                id="outlined-adornment-repassword"
+                                type={showRePassword ? "text" : "password"}
+                                endAdornment={
+                                  <InputAdornment position="end">
+                                    <IconButton
+                                      aria-label="toggle password visibility"
+                                      onClick={handleClickShowRePassword}
+                                      onMouseDown={handleMouseDownRePassword}
+                                      edge="end"
+                                      size="small"
+                                    >
+                                      {showRePassword ? (
+                                        <VisibilityOff />
+                                      ) : (
+                                        <Visibility />
+                                      )}
+                                    </IconButton>
+                                  </InputAdornment>
+                                }
+                                size="small"
+                                label="Password"
+                                {...methods.register("repassword")}
+                              />
+                            </FormControl>
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          {/* <button
+                            className="btn btn-success w-100"
+                            type="submit"
+                            disabled={mutation.isLoading}
+                          >
+                            Sign Up
+                          </button> */}
+                          <LoadingButton
+                            loading={loading}
+                            loadingPosition="start"
+                            variant="outlined"
+                            sx={{
+                              backgroundColor: "#13c56b",
+                              color: "#fff",
+                              border: "none",
+                              "&:hover": {
+                                color: "#fff",
+                                backgroundColor: "#30DA85",
+                                border: "none",
+                              },
+                            }}
+                            className="btn btn-success w-100"
+                            type="submit"
+                          >
+                            Sign Up
+                          </LoadingButton>
+                        </div>
+
+                        <div className="mt-4 text-center">
+                          <div className="signin-other-title">
+                            <h5 className="fs-13 mb-4 title">
+                              Create account with
+                            </h5>
+                          </div>
+                          <OauthMuiLink href="">
+                            <GoogleLogo style={{ height: "2rem" }} />
+                            Google
+                          </OauthMuiLink>
+                          <OauthMuiLink href="">
+                            <MicrosoftLogo style={{ height: "2rem" }} />
+                          </OauthMuiLink>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <p className="mb-0">
+                    Already have an account ?{" "}
+                    {/* <a
+                      href="auth-signup-basic.html"
+                      className="fw-semibold text-primary text-decoration-underline"
                     >
-                      Sign Up
-                    </LoadingButton>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={6} sx={{}}>
-                  <Typography
-                    variant="h6"
-                    component="p"
-                    sx={{
-                      paddingLeft: { sm: "3rem" },
-                      mb: "1.5rem",
-                      textAlign: "center",
-                    }}
-                  >
-                    Sign up using another provider:
-                  </Typography>
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    sx={{ paddingLeft: { sm: "3rem" }, rowGap: "1rem" }}
-                  >
-                    <OauthMuiLink href="">
-                      <GoogleLogo style={{ height: "2rem" }} />
-                      Google
-                    </OauthMuiLink>
-                    <OauthMuiLink href="">
-                      <MicrosoftLogo style={{ height: "2rem" }} />
-                    </OauthMuiLink>
-                  </Box>
-                </Grid>
-              </Grid>
-              <Grid container justifyContent="center">
-                <Stack sx={{ mt: "3rem", textAlign: "center" }}>
-                  <Typography sx={{ fontSize: "0.9rem", mb: "1rem" }}>
-                    Already have an account?{" "}
-                    <LinkItem to="/auth/login">Login</LinkItem>
-                  </Typography>
-                </Stack>
-              </Grid>
-            </FormProvider>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Container>
+                      {" "}
+                      Signup{" "}
+                    </a>{" "} */}
+                    <Link
+                      to="/auth/login"
+                      className="fw-semibold text-primary text-decoration-underline"
+                    >
+                      Signin
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ToastContainer containerId={2} />
+    </>
   );
 };
 export default RegisterPage;

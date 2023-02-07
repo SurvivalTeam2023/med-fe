@@ -11,8 +11,11 @@ let store: Store;
 
 export const CallAPI = axios.create({
   baseURL: config.SERVER_URL,
-  withCredentials: true,
-  headers: {},
+  withCredentials: false,
+  headers: {
+    "Content-type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
 });
 
 export const injectStore = (_store: EnhancedStore<RootState>) => {
@@ -20,7 +23,7 @@ export const injectStore = (_store: EnhancedStore<RootState>) => {
 };
 
 CallAPI.interceptors.request.use((req) => {
-  const token = store.getState().user.token?.access_token;
+  const token = store?.getState().user.token?.access_token;
   if (token && req.headers)
     req.headers[KEYS.HEADER_AUTHORIZATION] = `Bearer ${token}`;
 

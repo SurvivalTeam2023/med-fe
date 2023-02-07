@@ -1,5 +1,6 @@
 import { CallAPI } from "core/api";
 import { ApiResponse } from "core/interface/api";
+import { IRegister } from "core/interface/models";
 import { TokenResponse } from "core/interface/redux";
 
 export const getTokenApi = (
@@ -13,9 +14,10 @@ export const getTokenApi = (
   });
 };
 
-export const registerUserApi = (data: any): ApiResponse<any> => {
+export const registerUserApi = (payload: IRegister): ApiResponse<IRegister> => {
   const url = "/user/user";
-  return CallAPI.post(url, data);
+  const { username, email, password, repassword } = payload;
+  return CallAPI.post(url, { username, email, password, repassword });
 };
 export const getRefreshTokenApi = (
   refreshToken: string

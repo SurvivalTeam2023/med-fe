@@ -1,4 +1,5 @@
 import {
+  Action,
   AnyAction,
   combineReducers,
   configureStore,
@@ -33,3 +34,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   unknown,
   AnyAction
 >;
+
+export type ThunkAppDispatch = ThunkDispatch<RootState, void, Action>;
+
+export const useAppThunkDispatch = () => useDispatch<ThunkAppDispatch>();

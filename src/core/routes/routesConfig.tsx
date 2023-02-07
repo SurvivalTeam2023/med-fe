@@ -2,12 +2,13 @@ import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { NOT_FOUND_PAGE, AUTH_LOGIN, LOGIN } from "core/constant";
 import NotFoundPage from "pages/NotFound/NotFoundPage";
-import { AUTH, REGISTER } from "core/constant/routes";
+import { AUTH, DASHBOARD, REGISTER } from "core/constant/routes";
 import EmptyLayout from "core/layout/EmptyLayout";
 import UnAuthGuard from "core/guard/UnAuth";
 // import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constant/role";
 import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
+import HomePage from "pages/HomePage";
 
 export interface SingleRoute {
   path?: string;
@@ -41,6 +42,7 @@ export const ROUTES: SingleRoute[] = [
   //   guard: <AuthGuard acceptRoles={[ROLE_SUBCRIBER, ROLE_ADMIN]} />,
   //   children: [{ path: "", component: <Dashboard /> }],
   // },
+  { path: DASHBOARD, component: <HomePage /> },
   { path: NOT_FOUND_PAGE, component: <NotFoundPage /> },
   {
     path: "*",

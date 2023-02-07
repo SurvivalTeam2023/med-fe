@@ -10,23 +10,32 @@ import {
   InputAdornment,
   InputLabel,
   Link as MuiLink,
+  TextField,
   OutlinedInput,
 } from "@mui/material";
+import { css } from "@emotion/react";
 import "assets/css/app.min.css";
 import "assets/css/bootstrap.min.css";
 import { ILogin } from "core/interface/models";
 import { particles } from "constants/particles";
 import { UserState } from "core/interface/redux";
 import { thunkLogin } from "core/store/thunk";
-import React, { FunctionComponent, useCallback } from "react";
+import React, { FunctionComponent, useCallback, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loadFull } from "tsparticles";
 import type { Container, Engine } from "tsparticles-engine";
 import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
+import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
+import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
 import { ThunkDispatch } from "redux-thunk";
 import Particles from "react-tsparticles";
+import { selectIsError } from "core/store/selector";
+import { useAppSelector, useAppThunkDispatch } from "core/store";
+import jwt_decode from "jwt-decode";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
@@ -59,23 +68,17 @@ export const OauthMuiLink = styled(MuiLink)`
 const LoginPage: FunctionComponent = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [message, setMessage] = React.useState<string>("");
-  const dispatch: ThunkDispatch<UserState, null, any> = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useAppThunkDispatch();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const isLoginError = useAppSelector(selectIsError);
   const particlesInit = useCallback(async (engine: Engine) => {
-    console.log(engine);
-
     // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
     // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
     // starting from v2 you can add only the features you need reducing the bundle size
     await loadFull(engine);
   }, []);
 
-  // const particlesLoaded = useCallback(
-  //   async (container: Container | undefined) => {
-  //     await console.log(container);
-  //   },
-  //   []
-  // );
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -91,12 +94,48 @@ const LoginPage: FunctionComponent = () => {
   });
 
   const onSubmitHandler: SubmitHandler<ILogin> = async (values: ILogin) => {
-    try {
-      dispatch(thunkLogin(values.username, values.password));
-      setMessage("Login successful");
-    } catch (error) {
-      setMessage("Login fail");
-    }
+    await toast.promise(
+      dispatch(thunkLogin(values.username, values.password)),
+      {
+        pending: {
+          render() {
+            return "Loading...";
+          },
+        },
+        success: {
+          render({ data }) {
+            return "Login successfully";
+          },
+          // other options
+        },
+        error: {
+          render({ data }) {
+            // When the promise reject, data will contains the error
+            return `${data}`;
+          },
+        },
+      }
+    );
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000);
+
+    // try {
+    //   dispatch(thunkLogin(values.username, values.password)).then((value) => {
+    //     console.log(value);
+    //   });
+    //   toast.update(toastId, {
+    //     render: "All is good",
+    //     type: "success",
+    //     isLoading: false,
+    //   });
+    // } catch (error) {
+    //   toast.update(toastId, {
+    //     render: isLoginError,
+    //     type: "error",
+    //     isLoading: false,
+    //   });
+    // }
   };
 
   return (
@@ -141,19 +180,17 @@ const LoginPage: FunctionComponent = () => {
                   <div className="card-body p-4">
                     <div className="text-center mt-2">
                       <h5 className="text-primary">Welcome Back !</h5>
-                      <p className="text-muted">
-                        Sign in to continue to Velzon.
-                      </p>
+                      <p className="text-muted">Sign in to continue to MED.</p>
                     </div>
                     <div className="p-2 mt-4">
                       <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
                         <div className="mb-3">
                           {/* <label for="username" className="form-label">Username</label> */}
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="username"
-                            placeholder="Enter username"
+                          <TextField
+                            label="User name"
+                            placeholder="Username"
+                            sx={{ width: "100%" }}
+                            {...methods.register("username")}
                           />
                         </div>
 
@@ -162,6 +199,10 @@ const LoginPage: FunctionComponent = () => {
                             <a
                               href="auth-pass-reset-basic.html"
                               className="text-muted"
+                              style={{
+                                position: "relative",
+                                zIndex: 2,
+                              }}
                             >
                               Forgot password?
                             </a>
@@ -171,8 +212,8 @@ const LoginPage: FunctionComponent = () => {
                           </label> */}
                           <div className="position-relative auth-pass-inputgroup mb-3">
                             <FormControl
-                              sx={{ m: 1, width: "25ch" }}
                               variant="outlined"
+                              sx={{ width: "100%" }}
                             >
                               <InputLabel htmlFor="outlined-adornment-password">
                                 Password
@@ -187,6 +228,7 @@ const LoginPage: FunctionComponent = () => {
                                       onClick={handleClickShowPassword}
                                       onMouseDown={handleMouseDownPassword}
                                       edge="end"
+                                      size="small"
                                     >
                                       {showPassword ? (
                                         <VisibilityOff />
@@ -197,6 +239,7 @@ const LoginPage: FunctionComponent = () => {
                                   </InputAdornment>
                                 }
                                 label="Password"
+                                {...methods.register("password")}
                               />
                             </FormControl>
                           </div>
@@ -224,32 +267,13 @@ const LoginPage: FunctionComponent = () => {
                           <div className="signin-other-title">
                             <h5 className="fs-13 mb-4 title">Sign In with</h5>
                           </div>
-                          <div>
-                            <button
-                              type="button"
-                              className="btn btn-primary btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-facebook-fill fs-16"></i>
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-danger btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-google-fill fs-16"></i>
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-dark btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-github-fill fs-16"></i>
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-info btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-twitter-fill fs-16"></i>
-                            </button>
-                          </div>
+                          <OauthMuiLink href="">
+                            <GoogleLogo style={{ height: "2rem" }} />
+                            Google
+                          </OauthMuiLink>
+                          <OauthMuiLink href="">
+                            <MicrosoftLogo style={{ height: "2rem" }} />
+                          </OauthMuiLink>
                         </div>
                       </form>
                     </div>
@@ -259,13 +283,14 @@ const LoginPage: FunctionComponent = () => {
                 <div className="mt-4 text-center">
                   <p className="mb-0">
                     Don't have an account ?{" "}
-                    <a
+                    {/* <a
                       href="auth-signup-basic.html"
                       className="fw-semibold text-primary text-decoration-underline"
                     >
                       {" "}
                       Signup{" "}
-                    </a>{" "}
+                    </a>{" "} */}
+                    <Link to="/auth/signup" className="fw-semibold text-primary text-decoration-underline" replace>Signup</Link>
                   </p>
                 </div>
               </div>
@@ -273,6 +298,7 @@ const LoginPage: FunctionComponent = () => {
           </div>
         </div>
       </div>
+      <ToastContainer autoClose={2000} limit={1} />
     </>
   );
 };
