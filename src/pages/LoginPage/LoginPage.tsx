@@ -9,33 +9,26 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
-  Link as MuiLink,
-  TextField,
-  OutlinedInput,
+  Link as MuiLink, OutlinedInput, TextField
 } from "@mui/material";
-import { css } from "@emotion/react";
 import "assets/css/app.min.css";
 import "assets/css/bootstrap.min.css";
-import { ILogin } from "core/interface/models";
-import { particles } from "constants/particles";
-import { UserState } from "core/interface/redux";
-import { thunkLogin } from "core/store/thunk";
-import React, { FunctionComponent, useCallback, useRef } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { loadFull } from "tsparticles";
-import type { Container, Engine } from "tsparticles-engine";
 import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
-import { ThunkDispatch } from "redux-thunk";
-import Particles from "react-tsparticles";
-import { selectIsError } from "core/store/selector";
+import { particles } from "constants/particles";
+import { ILogin } from "core/interface/models";
 import { useAppSelector, useAppThunkDispatch } from "core/store";
-import jwt_decode from "jwt-decode";
+import { selectIsError } from "core/store/selector";
+import { thunkLogin } from "core/store/thunk";
+import React, { FunctionComponent, useCallback } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import type { Engine } from "tsparticles-engine";
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
