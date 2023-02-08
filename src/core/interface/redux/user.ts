@@ -15,6 +15,7 @@ export interface UserState {
   isTriedLogin: boolean;
   user: User | null;
   token: TokenResponse | null;
+  error: string | null;
 }
 
 export interface Properties {

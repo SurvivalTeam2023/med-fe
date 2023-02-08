@@ -35,3 +35,9 @@ export const selectIsAuthenticated = createSelector(
     return access_token;
   }
 );
+
+export const selectIsError = createSelector(selectUserStore, (userStore) => {
+  const error = userStore?.error;
+  if (!error) return null;
+  return error;
+});

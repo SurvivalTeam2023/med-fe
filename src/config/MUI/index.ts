@@ -46,7 +46,7 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: ["Inter", "sans-serif"].join(","),
+    fontFamily: ["Montserrat","Inter", "sans-serif"].join(","),
     fontWeightBold: "500",
     button: {
       textTransform: "none",

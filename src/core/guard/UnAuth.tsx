@@ -1,33 +1,12 @@
 import { FC } from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import Loading from "components/Loading";
-import { AUTH, DASHBOARD, TIME_SHEET } from "core/constant";
-import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constant/role";
+import { Outlet } from "react-router-dom";
+import { Role } from "core/interface/role";
 
-import { useAppSelector } from "../store";
-import {
-  selectIsAuthenticated,
-  selectUserRoleNames,
-  selectUserStore,
-} from "../store/selector";
-
-const UnAuthGuard: FC = () => {
-  const { isTriedLogin } = useAppSelector(selectUserStore);
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const userRoles = useAppSelector(selectUserRoleNames);
-
-  if (!isTriedLogin) return <Loading />;
-
-  if (isAuthenticated) {
-    // if (userRoles?.includes(ROLE_ADMIN) || userRoles?.includes()) {
-    //   return <Navigate to={DASHBOARD} replace />;
-    // }
-    return <Navigate to={DASHBOARD} replace />;
-  } else {
-    <Navigate to={AUTH} replace={true} />;
-  }
-
+interface AuthWrapperProps {
+  acceptRoles?: Role[];
+}
+const UnAuthGuard: FC<AuthWrapperProps> = ({ acceptRoles }) => {
+  console.log("routing wihtou auth");
   return <Outlet />;
 };
-
 export default UnAuthGuard;

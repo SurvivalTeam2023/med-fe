@@ -9,9 +9,7 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
-  Link as MuiLink,
-  OutlinedInput,
-  TextField,
+  Link as MuiLink, OutlinedInput, TextField
 } from "@mui/material";
 import "assets/css/app.min.css";
 import "assets/css/bootstrap.min.css";
@@ -20,15 +18,17 @@ import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
 import { particles } from "constants/particles";
 import { ILogin } from "core/interface/models";
-import { AppDispatch } from "core/store";
+import { useAppSelector, useAppThunkDispatch } from "core/store";
+import { selectIsError } from "core/store/selector";
 import { thunkLogin } from "core/store/thunk";
 import React, { FunctionComponent, useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import type { Container, Engine } from "tsparticles-engine";
+import type { Engine } from "tsparticles-engine";
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
@@ -39,6 +39,7 @@ export const LinkItem = styled(Link)`
   }
 `;
 
+// 👇 Styled Material UI Link Component
 export const OauthMuiLink = styled(MuiLink)`
   display: flex;
   justify-content: center;
@@ -59,22 +60,23 @@ export const OauthMuiLink = styled(MuiLink)`
 
 const LoginPage: FunctionComponent = () => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const dispatch: AppDispatch = useDispatch();
+  const [message, setMessage] = React.useState<string>("");
+  const navigate = useNavigate();
+  const dispatch = useAppThunkDispatch();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const isLoginError = useAppSelector(selectIsError);
+  const particlesInit = useCallback(async (engine: Engine) => {
+    // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
+    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+    // starting from v2 you can add only the features you need reducing the bundle size
+    await loadFull(engine);
+  }, []);
+
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
   };
-
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadFull(engine);
-  }, []);
-
-  const particlesLoaded = useCallback(
-    async (container: Container | undefined) => {},
-    []
-  );
   const defaultValues: ILogin = {
     username: "",
     password: "",
@@ -84,9 +86,49 @@ const LoginPage: FunctionComponent = () => {
     defaultValues,
   });
 
-  const onSubmitHandler: SubmitHandler<ILogin> = (values: ILogin) => {
-    console.log("form", values);
-    dispatch(thunkLogin(values.username, values.password));
+  const onSubmitHandler: SubmitHandler<ILogin> = async (values: ILogin) => {
+    await toast.promise(
+      dispatch(thunkLogin(values.username, values.password)),
+      {
+        pending: {
+          render() {
+            return "Loading...";
+          },
+        },
+        success: {
+          render({ data }) {
+            return "Login successfully";
+          },
+          // other options
+        },
+        error: {
+          render({ data }) {
+            // When the promise reject, data will contains the error
+            return `${data}`;
+          },
+        },
+      }
+    );
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000);
+
+    // try {
+    //   dispatch(thunkLogin(values.username, values.password)).then((value) => {
+    //     console.log(value);
+    //   });
+    //   toast.update(toastId, {
+    //     render: "All is good",
+    //     type: "success",
+    //     isLoading: false,
+    //   });
+    // } catch (error) {
+    //   toast.update(toastId, {
+    //     render: isLoginError,
+    //     type: "error",
+    //     isLoading: false,
+    //   });
+    // }
   };
 
   return (
@@ -94,15 +136,14 @@ const LoginPage: FunctionComponent = () => {
       <div className="auth-page-wrapper pt-5">
         <div className="auth-one-bg-position auth-one-bg" id="auth-particles">
           <div className="bg-overlay"></div>
-
+          <Particles
+            id="tsparticles"
+            init={particlesInit}
+            options={particles}
+          />
           <div className="shape">
             <AuthBackGroundSvg />
           </div>
-          <Particles
-            options={particles}
-            init={particlesInit}
-            loaded={particlesLoaded}
-          />
         </div>
 
         <div className="auth-page-content">
@@ -119,6 +160,9 @@ const LoginPage: FunctionComponent = () => {
                       />
                     </a>
                   </div>
+                  <p className="mt-3 fs-15 fw-medium">
+                    Premium Admin & Dashboard Template
+                  </p>
                 </div>
               </div>
             </div>
@@ -134,29 +178,41 @@ const LoginPage: FunctionComponent = () => {
                     <div className="p-2 mt-4">
                       <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
                         <div className="mb-3">
+                          {/* <label for="username" className="form-label">Username</label> */}
                           <TextField
-                            sx={{ width: "100%" }}
-                            required
                             label="User name"
+                            placeholder="Username"
+                            sx={{ width: "100%" }}
                             {...methods.register("username")}
                           />
                         </div>
 
                         <div className="mb-3">
+                          <div className="float-end">
+                            <a
+                              href="auth-pass-reset-basic.html"
+                              className="text-muted"
+                              style={{
+                                position: "relative",
+                                zIndex: 2,
+                              }}
+                            >
+                              Forgot password?
+                            </a>
+                          </div>
                           {/* <label className="form-label" for="password-input">
                             Password
                           </label> */}
-                          <div className="auth-pass-inputgroup mb-3">
+                          <div className="position-relative auth-pass-inputgroup mb-3">
                             <FormControl
-                              sx={{ width: "100%" }}
                               variant="outlined"
+                              sx={{ width: "100%" }}
                             >
-                              <InputLabel htmlFor="password" size="small">
+                              <InputLabel htmlFor="outlined-adornment-password">
                                 Password
                               </InputLabel>
                               <OutlinedInput
-                                size="small"
-                                id="password"
+                                id="outlined-adornment-password"
                                 type={showPassword ? "text" : "password"}
                                 endAdornment={
                                   <InputAdornment position="end">
@@ -165,6 +221,7 @@ const LoginPage: FunctionComponent = () => {
                                       onClick={handleClickShowPassword}
                                       onMouseDown={handleMouseDownPassword}
                                       edge="end"
+                                      size="small"
                                     >
                                       {showPassword ? (
                                         <VisibilityOff />
@@ -184,7 +241,7 @@ const LoginPage: FunctionComponent = () => {
                         <div className="form-check">
                           <FormGroup>
                             <FormControlLabel
-                              control={<Checkbox defaultChecked />}
+                              control={<Checkbox />}
                               label="Remember me"
                             />
                           </FormGroup>
@@ -203,15 +260,13 @@ const LoginPage: FunctionComponent = () => {
                           <div className="signin-other-title">
                             <h5 className="fs-13 mb-4 title">Sign In with</h5>
                           </div>
-                          <div>
-                            <OauthMuiLink href="" sx={{ mb: 1 }}>
-                              <GoogleLogo style={{ height: "2rem" }} />
-                              Google
-                            </OauthMuiLink>
-                            <OauthMuiLink href="">
-                              <MicrosoftLogo style={{ height: "2rem" }} />
-                            </OauthMuiLink>
-                          </div>
+                          <OauthMuiLink href="">
+                            <GoogleLogo style={{ height: "2rem" }} />
+                            Google
+                          </OauthMuiLink>
+                          <OauthMuiLink href="">
+                            <MicrosoftLogo style={{ height: "2rem" }} />
+                          </OauthMuiLink>
                         </div>
                       </form>
                     </div>
@@ -221,13 +276,14 @@ const LoginPage: FunctionComponent = () => {
                 <div className="mt-4 text-center">
                   <p className="mb-0">
                     Don't have an account ?{" "}
-                    <a
-                      href="/auth/signup"
+                    {/* <a
+                      href="auth-signup-basic.html"
                       className="fw-semibold text-primary text-decoration-underline"
                     >
                       {" "}
                       Signup{" "}
-                    </a>{" "}
+                    </a>{" "} */}
+                    <Link to="/auth/signup" className="fw-semibold text-primary text-decoration-underline" replace>Signup</Link>
                   </p>
                 </div>
               </div>
@@ -235,6 +291,7 @@ const LoginPage: FunctionComponent = () => {
           </div>
         </div>
       </div>
+      <ToastContainer autoClose={2000} limit={1} />
     </>
   );
 };
