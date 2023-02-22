@@ -10,3 +10,6 @@ export const TIME_SHEET = "/time-sheet";
 export const NOT_FOUND_PAGE = "/404-not-found";
 export const OAUTH_REDIRECT = "/oauth-redirect";
 export const ASSIGN = "/assign";
+export const ADMIN = "/admin"
+export const PLAYLIST = "/playlist"
+
