@@ -1,33 +1,37 @@
-import { getPlaylistByUserIdAPI } from "api/playlist"
+
 import { useQuery } from "react-query"
 import { createElement, useState } from "react";
 import { PaginationProps, Space, Table, Button, Layout, Menu, theme } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { PlaylistsData } from "core/interface/models/playlist";
+
 import moment from "moment";
 import { Footer, Header } from "antd/es/layout/layout";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-
-function PlaylistPage() {
+import { getTrackByPlaylistIdAPI } from "api/playlistTracks";
+import { TracksData } from "core/interface/models/track";
+import { useLocation } from "react-router-dom";
+function AudioPage() {
   const {
     token: { colorBgContainer },
   } = theme.useToken()
   const [page, setPage] = useState(1)
+  const location = useLocation()
+  const id = location.state
   const [collapsed, setCollapsed] = useState(false);
-  const fetchPlaylist = async (page: number) => {
-    const res = await getPlaylistByUserIdAPI(page, 3)
+  const fetchAudio = async (page: number, playlistId: number) => {
+    const res = await getTrackByPlaylistIdAPI(playlistId, page, 5)
     const data = res.data
     return data
   }
   const { Sider } = Layout;
-  const navigate = useNavigate();
+
   const {
     isLoading,
     isError,
     error,
     data,
-  } = useQuery<PlaylistsData, Error>(['playlist', page], () => fetchPlaylist(page), { keepPreviousData: true })
+  } = useQuery<TracksData, Error>(['track', page], () => fetchAudio(page, id))
+  console.log(data);
+  console.log(id);
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -38,9 +42,9 @@ function PlaylistPage() {
   const onChange: PaginationProps['onChange'] = (current) => {
     setPage(current);
   }
-  data?.items.map(playlist => {
-    let date = moment(new Date(playlist.createdAt));
-    playlist.createdAt = date.calendar()
+  data?.items.map(track => {
+    let date = moment(new Date(track.createdAt));
+    track.createdAt = date.calendar()
   })
 
   return (
@@ -71,29 +75,22 @@ function PlaylistPage() {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer, textAlign: 'center', fontSize: '2em' }}> Manage Playlist</Header>
-        <Table className="playlist-table"
+        <Header style={{ padding: 0, background: colorBgContainer, textAlign: 'center', fontSize: '2em' }}> Manage Audio</Header>
+        <Table className="audio-table"
           dataSource={data?.items}
           bordered
           scroll={{ y: 240 }}
           pagination={{ defaultPageSize: data?.meta.itemsPerPage, total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
           columns={[
-            { title: 'Name', dataIndex: 'name', key: 'name', render: (text) => <a>{text}</a>, width: '20%' },
-            { title: 'Description', dataIndex: 'description', key: 'description', render: (text) => <a>{text}</a>, width: '20%' },
-            { title: 'Status', dataIndex: 'status', key: 'status', render: (text) => <a>{text}</a>, width: '20%' },
-            { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', render: (text) => <a>{text}</a>, width: '20%' },
+            { title: 'Name', dataIndex: 'name', key: 'name', width: '20%' },
+            { title: 'File', dataIndex: 'file.url', key: 'file', width: '20%' },
+            { title: 'Status', dataIndex: 'status', key: 'status', width: '20%' },
+            { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', width: '20%' },
             {
-              title: 'Action', key: 'action', render: (text, record, index) => (
-                <Space size="middle">
-                  <Button type="primary">
-                    Detail
-                  </Button>
-                  <Button type="primary" key = "audio" onClick={(e) => {
-                    navigate(`/audio`, {state: record.id})
-                  }}>
-                    Audios
-                  </Button>
-                </Space>
+              title: 'Action', key: 'action', render: (_,) => (
+                <Button type="primary">
+                  Detail
+                </Button>
               ), width: '20%',
             },
           ]}
@@ -103,4 +100,4 @@ function PlaylistPage() {
     </Layout>
   );
 }
-export default PlaylistPage;
+export default AudioPage;
