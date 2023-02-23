@@ -110,7 +110,7 @@ const LoginPage: FunctionComponent = () => {
       }
     );
     setTimeout(() => {
-      navigate("/dashboard");
+      navigate("/playlist");
     }, 1000);
 
     // try {
