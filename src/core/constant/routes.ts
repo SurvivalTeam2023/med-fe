@@ -13,4 +13,4 @@ export const ASSIGN = "/assign";
 export const ADMIN = "/admin"
 export const PLAYLIST = "/playlist"
 export const USER = "/user"
-
+export const USERNAME = "user/:username"

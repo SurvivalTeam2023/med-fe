@@ -4,25 +4,25 @@ import { Table, Button, Layout, Menu, theme, MenuProps } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Footer, Header } from "antd/es/layout/layout";
 import { getUsersAPI } from "api/user";
-import { UsersData } from "core/interface/models";
+import { User } from "core/interface/models";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getAuthKeyFromLocalStorage } from "util/index";
 
 function UserPage() {
     const {
         token: { colorBgContainer },
     } = theme.useToken()
     const [collapsed, setCollapsed] = useState(false);
-    const location = useLocation();
-    const token = location.state
-    const fetchUser = async () => {
-        const res = await getUsersAPI(token)
+    const token = getAuthKeyFromLocalStorage()
+    const fetchUsers = async () => {
+        const res = await getUsersAPI(token?.access_token)
         const data = res.data
         return data
     }
     const navigate = useNavigate();
 
     const onClick: MenuProps['onClick'] = (e) => {
-        navigate(`/${e.key}`, { state: token?.access_token })
+        navigate(`/${e.key}`)
     };
     const { Sider } = Layout;
 
@@ -31,8 +31,7 @@ function UserPage() {
         isError,
         error,
         data,
-    } = useQuery<UsersData[], Error>(['user'], async () => fetchUser())
-    console.log(data);
+    } = useQuery<User[], Error>(['users'], async () => fetchUsers())
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -77,15 +76,17 @@ function UserPage() {
                     dataSource={data}
                     bordered
                     scroll={{ y: 240 }}
-                    pagination={{ position: ["bottomCenter"] }}
+                    pagination={{ defaultPageSize: 5, position: ["bottomCenter"] }}
                     columns={[
                         { title: 'Username', dataIndex: 'username', key: 'username', render: (text) => <a>{text}</a>, width: '20%' },
                         { title: 'First Name ', dataIndex: 'firstName', key: 'firstName', render: (text) => <a>{text}</a>, width: '20%' },
                         { title: 'Last Name', dataIndex: 'lastName', key: 'lastName', render: (text) => <a>{text}</a>, width: '20%' },
                         { title: 'email', dataIndex: 'email', key: 'email', render: (text) => <a>{text}</a>, width: '20%' },
                         {
-                            title: 'Action', key: 'action', render: (_,) => (
-                                <Button type="primary">
+                            title: 'Action', key: 'action', render: (text, record, index) => (
+                                <Button type="primary" onClick={() => {
+                                    navigate(`/user/${record.username}`, { state: record.username })
+                                }}>
                                     Detail
                                 </Button>
                             ), width: '20%',
@@ -94,7 +95,7 @@ function UserPage() {
                 />
                 <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
             </Layout>
-        </Layout>
+        </Layout >
     );
 }
 export default UserPage;

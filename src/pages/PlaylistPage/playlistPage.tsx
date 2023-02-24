@@ -26,11 +26,11 @@ function PlaylistPage() {
     const data = res.data
     return data
   }
-  const token = getAuthKeyFromLocalStorage()
+
 
   const { Sider } = Layout;
   const onClick: MenuProps['onClick'] = (e) => {
-    navigate(`/${e.key}`, { state: token?.access_token })
+    navigate(`/${e.key}`)
   };
 
   const {
