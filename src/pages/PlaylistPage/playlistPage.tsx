@@ -19,10 +19,13 @@ function PlaylistPage() {
   } = theme.useToken()
   const navigate = useNavigate();
   const [page, setPage] = useState(1)
-
+  const [name, setName] = useState('')
+  const [status, setStatus] = useState('')
   const [collapsed, setCollapsed] = useState(false);
-  const fetchPlaylist = async (page: number) => {
-    const res = await getPlaylistByUserIdAPI(page, 3)
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef<InputRef>(null);
+  const fetchPlaylist = async (page: number, name: string, status: string) => {
+    const res = await getPlaylistByUserIdAPI(page, name, status, 3)
     const data = res.data
     return data
   }
@@ -38,7 +41,7 @@ function PlaylistPage() {
     isError,
     error,
     data,
-  } = useQuery<PlaylistsData, Error>(['playlist', page], () => fetchPlaylist(page))
+  } = useQuery<PlaylistsData, Error>(['playlist', page], () => fetchPlaylist(page, name, status))
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -49,10 +52,67 @@ function PlaylistPage() {
   const onChange: PaginationProps['onChange'] = (current) => {
     setPage(current);
   }
+
   data?.items.map(playlist => {
     let date = moment(new Date(playlist.createdAt));
     playlist.createdAt = date.calendar()
   })
+  type DataIndex = keyof Playlist;
+
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: DataIndex,
+  ) => {
+    confirm();
+    setName(selectedKeys[0]);
+    setPage(1)
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setName('');
+    setPage(1)
+  };
+
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Playlist> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+  });
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -90,9 +150,9 @@ function PlaylistPage() {
           scroll={{ y: 240 }}
           pagination={{ defaultPageSize: data?.meta.itemsPerPage, total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
           columns={[
-            { title: 'Name', dataIndex: 'name', key: 'name', render: (text) => <a>{text}</a>, width: '20%' },
+            { title: 'Name', dataIndex: 'name', key: 'name', render: (text) => <a>{text}</a>, width: '20%', ...getColumnSearchProps('name') },
             { title: 'Description', dataIndex: 'description', key: 'description', render: (text) => <a>{text}</a>, width: '20%' },
-            { title: 'Status', dataIndex: 'status', key: 'status', render: (text) => <a>{text}</a>, width: '20%' },
+            { title: 'Status', dataIndex: 'status', key: 'status', render: (text) => <a>{text}</a>, width: '20%', },
             { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', render: (text) => <a>{text}</a>, width: '20%' },
             {
               title: 'Action', key: 'action', render: (text, record, index) => (
