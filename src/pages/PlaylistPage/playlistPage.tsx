@@ -1,16 +1,12 @@
 import { getPlaylistByUserIdAPI } from "api/playlist"
 import { useQuery } from "react-query"
-import { createElement, useRef, useState } from "react";
+import { useState } from "react";
 import { PaginationProps, Space, Table, Button, Layout, Menu, theme, MenuProps, InputRef, Input } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Playlist, PlaylistsData } from "core/interface/models/playlist";
+import { PlaylistsData } from "core/interface/models/playlist";
 import moment from "moment";
 import { Footer, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
-import { getAuthKeyFromLocalStorage } from "util/index";
-import { FilterConfirmProps } from "antd/es/table/interface";
-import { SearchOutlined } from '@ant-design/icons';
-import type { ColumnsType, ColumnType } from 'antd/es/table';
 ;
 
 function PlaylistPage() {
@@ -102,11 +98,12 @@ function PlaylistPage() {
                   }}>
                     Detail
                   </Button>
-                  <Button type="primary" key="audio">
+                  <Button type="primary" key="audio" onClick={(e) => {
+                    navigate(`/audio`, { state: record.id })
+                  }}>
                     Audios
                   </Button>
                 </Space>
-
               ), width: '20%',
             },
           ]}

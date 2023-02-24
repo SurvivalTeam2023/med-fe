@@ -13,7 +13,12 @@ const reducer = createSlice({
         resetState: () => ({ ...initialState }),
         setPlaylist: (state, { payload }: PayloadAction<PlaylistState["playlist"]>) => {
             state.playlist = payload;
-        }
+        },
+        setPlaylistId: (state, { payload }: PayloadAction<PlaylistState["playlist"]>) => {
+            if (state.playlist != null && payload != null) {
+                state.playlist.id = payload.id;
+              }
+          },
     }
 });
 export const playlistActions = {
