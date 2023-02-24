@@ -8,12 +8,14 @@ import {
   ThunkAction,
 } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
-import { userReducer } from "./slice";
+import { playlistReducer, userReducer } from "./slice";
 import { ThunkDispatch } from "redux-thunk";
 import thunk from "redux-thunk";
 
 const reducers = combineReducers({
   user: userReducer,
+  playlist: playlistReducer
+
 });
 
 export const store = configureStore({

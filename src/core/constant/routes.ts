@@ -12,4 +12,5 @@ export const OAUTH_REDIRECT = "/oauth-redirect";
 export const ASSIGN = "/assign";
 export const ADMIN = "/admin"
 export const PLAYLIST = "/playlist"
+export const USER = "/user"
 

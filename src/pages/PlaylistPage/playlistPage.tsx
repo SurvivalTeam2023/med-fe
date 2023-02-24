@@ -1,30 +1,44 @@
 import { getPlaylistByUserIdAPI } from "api/playlist"
 import { useQuery } from "react-query"
-import { createElement, useState } from "react";
-import { PaginationProps, Space, Table, Button, Layout, Menu, theme } from 'antd';
+import { createElement, useRef, useState } from "react";
+import { PaginationProps, Space, Table, Button, Layout, Menu, theme, MenuProps, InputRef, Input } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { PlaylistsData } from "core/interface/models/playlist";
+import { Playlist, PlaylistsData } from "core/interface/models/playlist";
 import moment from "moment";
 import { Footer, Header } from "antd/es/layout/layout";
+import { useNavigate } from "react-router";
+import { getAuthKeyFromLocalStorage } from "util/index";
+import { FilterConfirmProps } from "antd/es/table/interface";
+import { SearchOutlined } from '@ant-design/icons';
+import type { ColumnsType, ColumnType } from 'antd/es/table';
+;
+
 function PlaylistPage() {
   const {
     token: { colorBgContainer },
   } = theme.useToken()
+  const navigate = useNavigate();
   const [page, setPage] = useState(1)
+
   const [collapsed, setCollapsed] = useState(false);
   const fetchPlaylist = async (page: number) => {
     const res = await getPlaylistByUserIdAPI(page, 3)
     const data = res.data
     return data
   }
+  const token = getAuthKeyFromLocalStorage()
+
   const { Sider } = Layout;
+  const onClick: MenuProps['onClick'] = (e) => {
+    navigate(`/${e.key}`, { state: token?.access_token })
+  };
 
   const {
     isLoading,
     isError,
     error,
     data,
-  } = useQuery<PlaylistsData, Error>(['playlist', page], () => fetchPlaylist(page), { keepPreviousData: true })
+  } = useQuery<PlaylistsData, Error>(['playlist', page], () => fetchPlaylist(page))
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -39,7 +53,6 @@ function PlaylistPage() {
     let date = moment(new Date(playlist.createdAt));
     playlist.createdAt = date.calendar()
   })
-
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -50,14 +63,16 @@ function PlaylistPage() {
           defaultSelectedKeys={['1']}
           items={[
             {
-              key: '1',
+              key: 'user',
               icon: <UserOutlined />,
               label: 'User',
+              onClick: onClick
             },
             {
-              key: '2',
+              key: 'playlist',
               icon: <VideoCameraOutlined />,
               label: 'Playlist',
+              onClick: onClick
             },
             {
               key: '3',
@@ -80,10 +95,18 @@ function PlaylistPage() {
             { title: 'Status', dataIndex: 'status', key: 'status', render: (text) => <a>{text}</a>, width: '20%' },
             { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', render: (text) => <a>{text}</a>, width: '20%' },
             {
-              title: 'Action', key: 'action', render: (_,) => (
-                <Button type="primary">
-                  Detail
-                </Button>
+              title: 'Action', key: 'action', render: (text, record, index) => (
+                <Space size="middle">
+                  <Button type="primary" onClick={(e) => {
+                    navigate(`/playlist/${record.id}`, { state: record.id })
+                  }}>
+                    Detail
+                  </Button>
+                  <Button type="primary" key="audio">
+                    Audios
+                  </Button>
+                </Space>
+
               ), width: '20%',
             },
           ]}

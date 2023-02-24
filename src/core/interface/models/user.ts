@@ -3,6 +3,9 @@ import { Base } from "./base";
 export interface User extends Base {
   name: string;
   uuid: string;
+  email?: string;
+  firstName?: string
+  lastName?: string
 }
 
 export type ILogin = {
@@ -16,3 +19,7 @@ export type IRegister = {
   repassword: string;
   email: string;
 };
+
+export interface UsersData {
+  items: User[]
+}

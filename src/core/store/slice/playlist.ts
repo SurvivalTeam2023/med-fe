@@ -13,9 +13,10 @@ const reducer = createSlice({
         resetState: () => ({ ...initialState }),
         setPlaylist: (state, { payload }: PayloadAction<PlaylistState["playlist"]>) => {
             state.playlist = payload;
-        },
+        }
     }
 });
 export const playlistActions = {
     ...reducer.actions,
 };
+export const playlistReducer = reducer.reducer;

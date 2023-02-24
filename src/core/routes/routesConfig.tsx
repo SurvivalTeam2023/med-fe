@@ -1,5 +1,5 @@
 import { AUTH_LOGIN, LOGIN, NOT_FOUND_PAGE } from "core/constant";
-import { ADMIN, AUTH, DASHBOARD, PLAYLIST, REGISTER } from "core/constant/routes";
+import { ADMIN, AUTH, DASHBOARD, PLAYLIST, REGISTER, USER } from "core/constant/routes";
 import UnAuthGuard from "core/guard/UnAuth";
 import EmptyLayout from "core/layout/EmptyLayout";
 import NotFoundPage from "pages/NotFound/NotFoundPage";
@@ -10,6 +10,7 @@ import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
 import PlaylistPage from "pages/PlaylistPage/playlistPage";
+import UserPage from "pages/UserPage";
 
 export interface SingleRoute {
   path?: string;
@@ -46,6 +47,8 @@ export const ROUTES: SingleRoute[] = [
   // },
   { path: DASHBOARD, component: <HomePage /> },
   { path: PLAYLIST, component: <PlaylistPage /> },
+  { path: USER, component: <UserPage /> },
+
 
   { path: NOT_FOUND_PAGE, component: <NotFoundPage /> },
   {
