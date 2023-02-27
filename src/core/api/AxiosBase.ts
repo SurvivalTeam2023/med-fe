@@ -4,7 +4,7 @@ import { getRefreshTokenApi } from "api/auth";
 import { KEYS } from "core/constant";
 import { RootState, Store } from "core/store";
 import { userActions } from "core/store/slice";
-import { saveAuthKeyIntoLocalStorage } from "util/";
+import { getAuthKeyFromLocalStorage, saveAuthKeyIntoLocalStorage } from "util/";
 import { config } from "../constant/config";
 
 let store: Store;
@@ -23,9 +23,10 @@ export const injectStore = (_store: EnhancedStore<RootState>) => {
 };
 
 CallAPI.interceptors.request.use((req) => {
-  const token = store?.getState().user.token?.access_token;
+  const token = getAuthKeyFromLocalStorage();
+  console.log(token)
   if (token && req.headers)
-    req.headers[KEYS.HEADER_AUTHORIZATION] = `Bearer ${token}`;
+    req.headers[KEYS.HEADER_AUTHORIZATION] = `Bearer ${token.access_token}`;
 
   return req;
 });

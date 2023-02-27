@@ -3,14 +3,12 @@ import { getUserDetailAPI } from "api/user";
 import { UserData } from "core/interface/models";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
-import { getAuthKeyFromLocalStorage } from "util/index";
 
 function UserDetail() {
-    const token = getAuthKeyFromLocalStorage()
     const location = useLocation();
     const username = location.state
     const fetchUser = async () => {
-        const res = await getUserDetailAPI(token?.access_token, username)
+        const res = await getUserDetailAPI(username)
         const data = res.data
         return data
     }
@@ -20,6 +18,7 @@ function UserDetail() {
         error,
         data,
     } = useQuery<UserData, Error>(['user'], async () => fetchUser())
+    console.log(data);
 
     if (isLoading) {
         return <div>Loading...</div>;
