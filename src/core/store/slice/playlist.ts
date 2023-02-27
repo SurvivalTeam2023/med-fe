@@ -24,3 +24,4 @@ const reducer = createSlice({
 export const playlistActions = {
     ...reducer.actions,
 };
+export const playlistReducer = reducer.reducer;
