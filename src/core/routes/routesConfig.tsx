@@ -1,5 +1,5 @@
 import { AUTH_LOGIN, LOGIN, NOT_FOUND_PAGE } from "core/constant";
-import { ADMIN, AUDIOID, AUDIOS, AUTH, DASHBOARD, PLAYLIST, REGISTER, USER, USERNAME } from "core/constant/routes";
+import { ADMIN, AUDIOS, AUDIOID, AUTH, DASHBOARD, PLAYLIST, REGISTER, USER, USERNAME } from "core/constant/routes";
 import UnAuthGuard from "core/guard/UnAuth";
 import EmptyLayout from "core/layout/EmptyLayout";
 import NotFoundPage from "pages/NotFound/NotFoundPage";
