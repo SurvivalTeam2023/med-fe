@@ -10,9 +10,9 @@ import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
 import PlaylistPage from "pages/PlaylistPage/playlistPage";
-import UserPage from "pages/UserPage/userPage";
 import UserDetail from "pages/UserPage/UserDetail";
 import AudioPage from "pages/AudioPage/audioPage";
+import UserPage from "pages/UserPage/userPage";
 import AudioDetail from "pages/AudioPage/audioDetail";
 
 export interface SingleRoute {
