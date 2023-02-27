@@ -6,16 +6,14 @@ import { Footer, Header } from "antd/es/layout/layout";
 import { getUsersAPI } from "api/user";
 import { User } from "core/interface/models";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getAuthKeyFromLocalStorage } from "util/index";
 
 function UserPage() {
     const {
         token: { colorBgContainer },
     } = theme.useToken()
     const [collapsed, setCollapsed] = useState(false);
-    const token = getAuthKeyFromLocalStorage()
     const fetchUsers = async () => {
-        const res = await getUsersAPI(token?.access_token)
+        const res = await getUsersAPI()
         const data = res.data
         return data
     }
