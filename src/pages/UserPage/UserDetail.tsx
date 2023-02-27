@@ -20,7 +20,6 @@ function UserDetail() {
         error,
         data,
     } = useQuery<UserData, Error>(['user'], async () => fetchUser())
-    console.log(data);
 
     if (isLoading) {
         return <div>Loading...</div>;

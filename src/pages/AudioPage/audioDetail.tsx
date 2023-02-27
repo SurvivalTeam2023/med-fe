@@ -18,7 +18,6 @@ function AudioDetail() {
         error,
         data,
     } = useQuery<Track, Error>(['track'], async () => fetchAudioInfo())
-    console.log(data);
 
     if (isLoading) {
         return <div>Loading...</div>;

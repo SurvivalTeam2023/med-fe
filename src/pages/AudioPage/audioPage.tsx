@@ -32,8 +32,6 @@ function AudioPage() {
     error,
     data,
   } = useQuery<TracksData, Error>(['track', page], () => fetchAudios(page, id))
-  console.log(data);
-  console.log(id);
   if (isLoading) {
     return <div>Loading...</div>;
   }
