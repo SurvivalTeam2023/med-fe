@@ -17,6 +17,7 @@ import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
 import { particles } from "constants/particles";
+import { PLAYLIST } from "core/constant";
 import { ILogin } from "core/interface/models";
 import { useAppSelector, useAppThunkDispatch } from "core/store";
 import { selectIsError } from "core/store/selector";
@@ -110,7 +111,7 @@ const LoginPage: FunctionComponent = () => {
       }
     );
     setTimeout(() => {
-      navigate("/playlist");
+      navigate(PLAYLIST);
     }, 1000);
 
     // try {
