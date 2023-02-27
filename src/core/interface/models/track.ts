@@ -8,7 +8,7 @@ export interface Track extends Base {
     status: string,
     length: string,
     playlist: Playlist,
-    files: File, 
+    file: File, 
     artist: Artist,
   }
   export interface TracksData {

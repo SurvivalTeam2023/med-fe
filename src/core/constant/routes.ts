@@ -15,4 +15,5 @@ export const PLAYLIST = "/playlist"
 export const USER = "/user"
 export const USERNAME = "user/:username"
 export const AUDIOS = "/audio"
+export const AUDIOID = "/audio/:audioid"
 
