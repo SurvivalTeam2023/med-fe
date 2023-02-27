@@ -10,7 +10,6 @@ import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
 import PlaylistPage from "pages/PlaylistPage/playlistPage";
-import UserPage from "pages/UserPage/UserPage";
 import UserDetail from "pages/UserPage/UserDetail";
 import AudioPage from "pages/AudioPage/audioPage";
 import UserPage from "pages/UserPage/UserPage";
