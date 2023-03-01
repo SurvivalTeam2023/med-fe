@@ -292,7 +292,7 @@ const LoginPage: FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <ToastContainer autoClose={2000} limit={1} />
+      <ToastContainer autoClose={1000} limit={1} />
     </>
   );
 };

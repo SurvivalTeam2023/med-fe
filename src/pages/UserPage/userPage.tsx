@@ -6,6 +6,7 @@ import { Footer, Header } from "antd/es/layout/layout";
 import { getUsersAPI } from "api/user";
 import { User } from "core/interface/models";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function UserPage() {
     const {
@@ -25,18 +26,20 @@ function UserPage() {
     const { Sider } = Layout;
 
     const {
-        isLoading,
+        isSuccess,
         isError,
         error,
         data,
     } = useQuery<User[], Error>(['users'], async () => fetchUsers())
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    if (isSuccess) {
+        toast.success("Success")
+        toast.clearWaitingQueue();
     }
 
     if (isError) {
-        return <div>Error: {error?.message}</div>;
+        toast.error(error?.message)
+        toast.clearWaitingQueue()
     }
 
     return (

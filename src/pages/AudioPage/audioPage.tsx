@@ -9,6 +9,7 @@ import { Footer, Header } from "antd/es/layout/layout";
 import { getTrackByPlaylistIdAPI } from "api/playlistTracks";
 import { TracksData } from "core/interface/models/track";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 function AudioPage() {
   const {
     token: { colorBgContainer },
@@ -25,19 +26,21 @@ function AudioPage() {
   const { Sider } = Layout;
 
   const {
-    isLoading,
+    isSuccess,
     isError,
     error,
     data,
   } = useQuery<TracksData, Error>(['track', page], () => fetchAudio(page, id))
   console.log(data);
   console.log(id);
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (isSuccess) {
+    toast.success("Success")
+    toast.clearWaitingQueue()
   }
 
   if (isError) {
-    return <div>Error: {error?.message}</div>;
+    toast.error(error?.message)
+    toast.clearWaitingQueue()
   }
   const onChange: PaginationProps['onChange'] = (current) => {
     setPage(current);

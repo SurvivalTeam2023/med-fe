@@ -1,16 +1,16 @@
 import { getPlaylistByUserIdAPI } from "api/playlist"
 import { useQuery } from "react-query"
-import { createElement, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { PaginationProps, Space, Table, Button, Layout, Menu, theme, MenuProps, InputRef, Input } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Playlist, PlaylistsData } from "core/interface/models/playlist";
 import moment from "moment";
 import { Footer, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
-import { getAuthKeyFromLocalStorage } from "util/index";
 import { FilterConfirmProps } from "antd/es/table/interface";
 import { SearchOutlined } from '@ant-design/icons';
-import type { ColumnsType, ColumnType } from 'antd/es/table';
+import type { ColumnType } from 'antd/es/table';
+import { toast, ToastContainer } from "react-toastify";
 ;
 
 function PlaylistPage() {
@@ -24,8 +24,9 @@ function PlaylistPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
+
   const fetchPlaylist = async (page: number, name: string, status: string) => {
-    const res = await getPlaylistByUserIdAPI(page, name, status, 3)
+    const res = await getPlaylistByUserIdAPI(page, name, status)
     const data = res.data
     return data
   }
@@ -33,19 +34,21 @@ function PlaylistPage() {
   const onClick: MenuProps['onClick'] = (e) => {
     navigate(`/${e.key}`)
   };
-
   const {
-    isLoading,
-    isError,
-    error,
     data,
-  } = useQuery<PlaylistsData, Error>(['playlist', page], () => fetchPlaylist(page, name, status))
-  if (isLoading) {
-    return <div>Loading...</div>;
+    isSuccess,
+    isError,
+    error
+  } = useQuery<PlaylistsData, Error>(['playlist', page], () =>
+    fetchPlaylist(page, name, status),
+  )
+  if (isSuccess) {
+    toast.success("Success")
+    toast.clearWaitingQueue()
   }
 
   if (isError) {
-    return <div>Error: {error?.message}</div>;
+    toast.error(error?.message)
   }
   const onChange: PaginationProps['onChange'] = (current) => {
     setPage(current);
@@ -54,9 +57,9 @@ function PlaylistPage() {
   data?.items.map(playlist => {
     let date = moment(new Date(playlist.createdAt));
     playlist.createdAt = date.calendar()
+    return playlist.createdAt
   })
   type DataIndex = keyof Playlist;
-
 
   const handleSearch = (
     selectedKeys: string[],
@@ -109,69 +112,83 @@ function PlaylistPage() {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
   });
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className="logo" style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }}>Med App</div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: 'user',
-              icon: <UserOutlined />,
-              label: 'User',
-              onClick: onClick
-            },
-            {
-              key: 'playlist',
-              icon: <VideoCameraOutlined />,
-              label: 'Playlist',
-              onClick: onClick
-            },
-            {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'Something',
-            },
-          ]}
-        />
-      </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer, textAlign: 'center', fontSize: '2em' }}> Manage Playlist</Header>
-        <Table className="playlist-table"
-          dataSource={data?.items}
-          bordered
-          scroll={{ y: 240 }}
-          pagination={{ defaultPageSize: data?.meta.itemsPerPage, total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
-          columns={[
-            { title: 'Name', dataIndex: 'name', key: 'name', render: (text) => <a>{text}</a>, width: '20%', ...getColumnSearchProps('name') },
-            { title: 'Description', dataIndex: 'description', key: 'description', render: (text) => <a>{text}</a>, width: '20%' },
-            { title: 'Status', dataIndex: 'status', key: 'status', render: (text) => <a>{text}</a>, width: '20%', },
-            { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', render: (text) => <a>{text}</a>, width: '20%' },
-            {
-              title: 'Action', key: 'action', render: (text, record, index) => (
-                <Space size="middle">
-                  <Button type="primary" onClick={(e) => {
-                    navigate(`/playlist/${record.id}`, { state: record.id })
-                  }}>
-                    Detail
-                  </Button>
-                  <Button type="primary" key="audio">
-                    Audios
-                  </Button>
-                </Space>
+    <>
+      <Layout style={{ minHeight: '100vh' }}>
+        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+          <div className="logo" style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }}>Med App</div>
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={['1']}
+            items={[
+              {
+                key: 'user',
+                icon: <UserOutlined />,
+                label: 'User',
+                onClick: onClick
+              },
+              {
+                key: 'playlist',
+                icon: <VideoCameraOutlined />,
+                label: 'Playlist',
+                onClick: onClick
+              },
+              {
+                key: '3',
+                icon: <UploadOutlined />,
+                label: 'Something',
+              },
+            ]}
+          />
+        </Sider>
+        <Layout>
+          <Header style={{ padding: 0, background: colorBgContainer, textAlign: 'center', fontSize: '2em' }}> Manage Playlist</Header>
+          <Table className="playlist-table"
+            dataSource={data?.items}
+            bordered
+            pagination={{ defaultPageSize: data?.meta.itemCount, total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
+            columns={[
+              { title: 'Name', dataIndex: 'name', key: 'name', width: '20%', ...getColumnSearchProps('name') },
+              { title: 'Description', dataIndex: 'description', key: 'description', render: (text) => <a>{text}</a>, width: '20%' },
+              {
+                title: 'Status', dataIndex: 'status', key: 'status', width: '20%',
+              },
+              { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', width: '20%' },
+              {
+                title: 'Action', key: 'action', render: (text, record, index) => (
+                  <Space size="middle">
+                    <Button type="primary" onClick={() => {
+                      navigate(`/playlist/${record.id}`, { state: record.id })
+                    }}>
+                      Detail
+                    </Button>
+                    <Button type="primary" key="audio">
+                      Audios
+                    </Button>
+                  </Space>
 
-              ), width: '20%',
-            },
-          ]}
-        />
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
+                ), width: '20%',
+              },
+            ]}
+          />
+          <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
+        </Layout>
       </Layout>
-    </Layout>
+      <ToastContainer autoClose={1000} limit={1} />
+    </>
   );
 }
 export default PlaylistPage;
