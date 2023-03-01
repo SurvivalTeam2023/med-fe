@@ -11,9 +11,9 @@ import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
 import UserDetail from "pages/UserPage/UserDetail";
 import AudioPage from "pages/AudioPage/audioPage";
-import PlaylistPage from "pages/PlaylistPage/playlistPage";
+import PlaylistPage from "pages/PlaylistPage/PlaylistPage";
 import AudioDetail from "pages/AudioPage/audioDetail";
-import UserPage from "pages/UserPage/userPage";
+import UserPage from "pages/UserPage/UserPage";
 
 export interface SingleRoute {
   path?: string;
