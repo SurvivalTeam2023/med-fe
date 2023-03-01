@@ -1,15 +1,14 @@
 
 import { useQuery } from "react-query"
-import { createElement, useState } from "react";
-import { PaginationProps, Space, Table, Button, Layout, Menu, theme } from 'antd';
+import { useState } from "react";
+import { PaginationProps, Table, Button, Layout, Menu, theme } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-
 import moment from "moment";
 import { Footer, Header } from "antd/es/layout/layout";
 import { getTrackByPlaylistIdAPI } from "api/playlistTracks";
 import { TracksData } from "core/interface/models/track";
-import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
 function AudioPage() {
   const {
     token: { colorBgContainer },
@@ -18,11 +17,14 @@ function AudioPage() {
   const location = useLocation()
   const id = location.state
   const [collapsed, setCollapsed] = useState(false);
-  const fetchAudio = async (page: number, playlistId: number) => {
+  const fetchAudios = async (page: number, playlistId: number) => {
     const res = await getTrackByPlaylistIdAPI(playlistId, page, 5)
     const data = res.data
     return data
   }
+
+  const navigate = useNavigate();
+
   const { Sider } = Layout;
 
   const {
@@ -30,9 +32,8 @@ function AudioPage() {
     isError,
     error,
     data,
-  } = useQuery<TracksData, Error>(['track', page], () => fetchAudio(page, id))
-  console.log(data);
-  console.log(id);
+  } = useQuery<TracksData, Error>(['track', page], () => fetchAudios(page, id))
+
   if (isSuccess) {
     toast.success("Success")
     toast.clearWaitingQueue()
@@ -90,8 +91,10 @@ function AudioPage() {
             { title: 'Status', dataIndex: 'status', key: 'status', width: '20%' },
             { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', width: '20%' },
             {
-              title: 'Action', key: 'action', render: (_,) => (
-                <Button type="primary">
+              title: 'Action', key: 'action', render: (text, record, index) => (
+                <Button type="primary" onClick={() => {
+                  navigate(`/audio/${record.id}`, { state: record.id })
+                }}>
                   Detail
                 </Button>
               ), width: '20%',

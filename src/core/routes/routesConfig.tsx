@@ -1,5 +1,5 @@
 import { AUTH_LOGIN, LOGIN, NOT_FOUND_PAGE } from "core/constant";
-import { ADMIN, AUDIOS, AUTH, DASHBOARD, PLAYLIST, REGISTER, USER, USERNAME } from "core/constant/routes";
+import { ADMIN, AUDIOS, AUDIOID, AUTH, DASHBOARD, PLAYLIST, REGISTER, USER, USERNAME } from "core/constant/routes";
 import UnAuthGuard from "core/guard/UnAuth";
 import EmptyLayout from "core/layout/EmptyLayout";
 import NotFoundPage from "pages/NotFound/NotFoundPage";
@@ -9,10 +9,11 @@ import { Navigate } from "react-router-dom";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
-import PlaylistPage from "pages/PlaylistPage/playlistPage";
 import UserDetail from "pages/UserPage/UserDetail";
 import AudioPage from "pages/AudioPage/audioPage";
-import UserPage from "pages/UserPage/UserPage";
+import PlaylistPage from "pages/PlaylistPage/playlistPage";
+import AudioDetail from "pages/AudioPage/audioDetail";
+import UserPage from "pages/UserPage/userPage";
 
 export interface SingleRoute {
   path?: string;
@@ -55,6 +56,7 @@ export const ROUTES: SingleRoute[] = [
   },
   { path: USERNAME, component: <UserDetail /> },
   { path: AUDIOS, component: <AudioPage /> },
+  { path: AUDIOID, component: <AudioDetail /> },
 
   { path: NOT_FOUND_PAGE, component: <NotFoundPage /> },
   {
