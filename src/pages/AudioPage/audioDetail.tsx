@@ -32,8 +32,8 @@ function AudioDetail() {
             <Descriptions.Item label="Name">{data?.name}</Descriptions.Item>
             <Descriptions.Item label="Length">{data?.length}</Descriptions.Item>
             <Descriptions.Item label="Image"><Image
-            width={200}
-            src={data?.imageUrl}/> 
+                width={200}
+                src={data?.imageUrl} />
             </Descriptions.Item>
             <Descriptions.Item label="Artist">{data?.artist.artist_name}</Descriptions.Item>
             <Descriptions.Item label="File">{data?.file.url}</Descriptions.Item>

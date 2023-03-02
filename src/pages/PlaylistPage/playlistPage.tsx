@@ -136,20 +136,18 @@ function PlaylistPage() {
             items={[
               {
                 key: 'user',
-                icon: <UserOutlined />,
                 label: 'User',
                 onClick: onClick
               },
               {
                 key: 'playlist',
-                icon: <VideoCameraOutlined />,
                 label: 'Playlist',
                 onClick: onClick
               },
               {
-                key: '3',
-                icon: <UploadOutlined />,
-                label: 'Something',
+                key: 'plan',
+                label: 'Plan',
+                onClick: onClick
               },
             ]}
           />
@@ -159,7 +157,7 @@ function PlaylistPage() {
           <Table className="playlist-table"
             dataSource={data?.items}
             bordered
-            pagination={{ defaultPageSize: data?.meta.itemCount, total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
+            pagination={{ total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
             columns={[
               { title: 'Name', dataIndex: 'name', key: 'name', width: '20%', ...getColumnSearchProps('name') },
               { title: 'Description', dataIndex: 'description', key: 'description', render: (text) => <a>{text}</a>, width: '20%' },
@@ -175,7 +173,9 @@ function PlaylistPage() {
                     }}>
                       Detail
                     </Button>
-                    <Button type="primary" key="audio">
+                    <Button type="primary" key="audio" onClick={() => {
+                      navigate(`/audio`, { state: record.id })
+                    }}>
                       Audios
                     </Button>
                   </Space>

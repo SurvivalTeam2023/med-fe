@@ -18,7 +18,7 @@ function AudioPage() {
   const id = location.state
   const [collapsed, setCollapsed] = useState(false);
   const fetchAudios = async (page: number, playlistId: number) => {
-    const res = await getTrackByPlaylistIdAPI(playlistId, page, 5)
+    const res = await getTrackByPlaylistIdAPI(playlistId, page)
     const data = res.data
     return data
   }
@@ -83,11 +83,10 @@ function AudioPage() {
         <Table className="audio-table"
           dataSource={data?.items}
           bordered
-          scroll={{ y: 240 }}
-          pagination={{ defaultPageSize: data?.meta.itemsPerPage, total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
+          pagination={{ total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
           columns={[
             { title: 'Name', dataIndex: 'name', key: 'name', width: '20%' },
-            { title: 'File', dataIndex: 'file.url', key: 'file', width: '20%' },
+            { title: 'File', dataIndex: ['file', 'url'], key: 'file', width: '20%' },
             { title: 'Status', dataIndex: 'status', key: 'status', width: '20%' },
             { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', width: '20%' },
             {

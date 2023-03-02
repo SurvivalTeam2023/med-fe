@@ -49,5 +49,4 @@ const reducer = createSlice({
 export const userActions = {
   ...reducer.actions,
 };
-
 export const userReducer = reducer.reducer;
