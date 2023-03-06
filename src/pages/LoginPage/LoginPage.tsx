@@ -83,7 +83,7 @@ const LoginPage: FunctionComponent = () => {
     password: "",
   };
 
-  const methods = useForm<ILogin>({
+  const methods = useForm<ILogin>({ 
     defaultValues,
   });
 

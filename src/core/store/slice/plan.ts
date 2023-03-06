@@ -13,7 +13,7 @@ const reducer = createSlice({
         resetState: () => ({ ...initialState }),
         setPlan: (state, { payload }: PayloadAction<PlanState["plan"]>) => {
             state.plan = payload;
-        }
+        },
     }
 });
 export const planAction = {
