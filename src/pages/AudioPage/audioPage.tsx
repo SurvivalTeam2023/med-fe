@@ -7,6 +7,7 @@ import moment from "moment";
 import { Footer, Header } from "antd/es/layout/layout";
 import { getTrackByPlaylistIdAPI } from "api/playlistTracks";
 import { TracksData } from "core/interface/models/track";
+import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 function AudioPage() {
   const {
@@ -23,21 +24,24 @@ function AudioPage() {
   }
 
   const navigate = useNavigate();
-  
+
   const { Sider } = Layout;
 
   const {
-    isLoading,
+    isSuccess,
     isError,
     error,
     data,
   } = useQuery<TracksData, Error>(['track', page], () => fetchAudios(page, id))
-  if (isLoading) {
-    return <div>Loading...</div>;
+
+  if (isSuccess) {
+    toast.success("Success")
+    toast.clearWaitingQueue()
   }
 
   if (isError) {
-    return <div>Error: {error?.message}</div>;
+    toast.error(error?.message)
+    toast.clearWaitingQueue()
   }
   const onChange: PaginationProps['onChange'] = (current) => {
     setPage(current);
@@ -89,8 +93,8 @@ function AudioPage() {
             {
               title: 'Action', key: 'action', render: (text, record, index) => (
                 <Button type="primary" onClick={() => {
-                  navigate(`/audio/${record.id}`, { state: record.id})
-              }}>
+                  navigate(`/audio/${record.id}`, { state: record.id })
+                }}>
                   Detail
                 </Button>
               ), width: '20%',

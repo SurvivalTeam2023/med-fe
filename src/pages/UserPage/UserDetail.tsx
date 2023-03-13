@@ -3,6 +3,7 @@ import { getUserDetailAPI } from "api/user";
 import { UserData } from "core/interface/models";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function UserDetail() {
     const location = useLocation();
@@ -13,19 +14,20 @@ function UserDetail() {
         return data
     }
     const {
-        isLoading,
+        isSuccess,
         isError,
         error,
         data,
     } = useQuery<UserData, Error>(['user'], async () => fetchUser())
-    console.log(data);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    if (isSuccess) {
+        toast.success("Success")
+        toast.clearWaitingQueue()
     }
 
     if (isError) {
-        return <div>Error: {error?.message}</div>;
+        toast.error(error?.message)
+        toast.clearWaitingQueue()
     }
 
     return (
