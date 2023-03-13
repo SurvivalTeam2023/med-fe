@@ -158,8 +158,6 @@ function PlaylistPage() {
             dataSource={data?.items}
             bordered
             pagination={{ total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
-
-            pagination={{ defaultPageSize: data?.meta.itemCount, total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
             columns={[
               { title: 'Name', dataIndex: 'name', key: 'name', width: '20%', ...getColumnSearchProps('name') },
               { title: 'Description', dataIndex: 'description', key: 'description', render: (text) => <a>{text}</a>, width: '20%' },
