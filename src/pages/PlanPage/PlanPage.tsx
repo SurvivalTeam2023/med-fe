@@ -106,9 +106,7 @@ function PlanPage() {
             setOpen(false);
         }, 1000);
     };
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-    };
+
     data?.map(plan => {
         let date = moment(new Date(plan.createdAt));
         plan.createdAt = date.calendar()
@@ -122,6 +120,7 @@ function PlanPage() {
                     <Menu
                         theme="dark"
                         mode="inline"
+                        selectedKeys={['plan']}
                         items={[
                             {
                                 key: 'user',
@@ -195,7 +194,6 @@ function PlanPage() {
                         wrapperCol={{ span: 16 }}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
                         autoComplete="off"
                         labelAlign="left"
                     >

@@ -126,24 +126,6 @@ const RegisterPage: FunctionComponent = () => {
         autoClose: 8000,
       });
     }
-    // mutation.mutate(
-    //   {
-    //     username: values["username"],
-    //     email: values["email"],
-    //     password: values["password"],
-    //     repassword: values["repassword"],
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       toast.success("Signup successful",{ autoClose: 8000, toastId: 2 });
-    //       navigate("/auth/signin");
-    //     },
-    //     onError: (error: any) => {
-    //       toast.error("Signup fail", { autoClose: 8000, toastId: 2 });
-    //       // console.log("error", error.response);
-    //     },
-    //   }
-    // );
   };
 
   return (

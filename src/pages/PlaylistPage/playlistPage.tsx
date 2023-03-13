@@ -132,7 +132,7 @@ function PlaylistPage() {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={['1']}
+            selectedKeys={['playlist']}
             items={[
               {
                 key: 'user',

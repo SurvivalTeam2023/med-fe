@@ -5,7 +5,7 @@ import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/i
 import { Footer, Header } from "antd/es/layout/layout";
 import { getUsersAPI } from "api/user";
 import { User } from "core/interface/models";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function UserPage() {
@@ -49,24 +49,24 @@ function UserPage() {
                 <Menu
                     theme="dark"
                     mode="inline"
-                    defaultSelectedKeys={['1']}
+                    selectedKeys={['user']}
                     items={[
                         {
                             key: 'user',
-                            icon: <UserOutlined />,
                             label: 'User',
                             onClick: onClick
                         },
                         {
                             key: 'playlist',
-                            icon: <VideoCameraOutlined />,
                             label: 'Playlist',
                             onClick: onClick
+
                         },
                         {
-                            key: '3',
-                            icon: <UploadOutlined />,
-                            label: 'Something',
+                            key: 'plan',
+                            label: 'Plan',
+                            onClick: onClick
+
                         },
                     ]}
                 />

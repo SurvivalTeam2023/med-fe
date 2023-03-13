@@ -1,7 +1,7 @@
 
 import { useQuery } from "react-query"
 import { useState } from "react";
-import { PaginationProps, Table, Button, Layout, Menu, theme } from 'antd';
+import { PaginationProps, Table, Button, Layout, Menu, theme, MenuProps } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import moment from "moment";
 import { Footer, Header } from "antd/es/layout/layout";
@@ -22,7 +22,9 @@ function AudioPage() {
     const data = res.data
     return data
   }
-
+  const onClick: MenuProps['onClick'] = (e) => {
+    navigate(`/${e.key}`)
+  };
   const navigate = useNavigate();
 
   const { Sider } = Layout;
@@ -58,22 +60,24 @@ function AudioPage() {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          selectedKeys={['playlist']}
           items={[
             {
-              key: '1',
-              icon: <UserOutlined />,
+              key: 'user',
               label: 'User',
+              onClick: onClick
             },
             {
-              key: '2',
-              icon: <VideoCameraOutlined />,
+              key: 'playlist',
               label: 'Playlist',
+              onClick: onClick
+
             },
             {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'Something',
+              key: 'plan',
+              label: 'Plan',
+              onClick: onClick
+
             },
           ]}
         />

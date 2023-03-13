@@ -15,6 +15,5 @@ export const getTrackDetailAPI = (
     audioid: string
 ): ApiResponse<Track> => {
     const url = `/audio/${audioid} `;
-    console.log(url);
     return CallAPI.get(url)
 }
