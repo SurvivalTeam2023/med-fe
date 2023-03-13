@@ -1,7 +1,7 @@
 
 import { useQuery } from "react-query"
 import { useState } from "react";
-import { PaginationProps, Table, Button, Layout, Menu, theme } from 'antd';
+import { PaginationProps, Table, Button, Layout, Menu, theme, MenuProps } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import moment from "moment";
 import { Footer, Header } from "antd/es/layout/layout";
@@ -18,11 +18,13 @@ function AudioPage() {
   const id = location.state
   const [collapsed, setCollapsed] = useState(false);
   const fetchAudios = async (page: number, playlistId: number) => {
-    const res = await getTrackByPlaylistIdAPI(playlistId, page, 5)
+    const res = await getTrackByPlaylistIdAPI(playlistId, page)
     const data = res.data
     return data
   }
-
+  const onClick: MenuProps['onClick'] = (e) => {
+    navigate(`/${e.key}`)
+  };
   const navigate = useNavigate();
 
   const { Sider } = Layout;
@@ -58,22 +60,24 @@ function AudioPage() {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          selectedKeys={['playlist']}
           items={[
             {
-              key: '1',
-              icon: <UserOutlined />,
+              key: 'user',
               label: 'User',
+              onClick: onClick
             },
             {
-              key: '2',
-              icon: <VideoCameraOutlined />,
+              key: 'playlist',
               label: 'Playlist',
+              onClick: onClick
+
             },
             {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'Something',
+              key: 'plan',
+              label: 'Plan',
+              onClick: onClick
+
             },
           ]}
         />
@@ -83,11 +87,10 @@ function AudioPage() {
         <Table className="audio-table"
           dataSource={data?.items}
           bordered
-          scroll={{ y: 240 }}
-          pagination={{ defaultPageSize: data?.meta.itemsPerPage, total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
+          pagination={{ total: data?.meta.totalItems, current: page, onChange: onChange, position: ["bottomCenter"] }}
           columns={[
             { title: 'Name', dataIndex: 'name', key: 'name', width: '20%' },
-            { title: 'File', dataIndex: 'file.url', key: 'file', width: '20%' },
+            { title: 'File', dataIndex: ['file', 'url'], key: 'file', width: '20%' },
             { title: 'Status', dataIndex: 'status', key: 'status', width: '20%' },
             { title: 'Created Date', dataIndex: 'createdAt', key: 'createdAt', width: '20%' },
             {

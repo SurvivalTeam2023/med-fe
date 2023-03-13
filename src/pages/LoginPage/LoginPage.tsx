@@ -83,7 +83,7 @@ const LoginPage: FunctionComponent = () => {
     password: "",
   };
 
-  const methods = useForm<ILogin>({
+  const methods = useForm<ILogin>({ 
     defaultValues,
   });
 
@@ -113,23 +113,6 @@ const LoginPage: FunctionComponent = () => {
     setTimeout(() => {
       navigate(PLAYLIST);
     }, 1000);
-
-    // try {
-    //   dispatch(thunkLogin(values.username, values.password)).then((value) => {
-    //     console.log(value);
-    //   });
-    //   toast.update(toastId, {
-    //     render: "All is good",
-    //     type: "success",
-    //     isLoading: false,
-    //   });
-    // } catch (error) {
-    //   toast.update(toastId, {
-    //     render: isLoginError,
-    //     type: "error",
-    //     isLoading: false,
-    //   });
-    // }
   };
 
   return (
