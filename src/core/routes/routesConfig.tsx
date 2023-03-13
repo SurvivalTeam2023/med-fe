@@ -16,6 +16,7 @@ import AudioDetail from "pages/AudioPage/audioDetail";
 import UserPage from "pages/UserPage/userPage";
 import PlanPage from "pages/PlanPage/PlanPage";
 
+
 export interface SingleRoute {
   path?: string;
   component?: ReactNode;
