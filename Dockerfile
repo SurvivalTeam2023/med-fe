@@ -1,16 +1,19 @@
-FROM node:alpine as build
-
+FROM node:lts AS development
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
-ENV REACT_APP_SERVER_URL https://api.mediatation.tokyo/api
-COPY ./package.json /app/
-RUN yarn --silent
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
 
+RUN npm ci
 COPY . /app
-RUN yarn build
+ENV CI=true
+ENV REACT_APP_SERVER_URL=https://api.mediatation.tokyo/api
+CMD [ "npm", "start" ]
+FROM development AS build
+RUN npm run build
+# Nginx setup
 FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx/nginx.conf /etc/nginx/conf.d
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /usr/share/nginx/html
+RUN rm -rf ./*
+COPY --from=build /app/build .
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
