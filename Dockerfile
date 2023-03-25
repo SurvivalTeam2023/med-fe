@@ -5,11 +5,10 @@ COPY package-lock.json /app/package-lock.json
 
 RUN npm ci
 COPY . /app
-ENV CI=true
 ENV REACT_APP_SERVER_URL=https://api.mediatation.tokyo/api
 CMD [ "npm", "start" ]
 FROM development AS build
-RUN npm run build
+RUN yarn build
 # Nginx setup
 FROM nginx:alpine
 COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
