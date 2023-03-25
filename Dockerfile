@@ -1,13 +1,12 @@
-FROM node:lts AS development
-WORKDIR /app
-COPY package.json /app/package.json
-COPY package-lock.json /app/package-lock.json
+FROM node:alpine as build
 
-RUN npm ci
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+ENV REACT_APP_SERVER_URL https://api.mediatation.tokyo/api
+COPY ./package.json /app/
+RUN yarn --silent
+
 COPY . /app
-ENV REACT_APP_SERVER_URL=https://api.mediatation.tokyo/api
-CMD [ "npm", "start" ]
-FROM development AS build
 RUN yarn build
 # Nginx setup
 FROM nginx:alpine
