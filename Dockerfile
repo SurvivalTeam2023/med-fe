@@ -1,13 +1,13 @@
 FROM node:alpine as build
 
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
 ENV REACT_APP_SERVER_URL https://api.mediatation.tokyo/api
-COPY ./package.json /app/
 RUN yarn --silent
-
 COPY . /app
 RUN yarn build
+
 # Nginx setup
 FROM nginx:alpine
 # Copy config nginx
