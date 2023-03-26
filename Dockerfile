@@ -10,7 +10,7 @@ COPY . /app
 RUN yarn build
 # Nginx setup
 FROM nginx:alpine
-COPY --from=build .nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /nginx/nginx.conf /etc/nginx/conf.d/default.conf
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=build /app/build .
