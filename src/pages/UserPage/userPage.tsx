@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
 import { useState } from "react";
-import { Table, Button, Layout, Menu, theme, MenuProps } from 'antd';
+import { Table, Button, Layout, Menu, theme, MenuProps, Space } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Footer, Header } from "antd/es/layout/layout";
 import { getUsersAPI } from "api/user";
@@ -85,11 +85,18 @@ function UserPage() {
                         { title: 'email', dataIndex: 'email', key: 'email', render: (text) => <a>{text}</a>, width: '20%' },
                         {
                             title: 'Action', key: 'action', render: (text, record, index) => (
+                                <Space size="middle">
                                 <Button type="primary" onClick={() => {
                                     navigate(`/user/${record.username}`, { state: record.username })
                                 }}>
                                     Detail
                                 </Button>
+                                <Button type="primary" onClick={() => {
+                                    navigate(`/user/edit/${record.username}`, { state: record.username })
+                                }}>
+                                    Edit
+                                </Button>
+                                </Space>
                             ), width: '20%',
                         },
                     ]}
