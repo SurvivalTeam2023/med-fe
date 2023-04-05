@@ -11,6 +11,7 @@ export interface User extends Base {
   city?: string
   address?: string
   dob?: string
+  status?: string
 }
 
 export type ILogin = {

@@ -5,6 +5,8 @@ import { userActions } from "../slice";
 
 import { TokenDecode } from "core/interface/api";
 import jwt_decode from "jwt-decode";
+import { User } from "core/interface/models";
+import { editUserStatusAPI } from "api/user";
 
 export const getCurrentUserThunk =
   (): AppThunk<void> => (dispatch, getState) => {
@@ -49,3 +51,12 @@ export const thunkLogin =
 //       saveAuthKeyIntoLocalStorage(token.data);
 //     });
 //   };
+
+export const editUserStatusThunk = (status: any, username: string): AppThunk<Promise<void>> =>
+  async (dispatch: any) => {
+      try{
+        await editUserStatusAPI(status, username)
+      }catch(error: any){
+        return error
+      }
+  }

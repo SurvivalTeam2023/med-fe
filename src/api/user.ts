@@ -14,3 +14,11 @@ export const getUserDetailAPI = (
     const url = `/user/${username}`;
     return CallAPI.get(url)
 }
+
+export const editUserStatusAPI = (
+    status: any,
+    username: string
+    ): ApiResponse<User> => {
+    const url = `/user/${username}`;
+    return CallAPI.patch(url, status)
+}
