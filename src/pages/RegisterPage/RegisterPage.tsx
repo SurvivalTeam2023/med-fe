@@ -13,8 +13,6 @@ import {
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { registerUserApi } from "api/auth";
-import "assets/css/app.min.css";
-import "assets/css/bootstrap.min.css";
 import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
@@ -170,7 +168,6 @@ const RegisterPage: FunctionComponent = () => {
                     <div className="p-2 mt-4">
                       <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
                         <div className="mb-3">
-                          {/* <label for="username" className="form-label">Username</label> */}
                           <TextField
                             label="User name"
                             placeholder="Username"
@@ -179,7 +176,6 @@ const RegisterPage: FunctionComponent = () => {
                           />
                         </div>
                         <div className="mb-3">
-                          {/* <label for="username" className="form-label">Username</label> */}
                           <TextField
                             label="Email"
                             placeholder="Email"
@@ -190,9 +186,6 @@ const RegisterPage: FunctionComponent = () => {
                         </div>
 
                         <div className="mb-3">
-                          {/* <label className="form-label" for="password-input">
-                            Password
-                          </label> */}
                           <div className="position-relative auth-pass-inputgroup mb-3">
                             <FormControl
                               variant="outlined"

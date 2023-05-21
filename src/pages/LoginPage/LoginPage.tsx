@@ -13,16 +13,13 @@ import {
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import "assets/css/app.min.css";
-import "assets/css/bootstrap.min.css";
 import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
 import { particles } from "core/constants/particles";
 import { PLAYLIST } from "core/constants";
 import { ILogin } from "core/interface/models";
-import { useAppSelector, useAppThunkDispatch } from "store";
-import { selectIsError } from "store/selector";
+import { useAppThunkDispatch } from "store";
 import { thunkLogin } from "store/thunk";
 import React, { FunctionComponent, useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -41,8 +38,6 @@ export const LinkItem = styled(Link)`
     color: #5ea1b6;
   }
 `;
-
-// 👇 Styled Material UI Link Component
 export const OauthMuiLink = styled(MuiLink)`
   display: flex;
   justify-content: center;
@@ -63,15 +58,10 @@ export const OauthMuiLink = styled(MuiLink)`
 
 const LoginPage: FunctionComponent = () => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const [message, setMessage] = React.useState<string>("");
   const navigate = useNavigate();
   const dispatch = useAppThunkDispatch();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const isLoginError = useAppSelector(selectIsError);
   const particlesInit = useCallback(async (engine: Engine) => {
-    // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
-    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-    // starting from v2 you can add only the features you need reducing the bundle size
     await loadFull(engine);
   }, []);
 
@@ -102,11 +92,9 @@ const LoginPage: FunctionComponent = () => {
           render({ data }) {
             return "Login successfully";
           },
-          // other options
         },
         error: {
           render({ data }) {
-            // When the promise reject, data will contains the error
             return `${data}`;
           },
         },
@@ -164,7 +152,6 @@ const LoginPage: FunctionComponent = () => {
                     <div className="p-2 mt-4">
                       <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
                         <div className="mb-3">
-                          {/* <label for="username" className="form-label">Username</label> */}
                           <TextField
                             label="User name"
                             placeholder="Username"
@@ -186,9 +173,6 @@ const LoginPage: FunctionComponent = () => {
                               Forgot password?
                             </a>
                           </div>
-                          {/* <label className="form-label" for="password-input">
-                            Password
-                          </label> */}
                           <div className="position-relative auth-pass-inputgroup mb-3">
                             <FormControl
                               variant="outlined"
@@ -262,13 +246,6 @@ const LoginPage: FunctionComponent = () => {
                 <div className="mt-4 text-center">
                   <p className="mb-0">
                     Don't have an account ?{" "}
-                    {/* <a
-                      href="auth-signup-basic.html"
-                      className="fw-semibold text-primary text-decoration-underline"
-                    >
-                      {" "}
-                      Signup{" "}
-                    </a>{" "} */}
                     <Link
                       to="/auth/signup"
                       className="fw-semibold text-primary text-decoration-underline"

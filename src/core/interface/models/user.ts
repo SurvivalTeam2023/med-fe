@@ -4,14 +4,14 @@ export interface User extends Base {
   name: string;
   uuid: string;
   email?: string;
-  username?: string
-  firstName?: string
-  lastName?: string
-  gender?: string
-  city?: string
-  address?: string
-  dob?: string
-  status?: string
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
+  city?: string;
+  address?: string;
+  dob?: string;
+  status?: string;
 }
 
 export type ILogin = {
@@ -26,5 +26,5 @@ export type IRegister = {
   email: string;
 };
 export interface UserData {
-  user_db: User
+  user_db: User;
 }

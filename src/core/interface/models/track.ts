@@ -1,24 +1,26 @@
 import { Base } from "./base";
 import { Playlist } from "./playlist";
 import { Artist } from "./artist";
-import { File } from "./file"
 export interface Track extends Base {
-    name: string,
-    imageUrl: string,
-    status: string,
-    length: string,
-    playlist: Playlist,
-    file: File, 
-    artist: Artist,
-  }
-  export interface TracksData {
-    items: Track[],
-    meta: meta
-  }
-  export interface meta {
-    totalItems: number,
-    itemCount: number,
-    itemsPerPage: number,
-    totalPages: number,
-    currentPage: number
-  }
+  name: string;
+  imageUrl: string;
+  status: string;
+  length: string;
+  playlist: Playlist;
+  file: FileUpload;
+  artist: Artist;
+}
+export interface FileUpload extends File {
+  url: string;
+}
+export interface TracksData {
+  items: Track[];
+  meta: Meta;
+}
+export interface Meta {
+  totalItems: number;
+  itemCount: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
+}

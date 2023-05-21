@@ -1,13 +1,15 @@
-import { AUTH_LOGIN, LOGIN, NOT_FOUND_PAGE } from "core/constants";
 import {
+  AUTH_LOGIN,
+  LOGIN,
+  NOT_FOUND_PAGE,
   AUDIOS,
   AUDIOID,
   AUTH,
   DASHBOARD,
   PLAYLIST,
   REGISTER,
-  USER,
   USERNAME,
+  USER,
   PLAN,
   EDITUSER,
 } from "core/constants";
@@ -18,9 +20,9 @@ import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
 import UserDetail from "pages/UserPage/UserDetail";
-import AudioPage from "pages/AudioPage/audioPage";
-import PlaylistPage from "pages/PlaylistPage/playlistPage";
-import AudioDetail from "pages/AudioPage/audioDetail";
+import AudioPage from "pages/AudioPage/AudioManagePage";
+import PlaylistPage from "pages/PlaylistPage/PlayListMusicPage";
+import AudioDetail from "pages/AudioPage/AudioDetailPage";
 import UserPage from "pages/UserPage/userPage";
 import PlanPage from "pages/PlanPage/PlanPage";
 import EditUser from "pages/UserPage/editUser";

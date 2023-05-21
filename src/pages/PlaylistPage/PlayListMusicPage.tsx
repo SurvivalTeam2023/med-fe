@@ -21,7 +21,7 @@ import { FilterConfirmProps } from "antd/es/table/interface";
 import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnType } from "antd/es/table";
 import { toast, ToastContainer } from "react-toastify";
-function PlaylistPage() {
+function PlayListMusicPage() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -271,4 +271,4 @@ function PlaylistPage() {
     </>
   );
 }
-export default PlaylistPage;
+export default PlayListMusicPage;
