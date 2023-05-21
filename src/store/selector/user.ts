@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import jwt_decode from "jwt-decode";
-import { ROLE_ARTIST } from "core/constant";
+import { ROLE_ARTIST } from "core/constants";
 import { UserDecode } from "core/interface/redux";
 import { RootState } from "..";
 

@@ -3,7 +3,7 @@ import {
   clearAuthKeyFromLocalStorage,
   getAuthKeyFromLocalStorage,
 } from "util/";
-import { UserState } from "../../interface/redux";
+import { UserState } from "../../core/interface/redux";
 
 const initialState: UserState = {
   isTriedLogin: false,

@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
-import { useAppDispatch } from "core/store";
-import { userActions } from "core/store/slice";
+import { useAppDispatch } from "store";
+import { userActions } from "store/slice";
 import { FunctionComponent } from "react";
 import logo from "../common/logo.svg";
 const HomePage: FunctionComponent = () => {

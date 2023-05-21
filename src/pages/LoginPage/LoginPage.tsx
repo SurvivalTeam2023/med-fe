@@ -9,19 +9,21 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
-  Link as MuiLink, OutlinedInput, TextField
+  Link as MuiLink,
+  OutlinedInput,
+  TextField,
 } from "@mui/material";
 import "assets/css/app.min.css";
 import "assets/css/bootstrap.min.css";
 import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
-import { particles } from "constants/particles";
-import { PLAYLIST } from "core/constant";
+import { particles } from "core/constants/particles";
+import { PLAYLIST } from "core/constants";
 import { ILogin } from "core/interface/models";
-import { useAppSelector, useAppThunkDispatch } from "core/store";
-import { selectIsError } from "core/store/selector";
-import { thunkLogin } from "core/store/thunk";
+import { useAppSelector, useAppThunkDispatch } from "store";
+import { selectIsError } from "store/selector";
+import { thunkLogin } from "store/thunk";
 import React, { FunctionComponent, useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -83,7 +85,7 @@ const LoginPage: FunctionComponent = () => {
     password: "",
   };
 
-  const methods = useForm<ILogin>({ 
+  const methods = useForm<ILogin>({
     defaultValues,
   });
 
@@ -267,7 +269,13 @@ const LoginPage: FunctionComponent = () => {
                       {" "}
                       Signup{" "}
                     </a>{" "} */}
-                    <Link to="/auth/signup" className="fw-semibold text-primary text-decoration-underline" replace>Signup</Link>
+                    <Link
+                      to="/auth/signup"
+                      className="fw-semibold text-primary text-decoration-underline"
+                      replace
+                    >
+                      Signup
+                    </Link>
                   </p>
                 </div>
               </div>

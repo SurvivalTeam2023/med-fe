@@ -1,12 +1,7 @@
-import Loading from "components/Loading";
-import { AUTH_LOGIN, NOT_FOUND_PAGE } from "core/constant";
+import { AUTH_LOGIN, NOT_FOUND_PAGE } from "core/constants";
 import { Role } from "core/interface/role";
-import { useAppSelector } from "core/store";
-import {
-  selectIsAuthenticated,
-  selectUserRoleNames,
-  selectUserStore,
-} from "core/store/selector";
+import { useAppSelector } from "store";
+import { selectIsAuthenticated, selectUserRoleNames } from "store/selector";
 import { FC } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -18,7 +13,6 @@ const AuthGuard: FC<AuthWrapperProps> = ({ acceptRoles }) => {
   const userRoles = useAppSelector(selectUserRoleNames);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   console.log("auth", isAuthenticated);
-
 
   if (!isAuthenticated) {
     return <Navigate to={AUTH_LOGIN} replace />;

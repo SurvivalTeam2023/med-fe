@@ -1,4 +1,4 @@
-import { CallAPI } from "core/api";
+import { CallAPI } from "core/axiosCore";
 import { ApiResponse } from "core/interface/api";
 import { IRegister } from "core/interface/models";
 import { TokenResponse } from "core/interface/redux";

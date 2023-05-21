@@ -1,11 +1,11 @@
 import { EnhancedStore } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getRefreshTokenApi } from "api/auth";
-import { KEYS } from "core/constant";
-import { RootState, Store } from "core/store";
-import { userActions } from "core/store/slice";
+import { KEYS } from "core/constants";
+import { RootState, Store } from "store";
+import { userActions } from "store/slice";
 import { getAuthKeyFromLocalStorage, saveAuthKeyIntoLocalStorage } from "util/";
-import { config } from "../constant/config";
+import { config } from "core/constants";
 
 let store: Store;
 

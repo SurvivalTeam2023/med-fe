@@ -1,4 +1,4 @@
-import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constant/role";
+import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constants";
 
 export type Role =
   | typeof ROLE_ADMIN

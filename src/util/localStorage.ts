@@ -1,4 +1,4 @@
-import { KEYS } from "core/constant/key";
+import { KEYS } from "core/constants/key";
 import { TokenResponse } from "core/interface/redux";
 
 export const saveAuthKeyIntoLocalStorage = (key: TokenResponse) => {

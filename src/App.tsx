@@ -1,8 +1,7 @@
 import * as React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./common/App.css";
-import { GetCurrentUserWrapper } from "common/HOC/GetCurrentUser";
-import Routes from "core/routes/Routes";
+import Routes from "routes/Routes";
 import { BrowserRouter } from "react-router-dom";
 
 const queryClient = new QueryClient();
@@ -21,11 +20,9 @@ function App() {
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <GetCurrentUserWrapper>
-        <BrowserRouter>
-          <Routes />
-        </BrowserRouter>
-      </GetCurrentUserWrapper>
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
       <ReactQueryDevtoolsProduction initialIsOpen />
       {showDevtools && (
         <React.Suspense fallback={null}>

@@ -18,11 +18,10 @@ import "assets/css/bootstrap.min.css";
 import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
-import ToastError from "components/Toast";
-import { particles } from "constants/particles";
+import { particles } from "core/constants/particles";
 import { IRegister } from "core/interface/models";
-import { useAppSelector, useAppThunkDispatch } from "core/store";
-import { selectIsError } from "core/store/selector";
+import { useAppSelector, useAppThunkDispatch } from "store";
+import { selectIsError } from "store/selector";
 import React, { FunctionComponent, useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -68,9 +67,6 @@ const RegisterPage: FunctionComponent = () => {
   const dispatch = useAppThunkDispatch();
   const isLoginError = useAppSelector(selectIsError);
   const particlesInit = useCallback(async (engine: Engine) => {
-    // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
-    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-    // starting from v2 you can add only the features you need reducing the bundle size
     await loadFull(engine);
   }, []);
 
@@ -122,9 +118,6 @@ const RegisterPage: FunctionComponent = () => {
       }
     } catch (error: any) {
       setLoading(false);
-      await toast.error(<ToastError message={error.response.data.message} />, {
-        autoClose: 8000,
-      });
     }
   };
 
@@ -275,13 +268,6 @@ const RegisterPage: FunctionComponent = () => {
                         </div>
 
                         <div className="mt-4">
-                          {/* <button
-                            className="btn btn-success w-100"
-                            type="submit"
-                            disabled={mutation.isLoading}
-                          >
-                            Sign Up
-                          </button> */}
                           <LoadingButton
                             loading={loading}
                             loadingPosition="start"
@@ -325,13 +311,6 @@ const RegisterPage: FunctionComponent = () => {
                 <div className="mt-4 text-center">
                   <p className="mb-0">
                     Already have an account ?{" "}
-                    {/* <a
-                      href="auth-signup-basic.html"
-                      className="fw-semibold text-primary text-decoration-underline"
-                    >
-                      {" "}
-                      Signup{" "}
-                    </a>{" "} */}
                     <Link
                       to="/auth/login"
                       className="fw-semibold text-primary text-decoration-underline"

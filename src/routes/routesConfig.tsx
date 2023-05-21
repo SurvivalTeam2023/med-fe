@@ -1,11 +1,19 @@
-import { AUTH_LOGIN, LOGIN, NOT_FOUND_PAGE } from "core/constant";
-import { ADMIN, AUDIOS, AUDIOID, AUTH, DASHBOARD, PLAYLIST, REGISTER, USER, USERNAME, PLAN, EDITUSER } from "core/constant/routes";
+import { AUTH_LOGIN, LOGIN, NOT_FOUND_PAGE } from "core/constants";
+import {
+  AUDIOS,
+  AUDIOID,
+  AUTH,
+  DASHBOARD,
+  PLAYLIST,
+  REGISTER,
+  USER,
+  USERNAME,
+  PLAN,
+  EDITUSER,
+} from "core/constants";
 import UnAuthGuard from "core/guard/UnAuth";
-import EmptyLayout from "core/layout/EmptyLayout";
-import NotFoundPage from "pages/NotFound/NotFoundPage";
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-// import { ROLE_ADMIN, ROLE_ARTIST, ROLE_SUBCRIBER } from "core/constant/role";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage/LoginPage";
 import RegisterPage from "pages/RegisterPage/RegisterPage";
@@ -16,7 +24,6 @@ import AudioDetail from "pages/AudioPage/audioDetail";
 import UserPage from "pages/UserPage/userPage";
 import PlanPage from "pages/PlanPage/PlanPage";
 import EditUser from "pages/UserPage/editUser";
-
 
 export interface SingleRoute {
   path?: string;
@@ -30,7 +37,7 @@ export const ROUTES: SingleRoute[] = [
   { path: "/", component: <Navigate to={AUTH_LOGIN} replace={true} /> },
   {
     path: AUTH,
-    component: <EmptyLayout />,
+    // component: <EmptyLayout />,
     guard: <UnAuthGuard />,
     children: [
       { path: "", component: <Navigate to={NOT_FOUND_PAGE} replace={true} /> },
@@ -43,28 +50,22 @@ export const ROUTES: SingleRoute[] = [
         component: <RegisterPage />,
       },
     ],
-
   },
-  // {
-  //   path: DASHBOARD,
-  //   component: <Layout />,
-  //   guard: <AuthGuard acceptRoles={[ROLE_SUBCRIBER, ROLE_ADMIN]} />,
-  //   children: [{ path: "", component: <Dashboard /> }],
-  // },
   { path: DASHBOARD, component: <HomePage /> },
   { path: PLAYLIST, component: <PlaylistPage /> },
   {
     path: USER,
-    component: <UserPage />
+    component: <UserPage />,
   },
   { path: USERNAME, component: <UserDetail /> },
   { path: AUDIOS, component: <AudioPage /> },
-  { path: EDITUSER, component: <EditUser/>},
+  { path: EDITUSER, component: <EditUser /> },
   { path: AUDIOID, component: <AudioDetail /> },
   {
-    path: PLAN, component: <PlanPage />,
+    path: PLAN,
+    component: <PlanPage />,
   },
-  { path: NOT_FOUND_PAGE, component: <NotFoundPage /> },
+  // { path: NOT_FOUND_PAGE, component: <NotFoundPage /> },
   {
     path: "*",
     component: <Navigate to={NOT_FOUND_PAGE} replace={true} />,
