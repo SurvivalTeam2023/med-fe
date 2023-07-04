@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
-  Checkbox,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -13,9 +12,7 @@ import {
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
-import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
-import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
+
 import { particles } from "core/constants/particles";
 import { PLAYLIST } from "core/constants";
 import { ILogin } from "core/interface/models";
@@ -29,6 +26,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import type { Engine } from "tsparticles-engine";
+import { Button, Form, Input, Typography, Checkbox, Modal } from "antd";
+import "./login.module.css";
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
@@ -56,212 +55,171 @@ export const OauthMuiLink = styled(MuiLink)`
   }
 `;
 
+const { Title } = Typography;
 const LoginPage: FunctionComponent = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
-  const navigate = useNavigate();
-  const dispatch = useAppThunkDispatch();
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadFull(engine);
-  }, []);
-
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-  const defaultValues: ILogin = {
-    username: "",
-    password: "",
+  const onFinish = (values: any) => {
+    console.log("Success:", values);
   };
 
-  const methods = useForm<ILogin>({
-    defaultValues,
-  });
-
-  const onSubmitHandler: SubmitHandler<ILogin> = async (values: ILogin) => {
-    await toast.promise(
-      dispatch(thunkLogin(values.username, values.password)),
-      {
-        pending: {
-          render() {
-            return "Loading...";
-          },
-        },
-        success: {
-          render({ data }) {
-            return "Login successfully";
-          },
-        },
-        error: {
-          render({ data }) {
-            return `${data}`;
-          },
-        },
-      }
-    );
-    setTimeout(() => {
-      navigate(PLAYLIST);
-    }, 1000);
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
   };
 
   return (
-    <>
-      <div className="auth-page-wrapper pt-5">
-        <div className="auth-one-bg-position auth-one-bg" id="auth-particles">
-          <div className="bg-overlay"></div>
-          <Particles
-            id="tsparticles"
-            init={particlesInit}
-            options={particles}
-          />
-          <div className="shape">
-            <AuthBackGroundSvg />
+    <div
+      className="wrapper"
+      style={{
+        background:
+          "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(41, 10, 89, 1))",
+        height: "100vh",
+      }}
+    >
+      <Modal
+        className="loginContainer"
+        open={true}
+        footer={null}
+        mask={false}
+        style={{ alignItems: "center", marginTop: "200px", height: "800px" }}
+        closable={false}
+        centered={true}
+      >
+        <div
+          className="loginHeader"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Title
+            level={2}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              background:
+                "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(40, 10, 89, 1))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Admin Page
+          </Title>
+        </div>
+        <div className="loginBody">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              type="text"
+              style={{
+                marginLeft: "20px",
+                marginRight: "20px",
+              }}
+            >
+              Sign In
+            </Button>
+            <Button
+              type="text"
+              style={{
+                marginLeft: "20px",
+                marginRight: "20px",
+              }}
+            >
+              Sign Up
+            </Button>
+          </div>
+          <div>
+            <Form
+              name="basic"
+              wrapperCol={{ span: 16 }}
+              style={{ paddingTop: "20px" }}
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  marginBottom: 10,
+                }}
+              >
+                <Form.Item
+                  name="username"
+                  rules={[
+                    { required: true, message: "Please input your username!" },
+                  ]}
+                  style={{ marginBottom: "10px" }}
+                >
+                  <Input style={{ width: "250px" }} placeholder="Username" />
+                </Form.Item>
+
+                <Form.Item
+                  name="password"
+                  rules={[
+                    { required: true, message: "Please input your password!" },
+                  ]}
+                  style={{ marginBottom: "1px" }}
+                >
+                  <Input.Password
+                    style={{ width: "250px" }}
+                    placeholder="Password"
+                  />
+                </Form.Item>
+              </div>
+
+              <Form.Item
+                name="remember"
+                valuePropName="checked"
+                wrapperCol={{ offset: 6 }}
+                style={{ marginBottom: "10px" }}
+              >
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+              <Form.Item wrapperCol={{ offset: 6 }}>
+                <div>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{
+                      width: "70%",
+                      background:
+                        "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(10, 10, 89, 1))",
+                      color: "white",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    SIGN IN
+                  </Button>
+                </div>
+              </Form.Item>
+            </Form>
           </div>
         </div>
 
-        <div className="auth-page-content">
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-12">
-                <div className="text-center mt-sm-5 mb-4 text-white-50">
-                  <div>
-                    <a href="index.html" className="d-inline-block auth-logo">
-                      <img
-                        src="assets/images/logo-light.png"
-                        alt=""
-                        height="20"
-                      />
-                    </a>
-                  </div>
-                  <p className="mt-3 fs-15 fw-medium">
-                    Premium Admin & Dashboard Template
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="row justify-content-center">
-              <div className="col-md-8 col-lg-6 col-xl-5">
-                <div className="card mt-4">
-                  <div className="card-body p-4">
-                    <div className="text-center mt-2">
-                      <h5 className="text-primary">Welcome Back !</h5>
-                      <p className="text-muted">Sign in to continue to MED.</p>
-                    </div>
-                    <div className="p-2 mt-4">
-                      <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
-                        <div className="mb-3">
-                          <TextField
-                            label="User name"
-                            placeholder="Username"
-                            sx={{ width: "100%" }}
-                            {...methods.register("username")}
-                          />
-                        </div>
-
-                        <div className="mb-3">
-                          <div className="float-end">
-                            <a
-                              href="auth-pass-reset-basic.html"
-                              className="text-muted"
-                              style={{
-                                position: "relative",
-                                zIndex: 2,
-                              }}
-                            >
-                              Forgot password?
-                            </a>
-                          </div>
-                          <div className="position-relative auth-pass-inputgroup mb-3">
-                            <FormControl
-                              variant="outlined"
-                              sx={{ width: "100%" }}
-                            >
-                              <InputLabel htmlFor="outlined-adornment-password">
-                                Password
-                              </InputLabel>
-                              <OutlinedInput
-                                id="outlined-adornment-password"
-                                type={showPassword ? "text" : "password"}
-                                endAdornment={
-                                  <InputAdornment position="end">
-                                    <IconButton
-                                      aria-label="toggle password visibility"
-                                      onClick={handleClickShowPassword}
-                                      onMouseDown={handleMouseDownPassword}
-                                      edge="end"
-                                      size="small"
-                                    >
-                                      {showPassword ? (
-                                        <VisibilityOff />
-                                      ) : (
-                                        <Visibility />
-                                      )}
-                                    </IconButton>
-                                  </InputAdornment>
-                                }
-                                label="Password"
-                                {...methods.register("password")}
-                              />
-                            </FormControl>
-                          </div>
-                        </div>
-
-                        <div className="form-check">
-                          <FormGroup>
-                            <FormControlLabel
-                              control={<Checkbox />}
-                              label="Remember me"
-                            />
-                          </FormGroup>
-                        </div>
-
-                        <div className="mt-4">
-                          <button
-                            className="btn btn-success w-100"
-                            type="submit"
-                          >
-                            Sign In
-                          </button>
-                        </div>
-
-                        <div className="mt-4 text-center">
-                          <div className="signin-other-title">
-                            <h5 className="fs-13 mb-4 title">Sign In with</h5>
-                          </div>
-                          <OauthMuiLink href="">
-                            <GoogleLogo style={{ height: "2rem" }} />
-                            Google
-                          </OauthMuiLink>
-                          <OauthMuiLink href="">
-                            <MicrosoftLogo style={{ height: "2rem" }} />
-                          </OauthMuiLink>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 text-center">
-                  <p className="mb-0">
-                    Don't have an account ?{" "}
-                    <Link
-                      to="/auth/signup"
-                      className="fw-semibold text-primary text-decoration-underline"
-                      replace
-                    >
-                      Signup
-                    </Link>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div
+          className="loginFooter"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "#aaa",
+            fontStyle: "italic",
+          }}
+        >
+          Forgot Password?
         </div>
-      </div>
-      <ToastContainer autoClose={1000} limit={1} />
-    </>
+      </Modal>
+    </div>
   );
 };
 
