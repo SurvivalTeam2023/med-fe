@@ -1,34 +1,12 @@
 import styled from "@emotion/styled";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import {
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  Link as MuiLink,
-  OutlinedInput,
-  TextField,
-} from "@mui/material";
+import { Link as MuiLink } from "@mui/material";
 
-import { particles } from "core/constants/particles";
-import { PLAYLIST } from "core/constants";
-import { ILogin } from "core/interface/models";
-import { useAppThunkDispatch } from "store";
-import { thunkLogin } from "store/thunk";
-import React, { FunctionComponent, useCallback } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import React, { FunctionComponent, useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
-import type { Engine } from "tsparticles-engine";
 import { Button, Form, Input, Typography, Checkbox, Modal } from "antd";
 import "./login.module.css";
-
+import { FaGoogle } from "react-icons/fa";
 export const LinkItem = styled(Link)`
   text-decoration: none;
   color: #3683dc;
@@ -57,6 +35,18 @@ export const OauthMuiLink = styled(MuiLink)`
 
 const { Title } = Typography;
 const LoginPage: FunctionComponent = () => {
+  const [currentForm, setCurrentForm] = useState(true);
+
+  const handleSignInClick = () => {
+    console.log(currentForm);
+
+    setCurrentForm(true);
+  };
+
+  const handleSignUpClick = () => {
+    setCurrentForm(false);
+  };
+
   const onFinish = (values: any) => {
     console.log("Success:", values);
   };
@@ -119,6 +109,9 @@ const LoginPage: FunctionComponent = () => {
                 marginLeft: "20px",
                 marginRight: "20px",
               }}
+              onClick={() => {
+                handleSignInClick();
+              }}
             >
               Sign In
             </Button>
@@ -128,95 +121,226 @@ const LoginPage: FunctionComponent = () => {
                 marginLeft: "20px",
                 marginRight: "20px",
               }}
+              onClick={() => {
+                handleSignUpClick();
+              }}
             >
               Sign Up
             </Button>
           </div>
           <div>
-            <Form
-              name="basic"
-              wrapperCol={{ span: 16 }}
-              style={{ paddingTop: "20px" }}
-              initialValues={{ remember: true }}
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  marginBottom: 10,
-                }}
-              >
-                <Form.Item
-                  name="username"
-                  rules={[
-                    { required: true, message: "Please input your username!" },
-                  ]}
-                  style={{ marginBottom: "10px" }}
+            {currentForm ? (
+              <div>
+                <Form
+                  name="basic"
+                  wrapperCol={{ span: 16 }}
+                  style={{ paddingTop: "20px" }}
+                  initialValues={{ remember: true }}
+                  onFinish={onFinish}
+                  onFinishFailed={onFinishFailed}
+                  autoComplete="off"
                 >
-                  <Input style={{ width: "250px" }} placeholder="Username" />
-                </Form.Item>
-
-                <Form.Item
-                  name="password"
-                  rules={[
-                    { required: true, message: "Please input your password!" },
-                  ]}
-                  style={{ marginBottom: "1px" }}
-                >
-                  <Input.Password
-                    style={{ width: "250px" }}
-                    placeholder="Password"
-                  />
-                </Form.Item>
-              </div>
-
-              <Form.Item
-                name="remember"
-                valuePropName="checked"
-                wrapperCol={{ offset: 6 }}
-                style={{ marginBottom: "10px" }}
-              >
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-              <Form.Item wrapperCol={{ offset: 6 }}>
-                <div>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
+                  <div
                     style={{
-                      width: "70%",
-                      background:
-                        "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(10, 10, 89, 1))",
-                      color: "white",
-                      marginBottom: "10px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      marginBottom: 5,
                     }}
                   >
-                    SIGN IN
-                  </Button>
-                </div>
-              </Form.Item>
-            </Form>
-          </div>
-        </div>
+                    <Form.Item
+                      name="username"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your username!",
+                        },
+                      ]}
+                      style={{ marginBottom: "10px" }}
+                    >
+                      <Input
+                        style={{ width: "250px", borderRadius: 16 }}
+                        placeholder="Username"
+                      />
+                    </Form.Item>
 
-        <div
-          className="loginFooter"
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#aaa",
-            fontStyle: "italic",
-          }}
-        >
-          Forgot Password?
+                    <Form.Item
+                      name="password"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your password!",
+                        },
+                      ]}
+                      style={{ marginBottom: "1px" }}
+                    >
+                      <Input.Password
+                        style={{ width: "250px", borderRadius: 16 }}
+                        placeholder="Password"
+                      />
+                    </Form.Item>
+                  </div>
+
+                  <Form.Item
+                    name="remember"
+                    valuePropName="checked"
+                    wrapperCol={{ offset: 6 }}
+                    style={{ marginBottom: "10px" }}
+                  >
+                    <Checkbox>Remember me</Checkbox>
+                  </Form.Item>
+                  <Form.Item wrapperCol={{ offset: 6 }}>
+                    <div>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        style={{
+                          width: "70%",
+                          background:
+                            "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(10, 10, 89, 1))",
+                          color: "white",
+                        }}
+                      >
+                        SIGN IN
+                      </Button>
+                    </div>
+                  </Form.Item>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      paddingBottom: 24,
+                      marginTop: -25,
+                      width: "100%",
+                    }}
+                  >
+                    or sign in with
+                    <FaGoogle
+                      style={{ marginLeft: "5px", paddingTop: "2px" }}
+                    />
+                  </div>
+                </Form>
+                <div
+                  className="loginFooter"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "#aaa",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Forgot Password?
+                </div>
+              </div>
+            ) : (
+              <Form
+                name="basic"
+                wrapperCol={{ span: 16 }}
+                style={{ paddingTop: "20px" }}
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    marginBottom: 10,
+                  }}
+                >
+                  <Form.Item
+                    name="username"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your username!",
+                      },
+                    ]}
+                    style={{ marginBottom: "10px" }}
+                  >
+                    <Input
+                      style={{ width: "250px", borderRadius: 16 }}
+                      placeholder="Username"
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="email"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your email!",
+                      },
+                    ]}
+                    style={{ marginBottom: "10px" }}
+                  >
+                    <Input
+                      style={{ width: "250px", borderRadius: 16 }}
+                      placeholder="Email"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="password"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your password!",
+                      },
+                    ]}
+                    style={{ marginBottom: "10px" }}
+                  >
+                    <Input.Password
+                      style={{ width: "250px", borderRadius: 16 }}
+                      placeholder="Password"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="Repassword"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please comfirm your password!",
+                      },
+                    ]}
+                    style={{ marginBottom: "24px" }}
+                  >
+                    <Input.Password
+                      style={{ width: "250px", borderRadius: 16 }}
+                      placeholder="Confirm password"
+                    />
+                  </Form.Item>
+                </div>
+
+                <Form.Item wrapperCol={{ offset: 6 }}>
+                  <div>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      style={{
+                        width: "70%",
+                        background:
+                          "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(10, 10, 89, 1))",
+                        color: "white",
+                        marginBottom: "10px",
+                      }}
+                      shape="round"
+                    >
+                      SIGN UP
+                    </Button>
+                  </div>
+                </Form.Item>
+              </Form>
+            )}
+          </div>
         </div>
       </Modal>
     </div>
