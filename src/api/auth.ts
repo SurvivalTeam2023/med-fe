@@ -2,17 +2,19 @@ import { CallAPI } from "core/axiosCore";
 import { ApiResponse } from "core/interface/api";
 import { IRegister } from "core/interface/models";
 import { TokenResponse } from "core/interface/redux";
-
-export const getTokenApi = (
-  username: string,
-  password: string
-): ApiResponse<TokenResponse> => {
+import { LoginPayload } from "core/interface/models/auth";
+export const getTokenApi = (payload: LoginPayload) => {
+  const { username, password } = payload
   const url = "/auth/token";
   return CallAPI.post(url, {
     username,
     password,
   });
 };
+
+// export const loginApi = () => {
+//   c
+// }
 
 export const registerUserApi = (payload: IRegister): ApiResponse<IRegister> => {
   const url = "/user/user";

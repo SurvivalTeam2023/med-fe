@@ -7,6 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button, Form, Input, Typography, Checkbox, Modal } from "antd";
 import "./login.module.css";
 import { FaGoogle } from "react-icons/fa";
+import { useLoginApi } from "hooks/auth.hook";
+import { LoginPayload } from "core/interface/models/auth";
+import { PLAYLIST } from "core/constants";
 export const LinkItem = styled(Link)`
   text-decoration: none;
   color: #3683dc;
@@ -36,6 +39,14 @@ export const OauthMuiLink = styled(MuiLink)`
 const { Title } = Typography;
 const LoginPage: FunctionComponent = () => {
   const [currentForm, setCurrentForm] = useState(true);
+  const navigate = useNavigate();
+  const { mutate } = useLoginApi();
+  const [form] = Form.useForm();
+
+  const handleButtonClick = () => {
+    // Trigger the form submission manually
+    form.submit();
+  };
 
   const handleSignInClick = () => {
     console.log(currentForm);
@@ -47,14 +58,30 @@ const LoginPage: FunctionComponent = () => {
     setCurrentForm(false);
   };
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const onFinish = (values: LoginPayload) => {
+    console.log("Received values:", values);
+    // Perform any necessary actions with the form values here
+    const { username, password } = values;
+    handleLogin(username, password);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+  const handleLogin = (username: string, password: string) => {
+    mutate(
+      {
+        username: username,
+        password: password,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("login Success", data["data"]);
+          navigate(PLAYLIST);
+        },
+        onError: (error) => {
+          console.log("Login Failed", error);
+        },
+      }
+    );
   };
-
   return (
     <div
       className="wrapper"
@@ -69,7 +96,7 @@ const LoginPage: FunctionComponent = () => {
         open={true}
         footer={null}
         mask={false}
-        style={{ alignItems: "center", marginTop: "200px", height: "800px" }}
+        style={{ alignItems: "center" }}
         closable={false}
         centered={true}
       >
@@ -137,7 +164,6 @@ const LoginPage: FunctionComponent = () => {
                   style={{ paddingTop: "20px" }}
                   initialValues={{ remember: true }}
                   onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
                   autoComplete="off"
                 >
                   <div
@@ -202,6 +228,7 @@ const LoginPage: FunctionComponent = () => {
                             "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(10, 10, 89, 1))",
                           color: "white",
                         }}
+                        onClick={handleButtonClick}
                       >
                         SIGN IN
                       </Button>
@@ -244,7 +271,6 @@ const LoginPage: FunctionComponent = () => {
                 style={{ paddingTop: "20px" }}
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 autoComplete="off"
               >
                 <div
