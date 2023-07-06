@@ -3,7 +3,7 @@ FROM node:alpine as build
 WORKDIR /app
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
-ENV REACT_APP_SERVER_URL https://api.mediatation.tokyo/api
+ENV REACT_APP_SERVER_URL https://dev.mediatation.tokyo/api
 RUN yarn --silent
 COPY . /app
 RUN yarn build
