@@ -11,12 +11,13 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import { planReducer, playlistReducer, userReducer } from "./slice";
 import { ThunkDispatch } from "redux-thunk";
 import thunk from "redux-thunk";
+import { adminReducer } from "./slice/auth.slice";
 
 const reducers = combineReducers({
+  admin: adminReducer,
   user: userReducer,
   playlist: playlistReducer,
-  plan: planReducer
-
+  plan: planReducer,
 });
 
 export const store = configureStore({

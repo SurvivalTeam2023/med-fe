@@ -26,3 +26,5 @@ export const config = {
     process.env.CLIENT_ID ||
     "AfdKKH46rASiapwQ8JMQ8LA7SSdPyCff7-1lsTDPNELBp3Ee1PiQgMgHJI7JP3A7oP_AlXIyfhw3rtNj",
 };
+export const USER_KEY_STORAGE = "@MedApp:user";
+export const TOKEN_KEY_STORAGE = "@MedApp:token";

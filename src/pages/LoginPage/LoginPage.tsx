@@ -10,6 +10,9 @@ import { FaGoogle } from "react-icons/fa";
 import { useLoginApi } from "hooks/auth.hook";
 import { LoginPayload } from "core/interface/models/auth";
 import { PLAYLIST } from "core/constants";
+import { useDispatch } from "react-redux";
+import { userActions } from "store/slice";
+import { adminAction } from "store/slice/auth.slice";
 export const LinkItem = styled(Link)`
   text-decoration: none;
   color: #3683dc;
@@ -42,7 +45,7 @@ const LoginPage: FunctionComponent = () => {
   const navigate = useNavigate();
   const { mutate } = useLoginApi();
   const [form] = Form.useForm();
-
+  const dispatch = useDispatch();
   const handleButtonClick = () => {
     // Trigger the form submission manually
     form.submit();
@@ -73,7 +76,9 @@ const LoginPage: FunctionComponent = () => {
       },
       {
         onSuccess: (data) => {
+          // const access_token =
           console.log("login Success", data["data"]);
+          dispatch(adminAction.storeUser(data["data"]));
           navigate(PLAYLIST);
         },
         onError: (error) => {

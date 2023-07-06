@@ -14,6 +14,16 @@ export interface User extends Base {
   status?: string;
 }
 
+export interface DecodedToken {
+  preferred_username: string;
+  sub: string
+  resource_access: {
+    [key: string]: {
+      roles: string[];
+    };
+  };
+}
+
 export type ILogin = {
   username: string;
   password: string;
