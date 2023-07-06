@@ -4,10 +4,10 @@ import { userActions } from "store/slice";
 import { FunctionComponent } from "react";
 import logo from "../common/logo.svg";
 const HomePage: FunctionComponent = () => {
-  const dispathc = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const handleLogoutClick = () => {
-    dispathc(userActions.setToken(null));
+    dispatch(userActions.setToken(null));
   };
   return (
     <div className="App">
