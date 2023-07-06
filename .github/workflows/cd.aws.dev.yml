@@ -68,7 +68,7 @@ jobs:
           REPOSITORY: ${{ secrets.REPOSITORY }}
           IMAGE_TAG: "med-fe-dev-${{ steps.format-time.outputs.replaced }}"
         run: |
-          docker build -t $REPOSITORY:$IMAGE_TAG -f Dockerfile.dev
+          docker build -t $REPOSITORY:$IMAGE_TAG -f Dockerfile.dev .
           docker push $REPOSITORY:$IMAGE_TAG
       - name: Executing remote ssh EC2
         uses: appleboy/ssh-action@master
