@@ -29,12 +29,7 @@ export type ILogin = {
   password: string;
 };
 
-export type IRegister = {
-  username: string;
-  password: string;
-  repassword: string;
-  email: string;
-};
+
 export interface UserData {
   user_db: User;
 }

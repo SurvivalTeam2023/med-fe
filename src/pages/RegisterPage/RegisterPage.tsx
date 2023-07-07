@@ -17,7 +17,6 @@ import { ReactComponent as AuthBackGroundSvg } from "common/icon/auth-bg.svg";
 import { ReactComponent as GoogleLogo } from "common/icon/google.svg";
 import { ReactComponent as MicrosoftLogo } from "common/icon/microsoft.svg";
 import { particles } from "core/constants/particles";
-import { IRegister } from "core/interface/models";
 import { useAppSelector, useAppThunkDispatch } from "store";
 import { selectIsError } from "store/selector";
 import React, { FunctionComponent, useCallback } from "react";
@@ -28,6 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import type { Engine } from "tsparticles-engine";
+import { AuthPayload } from "core/interface/models/auth";
 
 export const LinkItem = styled(Link)`
   text-decoration: none;
@@ -82,21 +82,21 @@ const RegisterPage: FunctionComponent = () => {
   };
   const handleClickShowRePassword = () => setShowRePassword((show) => !show);
 
-  const defaultValues: IRegister = {
+  const defaultValues: AuthPayload = {
     username: "",
     password: "",
     repassword: "",
     email: "",
   };
 
-  const methods = useForm<IRegister>({
+  const methods = useForm<AuthPayload>({
     defaultValues,
   });
   const mutation = useMutation({
-    mutationFn: (payload: IRegister) => registerUserApi(payload),
+    mutationFn: (payload: AuthPayload) => registerUserApi(payload),
   });
-  const onSubmitHandler: SubmitHandler<IRegister> = async (
-    values: IRegister
+  const onSubmitHandler: SubmitHandler<AuthPayload> = async (
+    values: AuthPayload
   ) => {
     try {
       setLoading(true);

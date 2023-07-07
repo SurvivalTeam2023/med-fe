@@ -7,9 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button, Form, Input, Typography, Checkbox, Modal } from "antd";
 import "./login.module.css";
 import { FaGoogle } from "react-icons/fa";
-import { useLoginApi } from "hooks/auth.hook";
-import { LoginPayload } from "core/interface/models/auth";
-import { PLAYLIST } from "core/constants";
+import { useLoginApi, useRegisterUserApi } from "hooks/auth.hook";
+import { AuthPayload } from "core/interface/models/auth";
+import { LOGIN, PLAYLIST } from "core/constants";
 import { useDispatch } from "react-redux";
 import { userActions } from "store/slice";
 import { adminAction } from "store/slice/auth.slice";
@@ -44,6 +44,7 @@ const LoginPage: FunctionComponent = () => {
   const [currentForm, setCurrentForm] = useState(true);
   const navigate = useNavigate();
   const { mutate } = useLoginApi();
+  const { mutate: mutateRegister } = useRegisterUserApi();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const handleButtonClick = () => {
@@ -52,8 +53,6 @@ const LoginPage: FunctionComponent = () => {
   };
 
   const handleSignInClick = () => {
-    console.log(currentForm);
-
     setCurrentForm(true);
   };
 
@@ -61,11 +60,42 @@ const LoginPage: FunctionComponent = () => {
     setCurrentForm(false);
   };
 
-  const onFinish = (values: LoginPayload) => {
+  const onFinish = (values: AuthPayload) => {
     console.log("Received values:", values);
     // Perform any necessary actions with the form values here
-    const { username, password } = values;
-    handleLogin(username, password);
+    const { username, email, password, repassword } = values;
+    if (currentForm) {
+      handleLogin(username, password);
+    } else {
+      handleRegister(username, email, password, repassword);
+    }
+  };
+
+  const handleRegister = (
+    username: string,
+    email: string,
+    password: string,
+    repassword: string
+  ) => {
+    mutateRegister(
+      {
+        username: username,
+        email: email,
+        password: password,
+        repassword: repassword,
+      },
+      {
+        onSuccess: (data) => {
+          // const access_token =
+          console.log("Register sucess", data["data"]);
+          dispatch(adminAction.storeUser(data["data"]));
+          navigate(LOGIN);
+        },
+        onError: (error) => {
+          console.log("Register Failed", error);
+        },
+      }
+    );
   };
 
   const handleLogin = (username: string, password: string) => {
