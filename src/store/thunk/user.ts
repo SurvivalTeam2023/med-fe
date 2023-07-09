@@ -1,5 +1,3 @@
-import { getTokenApi } from "api/auth";
-import { saveAuthKeyIntoLocalStorage } from "util/";
 import { AppThunk } from "..";
 import { userActions } from "../slice";
 
