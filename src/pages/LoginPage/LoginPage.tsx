@@ -61,7 +61,6 @@ const LoginPage: FunctionComponent = () => {
   };
 
   const onFinish = (values: AuthPayload) => {
-    console.log("Received values:", values);
     // Perform any necessary actions with the form values here
     const { username, email, password, repassword } = values;
     if (currentForm) {
@@ -87,7 +86,6 @@ const LoginPage: FunctionComponent = () => {
       {
         onSuccess: (data) => {
           // const access_token =
-          console.log("Register sucess", data["data"]);
           dispatch(adminAction.storeUser(data["data"]));
           navigate(LOGIN);
         },
@@ -107,7 +105,6 @@ const LoginPage: FunctionComponent = () => {
       {
         onSuccess: (data) => {
           // const access_token =
-          console.log("login Success", data["data"]);
           dispatch(adminAction.storeUser(data["data"]));
           navigate(PLAYLIST);
         },
