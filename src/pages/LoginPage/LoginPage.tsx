@@ -259,6 +259,7 @@ const LoginPage: FunctionComponent = () => {
                           background:
                             "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(10, 10, 89, 1))",
                           color: "white",
+                          borderRadius: 16,
                         }}
                         onClick={handleButtonClick}
                       >

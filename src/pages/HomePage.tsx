@@ -25,18 +25,22 @@ import UserPage from "./UserPage/userPage";
 import PlanPage from "./PlanPage/PlanPage";
 import PlayListMusicPage from "./PlaylistPage/PlayListMusicPage";
 import {
-  AppstoreOutlined,
-  ContainerOutlined,
   DesktopOutlined,
   MailOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  PieChartOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { adminAction } from "store/slice/auth.slice";
+import { AUTH_LOGIN } from "core/constants";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState(null);
   type MenuItem = Required<MenuProps>["items"][number];
+  const dispatch = useDispatch();
+  const removeData = () => {
+    dispatch(adminAction.logout());
+    navigate(AUTH_LOGIN);
+  };
 
   const handleClick = (key: any) => {
     setCurrentPage(key);
@@ -113,6 +117,8 @@ function HomePage() {
           <div
             className="logo"
             style={{
+              display: "flex",
+              justifyContent: "space-between",
               padding: "12px 16px",
               color: "#eee",
               fontSize: "18px",
@@ -120,7 +126,14 @@ function HomePage() {
               background: "rgba(255, 255, 255, 0.2)",
             }}
           >
-            Med App
+            <span>Mediatation</span>
+            <div
+              onClick={() => {
+                removeData();
+              }}
+            >
+              <LogoutOutlined />
+            </div>
           </div>
           <Menu
             style={{
@@ -131,11 +144,14 @@ function HomePage() {
             onClick={({ key }) => handleClick(key)}
           />
         </Sider>
+        <div style={{ border: "1px solid black", width: "100%" }}>
+          <div>Hello</div>
 
-        {currentPage === "user" && <UserPage />}
-        {currentPage === "playlist" && <PlayListMusicPage />}
-        {currentPage === "plan" && <PlanPage />}
-        {currentPage === null && null}
+          {currentPage === "user" && <UserPage />}
+          {currentPage === "playlist" && <PlayListMusicPage />}
+          {currentPage === "plan" && <PlanPage />}
+          {currentPage === null && null}
+        </div>
       </Layout>
     </div>
   );

@@ -145,7 +145,6 @@ function PlayListMusicPage() {
       style={{
         padding: 8,
         background: "#eee",
-        width: "100vh",
       }}
     >
       <div style={{ padding: 8, background: "#fff" }}>
