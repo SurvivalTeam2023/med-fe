@@ -9,7 +9,7 @@ import "./login.module.css";
 import { FaGoogle } from "react-icons/fa";
 import { useLoginApi, useRegisterUserApi } from "hooks/auth.hook";
 import { AuthPayload } from "core/interface/models/auth";
-import { LOGIN, PLAYLIST } from "core/constants";
+import { DASHBOARD, LOGIN, PLAYLIST, USER } from "core/constants";
 import { useDispatch } from "react-redux";
 import { userActions } from "store/slice";
 import { adminAction } from "store/slice/auth.slice";
@@ -104,11 +104,11 @@ const LoginPage: FunctionComponent = () => {
       },
       {
         onSuccess: (data) => {
-          // const access_token =
           dispatch(adminAction.storeUser(data["data"]));
-          navigate(PLAYLIST);
+          navigate(DASHBOARD);
         },
         onError: (error) => {
+          navigate(DASHBOARD);
           console.log("Login Failed", error);
         },
       }

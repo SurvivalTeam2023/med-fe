@@ -14,6 +14,12 @@ export interface User extends Base {
   status?: string;
 }
 
+export interface UserDetail {
+  username: string;
+  email: string;
+  firstname: string;
+  lastname: string;
+}
 export interface DecodedToken {
   preferred_username: string;
   sub: string

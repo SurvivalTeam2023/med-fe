@@ -12,6 +12,7 @@ import {
   MenuProps,
   InputRef,
   Input,
+  Avatar,
 } from "antd";
 import { Playlist, PlaylistsData } from "core/interface/models/playlist";
 import moment from "moment";
@@ -21,6 +22,7 @@ import { FilterConfirmProps } from "antd/es/table/interface";
 import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnType } from "antd/es/table";
 import { toast, ToastContainer } from "react-toastify";
+import { UserOutlined } from "@ant-design/icons";
 function PlayListMusicPage() {
   const {
     token: { colorBgContainer },
@@ -29,7 +31,6 @@ function PlayListMusicPage() {
   const [page, setPage] = useState(1);
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
-  const [collapsed, setCollapsed] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
 
@@ -38,10 +39,7 @@ function PlayListMusicPage() {
     const data = res.data;
     return data;
   };
-  const { Sider } = Layout;
-  const onClick: MenuProps["onClick"] = (e) => {
-    navigate(`/${e.key}`);
-  };
+
   const { data, isSuccess, isError, error } = useQuery<PlaylistsData, Error>(
     ["playlist", page],
     () => fetchPlaylist(page, name, status)
@@ -143,132 +141,107 @@ function PlayListMusicPage() {
   });
 
   return (
-    <>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
+    <Layout
+      style={{
+        padding: 8,
+        background: "#eee",
+        width: "100vh",
+      }}
+    >
+      <div style={{ padding: 8, background: "#fff" }}>
+        <div
+          style={{
+            padding: "12px 8px",
+            background: "#EEEEEE",
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: 4,
+
+            fontSize: 16,
+            fontWeight: "500",
+            justifyContent: "space-between",
+          }}
         >
-          <div
-            className="logo"
-            style={{
-              height: 32,
-              margin: 16,
-              background: "rgba(255, 255, 255, 0.2)",
-            }}
-          >
-            Med App
+          <span>Manage Playlist</span>
+          <div>
+            <Avatar shape="square" size="small" icon={<UserOutlined />} />
           </div>
-          <Menu
-            theme="dark"
-            mode="inline"
-            selectedKeys={["playlist"]}
-            items={[
-              {
-                key: "user",
-                label: "User",
-                onClick: onClick,
-              },
-              {
-                key: "playlist",
-                label: "Playlist",
-                onClick: onClick,
-              },
-              {
-                key: "plan",
-                label: "Plan",
-                onClick: onClick,
-              },
-            ]}
-          />
-        </Sider>
-        <Layout>
-          <Header
-            style={{
-              padding: 0,
-              background: colorBgContainer,
-              textAlign: "center",
-              fontSize: "2em",
-            }}
-          >
-            {" "}
-            Manage Playlist
-          </Header>
-          <Table
-            className="playlist-table"
-            dataSource={data?.items}
-            bordered
-            pagination={{
-              total: data?.meta.totalItems,
-              current: page,
-              onChange: onChange,
-              position: ["bottomCenter"],
-            }}
-            columns={[
-              {
-                title: "Name",
-                dataIndex: "name",
-                key: "name",
-                width: "20%",
-                ...getColumnSearchProps("name"),
-              },
-              {
-                title: "Description",
-                dataIndex: "description",
-                key: "description",
-                render: (text) => <a>{text}</a>,
-                width: "20%",
-              },
-              {
-                title: "Status",
-                dataIndex: "status",
-                key: "status",
-                width: "20%",
-              },
-              {
-                title: "Created Date",
-                dataIndex: "createdAt",
-                key: "createdAt",
-                width: "20%",
-              },
-              {
-                title: "Action",
-                key: "action",
-                render: (text, record, index) => (
-                  <Space size="middle">
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        navigate(`/playlist/${record.id}`, {
-                          state: record.id,
-                        });
-                      }}
-                    >
-                      Detail
-                    </Button>
-                    <Button
-                      type="primary"
-                      key="audio"
-                      onClick={() => {
-                        navigate(`/audio`, { state: record.id });
-                      }}
-                    >
-                      Audios
-                    </Button>
-                  </Space>
-                ),
-                width: "20%",
-              },
-            ]}
-          />
-          <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2023 Created by Ant UED
-          </Footer>
-        </Layout>
-      </Layout>
+        </div>
+        <Table
+          style={{ margin: "8px 0" }}
+          className="playlist-table"
+          dataSource={data?.items}
+          scroll={{ y: 240 }}
+          bordered
+          pagination={{
+            total: data?.meta.totalItems,
+            current: page,
+            onChange: onChange,
+            position: ["bottomCenter"],
+          }}
+          columns={[
+            {
+              title: "Name",
+              dataIndex: "name",
+              key: "name",
+              width: "20%",
+              ...getColumnSearchProps("name"),
+            },
+            {
+              title: "Description",
+              dataIndex: "description",
+              key: "description",
+              render: (text) => <a>{text}</a>,
+              width: "20%",
+            },
+            {
+              title: "Status",
+              dataIndex: "status",
+              key: "status",
+              width: "20%",
+            },
+            {
+              title: "Created Date",
+              dataIndex: "createdAt",
+              key: "createdAt",
+              width: "20%",
+            },
+            {
+              title: "Action",
+              key: "action",
+              render: (text, record, index) => (
+                <Space size="middle">
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      navigate(`/playlist/${record.id}`, {
+                        state: record.id,
+                      });
+                    }}
+                  >
+                    Detail
+                  </Button>
+                  <Button
+                    type="primary"
+                    key="audio"
+                    onClick={() => {
+                      navigate(`/audio`, { state: record.id });
+                    }}
+                  >
+                    Audios
+                  </Button>
+                </Space>
+              ),
+              width: "20%",
+            },
+          ]}
+        />
+        <Footer style={{ textAlign: "center" }}>
+          Ant Design ©2023 Created by Ant UED
+        </Footer>
+      </div>
       <ToastContainer autoClose={1000} limit={1} />
-    </>
+    </Layout>
   );
 }
 export default PlayListMusicPage;
