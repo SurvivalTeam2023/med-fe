@@ -7,12 +7,11 @@ import {
   Table,
   Button,
   Layout,
-  Menu,
   theme,
-  MenuProps,
   InputRef,
   Input,
   Avatar,
+  Modal,
 } from "antd";
 import { Playlist, PlaylistsData } from "core/interface/models/playlist";
 import moment from "moment";
@@ -23,6 +22,11 @@ import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnType } from "antd/es/table";
 import { toast, ToastContainer } from "react-toastify";
 import { UserOutlined } from "@ant-design/icons";
+import AudioManagePage from "pages/AudioPage/AudioManagePage";
+import { useDispatch } from "react-redux";
+import { audioActions } from "store/slice/audio.slice";
+import { store } from "store";
+import { playlistActions } from "store/slice";
 function PlayListMusicPage() {
   const {
     token: { colorBgContainer },
@@ -40,18 +44,27 @@ function PlayListMusicPage() {
     return data;
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const dispatch = useDispatch();
+
   const { data, isSuccess, isError, error } = useQuery<PlaylistsData, Error>(
     ["playlist", page],
     () => fetchPlaylist(page, name, status)
   );
-  if (isSuccess) {
-    toast.success("Success");
-    toast.clearWaitingQueue();
-  }
 
-  if (isError) {
-    toast.error(error?.message);
-  }
   const onChange: PaginationProps["onChange"] = (current) => {
     setPage(current);
   };
@@ -166,12 +179,26 @@ function PlayListMusicPage() {
             <Avatar shape="square" size="small" icon={<UserOutlined />} />
           </div>
         </div>
+        <Modal
+          open={isModalOpen}
+          onOk={handleOk}
+          footer={null}
+          onCancel={handleCancel}
+          centered={true}
+          width={"65%"}
+          style={{ border: "1px solid black" }}
+          bodyStyle={{ padding: "8px" }}
+        >
+          <AudioManagePage />
+        </Modal>
+
         <Table
           style={{ margin: "8px 0" }}
           className="playlist-table"
           dataSource={data?.items}
           scroll={{ y: 240 }}
           bordered
+          rowKey={(record) => record.id}
           pagination={{
             total: data?.meta.totalItems,
             current: page,
@@ -224,7 +251,13 @@ function PlayListMusicPage() {
                     type="primary"
                     key="audio"
                     onClick={() => {
-                      navigate(`/audio`, { state: record.id });
+                      const id: any = record.id;
+                      const currentPage: any = page;
+                      dispatch(playlistActions.setPlaylistId(id));
+                      dispatch(
+                        playlistActions.setPlaylistCurrentPage(currentPage)
+                      );
+                      showModal();
                     }}
                   >
                     Audios
@@ -239,7 +272,6 @@ function PlayListMusicPage() {
           Ant Design ©2023 Created by Ant UED
         </Footer>
       </div>
-      <ToastContainer autoClose={1000} limit={1} />
     </Layout>
   );
 }

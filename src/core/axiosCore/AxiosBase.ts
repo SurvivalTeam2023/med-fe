@@ -25,7 +25,7 @@ export const injectStore = (_store: EnhancedStore<RootState>) => {
 CallAPI.interceptors.request.use((req) => {
   const token = getAuthKeyFromLocalStorage();
   if (token && req.headers)
-    req.headers[KEYS.HEADER_AUTHORIZATION] = `Bearer ${token.access_token}`;
+    req.headers[KEYS.HEADER_AUTHORIZATION] = `Bearer ${token}`;
 
   return req;
 });

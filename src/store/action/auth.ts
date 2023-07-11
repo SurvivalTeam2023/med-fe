@@ -4,18 +4,20 @@ import { parseTokenToUserId, parseTokenToUsername } from "util/user";
 
 
 export const fetchUserData = async (token: string) => {
+
     if (!token) return;
     const [username, userId] = [
         parseTokenToUsername(token),
         parseTokenToUserId(token),
     ];
 
+
     const [userDatabyUsername, getUserProfileByUserId]: any = await Promise.all([
         getUserDataByUsernameApi(username),
         getUserProfileByUserIdApi(userId),
     ]);
 
-    const { user_keycloak, user_db } = userDatabyUsername;
+    const { user_keycloak, user_db } = userDatabyUsername['data'];
     const {
         id,
         username: dbUsername,
@@ -42,7 +44,7 @@ export const fetchUserData = async (token: string) => {
         publicPlaylist = [],
         followingArtist = [],
         lastestSub = {},
-    } = getUserProfileByUserId;
+    } = getUserProfileByUserId['data'];
 
     return {
         id: id || keycloakId,

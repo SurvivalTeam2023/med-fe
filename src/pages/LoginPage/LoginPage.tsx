@@ -13,6 +13,9 @@ import { DASHBOARD, LOGIN, PLAYLIST, USER } from "core/constants";
 import { useDispatch } from "react-redux";
 import { userActions } from "store/slice";
 import { adminAction } from "store/slice/auth.slice";
+import { fetchUserData } from "store/action/auth";
+import { store } from "store";
+import { saveAuthKeyIntoLocalStorage } from "util/localStorage";
 export const LinkItem = styled(Link)`
   text-decoration: none;
   color: #3683dc;
@@ -85,7 +88,6 @@ const LoginPage: FunctionComponent = () => {
       },
       {
         onSuccess: (data) => {
-          // const access_token =
           dispatch(adminAction.storeUser(data["data"]));
           navigate(LOGIN);
         },
@@ -103,12 +105,22 @@ const LoginPage: FunctionComponent = () => {
         password: password,
       },
       {
-        onSuccess: (data) => {
-          dispatch(adminAction.storeUser(data["data"]));
-          navigate(DASHBOARD);
+        onSuccess: async (data: any) => {
+          try {
+            const dataRaw = data["data"];
+            const access_token = dataRaw["access_token"];
+            dispatch(adminAction.storeToken(dataRaw));
+            saveAuthKeyIntoLocalStorage(access_token);
+            const userData = await fetchUserData(access_token);
+            if (userData) {
+              dispatch(adminAction.storeUser(userData));
+              navigate(DASHBOARD);
+            }
+          } catch (error) {
+            console.log("An error occurred during login:", error);
+          }
         },
         onError: (error) => {
-          navigate(DASHBOARD);
           console.log("Login Failed", error);
         },
       }

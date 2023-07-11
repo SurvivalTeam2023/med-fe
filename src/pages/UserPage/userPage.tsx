@@ -22,10 +22,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AntDesignOutlined } from "@ant-design/icons";
 function UserPage() {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-  const [collapsed, setCollapsed] = useState(false);
   const fetchUsers = async () => {
     const res = await getUsersAPI();
     const data = res.data;
@@ -81,33 +77,30 @@ function UserPage() {
           bordered
           scroll={{ y: 240 }}
           pagination={{ defaultPageSize: 5, position: ["bottomCenter"] }}
+          rowKey={(record) => record.id}
           columns={[
             {
               title: "Username",
               dataIndex: "username",
               key: "username",
-              render: (text) => <a>{text}</a>,
               width: "20%",
             },
             {
               title: "First Name ",
               dataIndex: "firstName",
               key: "firstName",
-              render: (text) => <a>{text}</a>,
               width: "20%",
             },
             {
               title: "Last Name",
               dataIndex: "lastName",
               key: "lastName",
-              render: (text) => <a>{text}</a>,
               width: "20%",
             },
             {
               title: "email",
               dataIndex: "email",
               key: "email",
-              render: (text) => <a>{text}</a>,
               width: "20%",
             },
             {
