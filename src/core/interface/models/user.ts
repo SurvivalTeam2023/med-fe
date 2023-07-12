@@ -30,6 +30,16 @@ export interface DecodedToken {
   };
 }
 
+export interface Register {
+  firstName: string
+  lastName: string
+  email: string
+  city: string
+  address: string
+  dob: string
+  avatar: File
+}
+
 export type ILogin = {
   username: string;
   password: string;

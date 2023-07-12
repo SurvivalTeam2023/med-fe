@@ -154,125 +154,124 @@ function PlayListMusicPage() {
   });
 
   return (
-    <Layout
-      style={{
-        padding: 8,
-        background: "#eee",
-      }}
-    >
-      <div style={{ padding: 8, background: "#fff" }}>
-        <div
-          style={{
-            padding: "12px 8px",
-            background: "#EEEEEE",
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: 4,
+    <div>
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        footer={null}
+        onCancel={handleCancel}
+        centered
+      >
+        <AudioManagePage />
+      </Modal>
+      <Layout
+        style={{
+          padding: 8,
+          background: "#eee",
+        }}
+      >
+        <div style={{ padding: 8, background: "#fff" }}>
+          <div
+            style={{
+              padding: "12px 8px",
+              background: "#EEEEEE",
+              display: "flex",
+              alignItems: "center",
+              paddingLeft: 4,
 
-            fontSize: 16,
-            fontWeight: "500",
-            justifyContent: "space-between",
-          }}
-        >
-          <span>Manage Playlist</span>
-          <div>
-            <Avatar shape="square" size="small" icon={<UserOutlined />} />
+              fontSize: 16,
+              fontWeight: "500",
+              justifyContent: "space-between",
+            }}
+          >
+            <span>Manage Playlist</span>
+            <div>
+              <Avatar shape="square" size="small" icon={<UserOutlined />} />
+            </div>
           </div>
-        </div>
-        <Modal
-          open={isModalOpen}
-          onOk={handleOk}
-          footer={null}
-          onCancel={handleCancel}
-          centered={true}
-          width={"65%"}
-          style={{ border: "1px solid black" }}
-          bodyStyle={{ padding: "8px" }}
-        >
-          <AudioManagePage />
-        </Modal>
 
-        <Table
-          style={{ margin: "8px 0" }}
-          className="playlist-table"
-          dataSource={data?.items}
-          scroll={{ y: 240 }}
-          bordered
-          rowKey={(record) => record.id}
-          pagination={{
-            total: data?.meta.totalItems,
-            current: page,
-            onChange: onChange,
-            position: ["bottomCenter"],
-          }}
-          columns={[
-            {
-              title: "Name",
-              dataIndex: "name",
-              key: "name",
-              width: "20%",
-              ...getColumnSearchProps("name"),
-            },
-            {
-              title: "Description",
-              dataIndex: "description",
-              key: "description",
-              render: (text) => <a>{text}</a>,
-              width: "20%",
-            },
-            {
-              title: "Status",
-              dataIndex: "status",
-              key: "status",
-              width: "20%",
-            },
-            {
-              title: "Created Date",
-              dataIndex: "createdAt",
-              key: "createdAt",
-              width: "20%",
-            },
-            {
-              title: "Action",
-              key: "action",
-              render: (text, record, index) => (
-                <Space size="middle">
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      navigate(`/playlist/${record.id}`, {
-                        state: record.id,
-                      });
-                    }}
-                  >
-                    Detail
-                  </Button>
-                  <Button
-                    type="primary"
-                    key="audio"
-                    onClick={() => {
-                      const id: any = record.id;
-                      const currentPage: any = page;
-                      dispatch(playlistActions.setPlaylistId(id));
-                      dispatch(
-                        playlistActions.setPlaylistCurrentPage(currentPage)
-                      );
-                      showModal();
-                    }}
-                  >
-                    Audios
-                  </Button>
-                </Space>
-              ),
-              width: "20%",
-            },
-          ]}
-        />
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©2023 Created by Ant UED
-        </Footer>
-      </div>
-    </Layout>
+          <Table
+            style={{ margin: "8px 0" }}
+            className="playlist-table"
+            dataSource={data?.items}
+            scroll={{ y: 240 }}
+            bordered
+            rowKey={(record) => record.id}
+            pagination={{
+              total: data?.meta.totalItems,
+              current: page,
+              onChange: onChange,
+              position: ["bottomCenter"],
+            }}
+            columns={[
+              {
+                title: "Name",
+                dataIndex: "name",
+                key: "name",
+                width: "20%",
+                ...getColumnSearchProps("name"),
+              },
+              {
+                title: "Description",
+                dataIndex: "description",
+                key: "description",
+                render: (text) => <a>{text}</a>,
+                width: "20%",
+              },
+              {
+                title: "Status",
+                dataIndex: "status",
+                key: "status",
+                width: "20%",
+              },
+              {
+                title: "Created Date",
+                dataIndex: "createdAt",
+                key: "createdAt",
+                width: "20%",
+              },
+              {
+                title: "Action",
+                key: "action",
+                render: (text, record, index) => (
+                  <Space size="middle">
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        navigate(`/playlist/${record.id}`, {
+                          state: record.id,
+                        });
+                      }}
+                    >
+                      Detail
+                    </Button>
+                    <Button
+                      type="primary"
+                      key="audio"
+                      onClick={() => {
+                        const id: any = record.id;
+                        const currentPage: any = page;
+                        dispatch(playlistActions.setPlaylistId(id));
+                        dispatch(
+                          playlistActions.setPlaylistCurrentPage(currentPage)
+                        );
+                        showModal();
+                      }}
+                    >
+                      Audios
+                    </Button>
+                  </Space>
+                ),
+                width: "20%",
+              },
+            ]}
+          />
+          <Footer style={{ textAlign: "center" }}>
+            Ant Design ©2023 Created by Ant UED
+          </Footer>
+        </div>
+      </Layout>
+    </div>
   );
 }
 export default PlayListMusicPage;

@@ -1,6 +1,6 @@
-import { CallAPI } from "core/axiosCore";
+import { CallAPI, CallAPIMulti } from "core/axiosCore";
 import { ApiResponse } from "core/interface/api";
-import { User, UserData } from "core/interface/models";
+import { Register, User, UserData } from "core/interface/models";
 
 export const getUsersAPI = (): ApiResponse<User[]> => {
   const url = `/user/userList`;
@@ -19,6 +19,25 @@ export const getUserProfileByUserIdApi = (userId: string) => {
 export const getUserDetailAPI = (username: string): ApiResponse<UserData> => {
   const url = `/user/${username}`;
   return CallAPI.get(url);
+};
+export const updateUserApi = (payload: Register): ApiResponse<Register> => {
+  const url = "/user/user";
+  const { firstName,
+    lastName,
+    email,
+    city,
+    address,
+    dob,
+    avatar } = payload;
+  return CallAPIMulti.post(url, {
+    firstName,
+    lastName,
+    email,
+    city,
+    address,
+    dob,
+    avatar
+  })
 };
 
 export const editUserStatusAPI = (

@@ -84,6 +84,7 @@ function AudioManagePage() {
           className="audio-table"
           dataSource={data?.items}
           bordered
+          style={{ padding: "8px, 0px" }}
           pagination={{
             total: data?.meta.totalItems,
             current: page,

@@ -112,6 +112,7 @@ const LoginPage: FunctionComponent = () => {
             dispatch(adminAction.storeToken(dataRaw));
             saveAuthKeyIntoLocalStorage(access_token);
             const userData = await fetchUserData(access_token);
+            console.log(userData);
             if (userData) {
               dispatch(adminAction.storeUser(userData));
               navigate(DASHBOARD);
