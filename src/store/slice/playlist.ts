@@ -3,6 +3,8 @@ import { PlaylistState } from "core/interface/redux";
 
 const initialState: PlaylistState = {
   playlist: null,
+  id: null,
+  currentPage: null,
   error: null,
 };
 
@@ -21,10 +23,18 @@ const reducer = createSlice({
       state,
       { payload }: PayloadAction<PlaylistState["playlist"]>
     ) => {
-      if (state.playlist != null && payload != null) {
-        state.playlist.id = payload.id;
+      if (payload != null) {
+        state.id = payload;
       }
     },
+    setPlaylistCurrentPage: (
+      state,
+      { payload }: PayloadAction<PlaylistState["playlist"]>
+    ) => {
+      if (payload != null) {
+        state.currentPage = payload;
+      }
+    }
   },
 });
 export const playlistActions = {

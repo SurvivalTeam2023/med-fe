@@ -1,8 +1,9 @@
-import { getUserDataByUsernameApi, getUserProfileByUserIdApi } from "api/user";
-import { useQuery } from "react-query";
+import { getUserDataByUsernameApi, getUserProfileByUserIdApi, updateUserApi } from "api/user";
+import { useMutation, useQuery } from "react-query";
+
+
 
 export const useGetUserDataByUsername = (username: string) => {
-    if (!username) return;
     const { ...rest } = useQuery({
         queryKey: ["getUsername", username],
         queryFn: async () => {
@@ -10,11 +11,11 @@ export const useGetUserDataByUsername = (username: string) => {
         },
         enabled: !!username,
     });
+    if (!username) return;
     return { ...rest };
 };
 
 export const useGetUserProfile = (userId: string) => {
-    if (!userId) return;
     const { ...rest } = useQuery({
         queryKey: ["getUserProfile", userId],
         queryFn: async () => {
@@ -22,5 +23,11 @@ export const useGetUserProfile = (userId: string) => {
         },
         enabled: !!userId,
     });
+    if (!userId) return;
     return { ...rest };
 };
+
+export const useUpdateUserApi = () =>
+    useMutation({
+        mutationFn: updateUserApi,
+    });

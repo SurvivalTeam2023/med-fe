@@ -12,6 +12,7 @@ import {
   USER,
   PLAN,
   EDITUSER,
+  ACCOUNT_DETAIL,
 } from "core/constants";
 import UnAuthGuard from "core/guard/UnAuth";
 import { ReactNode } from "react";
@@ -26,6 +27,7 @@ import AudioDetail from "pages/AudioPage/AudioDetailPage";
 import UserPage from "pages/UserPage/userPage";
 import PlanPage from "pages/PlanPage/PlanPage";
 import EditUser from "pages/UserPage/editUser";
+import UserInfoPage from "pages/UserInfo/UserInfoPage";
 
 export interface SingleRoute {
   path?: string;
@@ -55,6 +57,7 @@ export const ROUTES: SingleRoute[] = [
   },
   { path: DASHBOARD, component: <HomePage /> },
   { path: PLAYLIST, component: <PlaylistPage /> },
+  { path: ACCOUNT_DETAIL, component: <UserInfoPage /> },
   {
     path: USER,
     component: <UserPage />,

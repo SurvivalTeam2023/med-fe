@@ -4,18 +4,20 @@ import { parseTokenToUserId, parseTokenToUsername } from "util/user";
 
 
 export const fetchUserData = async (token: string) => {
+
     if (!token) return;
     const [username, userId] = [
         parseTokenToUsername(token),
         parseTokenToUserId(token),
     ];
 
+
     const [userDatabyUsername, getUserProfileByUserId]: any = await Promise.all([
         getUserDataByUsernameApi(username),
         getUserProfileByUserIdApi(userId),
     ]);
 
-    const { user_keycloak, user_db } = userDatabyUsername;
+    const { user_keycloak, user_db } = userDatabyUsername['data'];
     const {
         id,
         username: dbUsername,
@@ -27,6 +29,7 @@ export const fetchUserData = async (token: string) => {
         address,
         dob,
         status,
+        avatar
     } = user_db;
     const {
         id: keycloakId,
@@ -42,7 +45,7 @@ export const fetchUserData = async (token: string) => {
         publicPlaylist = [],
         followingArtist = [],
         lastestSub = {},
-    } = getUserProfileByUserId;
+    } = getUserProfileByUserId['data'];
 
     return {
         id: id || keycloakId,
@@ -56,7 +59,7 @@ export const fetchUserData = async (token: string) => {
         dob: dob || "",
         status: status || "",
         created_at: id || "",
-        avatar: id || {},
+        avatar: avatar || {},
         favorite,
         playlist,
         following,

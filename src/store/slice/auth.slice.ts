@@ -28,7 +28,7 @@ const reducer = createSlice({
             state.token = payload["access_token"];
             state.refreshToken = payload["refresh_token"];
             state.role = parseTokenToRole(payload["access_token"]);
-            storeTokenToLocal(payload).then((r: any) =>
+            storeTokenToLocal(payload['access_token']).then((r: any) =>
                 console.log("store_token_local_success")
             );
         },

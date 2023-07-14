@@ -12,12 +12,14 @@ import { planReducer, playlistReducer, userReducer } from "./slice";
 import { ThunkDispatch } from "redux-thunk";
 import thunk from "redux-thunk";
 import { adminReducer } from "./slice/auth.slice";
+import { audioReducer } from "./slice/audio.slice";
 
 const reducers = combineReducers({
   admin: adminReducer,
   user: userReducer,
   playlist: playlistReducer,
   plan: planReducer,
+  audio: audioReducer,
 });
 
 export const store = configureStore({

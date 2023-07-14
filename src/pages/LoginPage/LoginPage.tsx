@@ -9,10 +9,13 @@ import "./login.module.css";
 import { FaGoogle } from "react-icons/fa";
 import { useLoginApi, useRegisterUserApi } from "hooks/auth.hook";
 import { AuthPayload } from "core/interface/models/auth";
-import { LOGIN, PLAYLIST } from "core/constants";
+import { DASHBOARD, LOGIN, PLAYLIST, USER } from "core/constants";
 import { useDispatch } from "react-redux";
 import { userActions } from "store/slice";
 import { adminAction } from "store/slice/auth.slice";
+import { fetchUserData } from "store/action/auth";
+import { store } from "store";
+import { saveAuthKeyIntoLocalStorage } from "util/localStorage";
 export const LinkItem = styled(Link)`
   text-decoration: none;
   color: #3683dc;
@@ -63,6 +66,7 @@ const LoginPage: FunctionComponent = () => {
   const onFinish = (values: AuthPayload) => {
     // Perform any necessary actions with the form values here
     const { username, email, password, repassword } = values;
+    console.log(values);
     if (currentForm) {
       handleLogin(username, password);
     } else {
@@ -85,7 +89,6 @@ const LoginPage: FunctionComponent = () => {
       },
       {
         onSuccess: (data) => {
-          // const access_token =
           dispatch(adminAction.storeUser(data["data"]));
           navigate(LOGIN);
         },
@@ -103,10 +106,20 @@ const LoginPage: FunctionComponent = () => {
         password: password,
       },
       {
-        onSuccess: (data) => {
-          // const access_token =
-          dispatch(adminAction.storeUser(data["data"]));
-          navigate(PLAYLIST);
+        onSuccess: async (data: any) => {
+          try {
+            const dataRaw = data["data"];
+            const access_token = dataRaw["access_token"];
+            dispatch(adminAction.storeToken(dataRaw));
+            saveAuthKeyIntoLocalStorage(access_token);
+            const userData = await fetchUserData(access_token);
+            if (userData) {
+              dispatch(adminAction.storeUser(userData));
+              navigate(DASHBOARD);
+            }
+          } catch (error) {
+            console.log("An error occurred during login:", error);
+          }
         },
         onError: (error) => {
           console.log("Login Failed", error);
@@ -259,6 +272,7 @@ const LoginPage: FunctionComponent = () => {
                           background:
                             "linear-gradient(to bottom, rgba(255, 124, 0, 1), rgba(10, 10, 89, 1))",
                           color: "white",
+                          borderRadius: 16,
                         }}
                         onClick={handleButtonClick}
                       >

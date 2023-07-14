@@ -7,20 +7,25 @@ import {
   Table,
   Button,
   Layout,
-  Menu,
   theme,
-  MenuProps,
   InputRef,
   Input,
+  Avatar,
+  Modal,
 } from "antd";
 import { Playlist, PlaylistsData } from "core/interface/models/playlist";
 import moment from "moment";
-import { Footer, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
-import { FilterConfirmProps } from "antd/es/table/interface";
-import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnType } from "antd/es/table";
 import { toast, ToastContainer } from "react-toastify";
+import AudioManagePage from "pages/AudioPage/AudioManagePage";
+import { useDispatch } from "react-redux";
+import { audioActions } from "store/slice/audio.slice";
+import { store } from "store";
+import { playlistActions } from "store/slice";
+import { FilterConfirmProps } from "antd/es/table/interface";
+import { SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { Footer } from "antd/es/layout/layout";
 function PlayListMusicPage() {
   const {
     token: { colorBgContainer },
@@ -29,7 +34,6 @@ function PlayListMusicPage() {
   const [page, setPage] = useState(1);
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
-  const [collapsed, setCollapsed] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
 
@@ -38,23 +42,29 @@ function PlayListMusicPage() {
     const data = res.data;
     return data;
   };
-  const { Sider } = Layout;
-  const onClick: MenuProps["onClick"] = (e) => {
-    navigate(`/${e.key}`);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
   };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const dispatch = useDispatch();
+
   const { data, isSuccess, isError, error } = useQuery<PlaylistsData, Error>(
     ["playlist", page],
     () => fetchPlaylist(page, name, status)
   );
-  if (isSuccess) {
-    toast.success("Success");
-    toast.clearWaitingQueue();
-  }
 
-  if (isError) {
-    toast.error(error?.message);
-  }
-  const onChange: PaginationProps["onChange"] = (current) => {
+  const onChange: PaginationProps["onChange"] = (current: any) => {
     setPage(current);
   };
 
@@ -143,62 +153,49 @@ function PlayListMusicPage() {
   });
 
   return (
-    <>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
-        >
+    <div>
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        footer={null}
+        onCancel={handleCancel}
+        centered
+      >
+        <AudioManagePage />
+      </Modal>
+      <Layout
+        style={{
+          padding: 8,
+          background: "#eee",
+        }}
+      >
+        <div style={{ padding: 8, background: "#fff" }}>
           <div
-            className="logo"
             style={{
-              height: 32,
-              margin: 16,
-              background: "rgba(255, 255, 255, 0.2)",
+              padding: "12px 8px",
+              background: "#EEEEEE",
+              display: "flex",
+              alignItems: "center",
+              paddingLeft: 4,
+
+              fontSize: 16,
+              fontWeight: "500",
+              justifyContent: "space-between",
             }}
           >
-            Med App
+            <span>Manage Playlist</span>
+            <div>
+              <Avatar shape="square" size="small" icon={<UserOutlined />} />
+            </div>
           </div>
-          <Menu
-            theme="dark"
-            mode="inline"
-            selectedKeys={["playlist"]}
-            items={[
-              {
-                key: "user",
-                label: "User",
-                onClick: onClick,
-              },
-              {
-                key: "playlist",
-                label: "Playlist",
-                onClick: onClick,
-              },
-              {
-                key: "plan",
-                label: "Plan",
-                onClick: onClick,
-              },
-            ]}
-          />
-        </Sider>
-        <Layout>
-          <Header
-            style={{
-              padding: 0,
-              background: colorBgContainer,
-              textAlign: "center",
-              fontSize: "2em",
-            }}
-          >
-            {" "}
-            Manage Playlist
-          </Header>
+
           <Table
+            style={{ margin: "8px 0" }}
             className="playlist-table"
             dataSource={data?.items}
+            scroll={{ y: 240 }}
             bordered
+            rowKey={(record) => record.id}
             pagination={{
               total: data?.meta.totalItems,
               current: page,
@@ -251,7 +248,13 @@ function PlayListMusicPage() {
                       type="primary"
                       key="audio"
                       onClick={() => {
-                        navigate(`/audio`, { state: record.id });
+                        const id: any = record.id;
+                        const currentPage: any = page;
+                        dispatch(playlistActions.setPlaylistId(id));
+                        dispatch(
+                          playlistActions.setPlaylistCurrentPage(currentPage)
+                        );
+                        showModal();
                       }}
                     >
                       Audios
@@ -265,10 +268,9 @@ function PlayListMusicPage() {
           <Footer style={{ textAlign: "center" }}>
             Ant Design ©2023 Created by Ant UED
           </Footer>
-        </Layout>
+        </div>
       </Layout>
-      <ToastContainer autoClose={1000} limit={1} />
-    </>
+    </div>
   );
 }
 export default PlayListMusicPage;

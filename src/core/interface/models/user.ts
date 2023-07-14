@@ -12,8 +12,19 @@ export interface User extends Base {
   address?: string;
   dob?: string;
   status?: string;
+  avatar?: {
+    id: string,
+    key: string,
+    url: string,
+  };
 }
 
+export interface UserDetail {
+  username: string;
+  email: string;
+  firstname: string;
+  lastname: string;
+}
 export interface DecodedToken {
   preferred_username: string;
   sub: string
@@ -22,6 +33,16 @@ export interface DecodedToken {
       roles: string[];
     };
   };
+}
+
+export interface Register {
+  firstName: string | null
+  lastName: string | null
+  email: string | null
+  city: string | null
+  address: string | null
+  dob: Date | null
+  avatar: File | null
 }
 
 export type ILogin = {

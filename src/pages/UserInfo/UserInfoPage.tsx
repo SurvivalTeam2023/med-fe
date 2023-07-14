@@ -1,48 +1,32 @@
-import { useQuery } from "react-query";
-import { useState } from "react";
-import {
-  Table,
-  Button,
-  Layout,
-  Space,
-  Avatar,
-  Modal,
-  Form,
-  Input,
-  Image,
-  UploadProps,
-  message,
-  Upload,
-} from "antd";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
-import { getUsersAPI } from "api/user";
-import { Register, User } from "core/interface/models";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Layout, Image, Descriptions, Form, Input, Button, Modal } from "antd";
+import { Register } from "core/interface/models";
 import { useUpdateUserApi } from "hooks/user.hook";
-import UserDetail from "./UserDetail";
-import { useDispatch } from "react-redux";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { store } from "store";
-import { userActions } from "store/slice";
-const { Header, Content, Footer } = Layout;
-function UserPage() {
+
+function UserInfoPage() {
+  const userData: any = store.getState().admin.data;
   const [form] = Form.useForm();
   const { mutate } = useUpdateUserApi();
+  const [modal2Open, setModal2Open] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [modalUpdateUser, setModalUpdateUser] = useState(false);
-  const [modalUserDetail, setModalUserDetail] = useState(false);
-  const { isSuccess, isError, error, data } = useQuery<User[], Error>(
-    ["users"],
-    async () => fetchUsers()
-  );
-  const onFileChange = (file: any) => {
-    setSelectedFile(file);
+  const handleUpdateUserClick = () => {
+    // Trigger the form submission manually
+    form.submit();
+  };
+  const formData = new FormData();
+
+  const onFinish = (values: Register) => {
+    // Perform any necessary actions with the form values here
+    console.log("values received", values);
+    const { firstName, lastName, email, city, address, dob, avatar } = values;
+    if (values) {
+      handleUpdateUser(firstName, lastName, email, city, address, dob, avatar);
+    } else {
+      console.log("Can not get input values");
+    }
   };
 
   const handleUpdateUser = (
@@ -66,7 +50,9 @@ function UserPage() {
       },
       {
         onSuccess: (data) => {
-          console.log(data["data"]);
+          console.log(data);
+          console.log("Update Success");
+
           toast.success("Success");
         },
         onError: (error) => {
@@ -75,35 +61,11 @@ function UserPage() {
       }
     );
   };
-  const onFinish = (values: Register) => {
-    // Perform any necessary actions with the form values here
-    const { firstName, lastName, email, city, address, dob, avatar } = values;
-    if (values) {
-      handleUpdateUser(firstName, lastName, email, city, address, dob, avatar);
-    } else {
-      console.log("Can not get input values");
-    }
-  };
+  useEffect(() => {}, [selectedFile]);
 
-  const handleUpdateUserClick = () => {
-    // Trigger the form submission manually
-    form.submit();
+  const onFileChange = (file: any) => {
+    setSelectedFile(file);
   };
-  const fetchUsers = async () => {
-    const res = await getUsersAPI();
-    const data = res.data;
-    return data;
-  };
-
-  if (isSuccess) {
-    toast.success("Success");
-    toast.clearWaitingQueue();
-  }
-
-  if (isError) {
-    toast.error(error?.message);
-    toast.clearWaitingQueue();
-  }
 
   return (
     <div>
@@ -112,10 +74,10 @@ function UserPage() {
         centered
         footer={false}
         bodyStyle={{ width: "100%", padding: "12px" }}
-        open={modalUpdateUser}
+        open={modal2Open}
         width={"75%"}
-        onOk={() => setModalUpdateUser(false)}
-        onCancel={() => setModalUpdateUser(false)}
+        onOk={() => setModal2Open(false)}
+        onCancel={() => setModal2Open(false)}
       >
         <div style={{ padding: 8, background: "#eee" }}>
           <div
@@ -135,7 +97,7 @@ function UserPage() {
             >
               <Image
                 width={200}
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                src={`${userData.avatar.url}`}
                 style={{ borderRadius: "100px" }}
               />
             </div>
@@ -211,15 +173,32 @@ function UserPage() {
                     </Form.Item>
 
                     <Form.Item
-                      label="avatar"
-                      name="image"
+                      label="Avatar"
+                      name="avatar"
                       style={{ marginBottom: "1px" }}
                     >
                       <div>
                         <input
                           type="file"
-                          onChange={() => {
-                            onFileChange(selectedFile);
+                          onChange={(e: any) => {
+                            const selectedFile = e.target.files?.[0];
+
+                            if (selectedFile) {
+                              const formData = new FormData(); // Create a new FormData instance
+                              formData.append(
+                                "myFile",
+                                selectedFile,
+                                selectedFile.name
+                              ); // Append the selected file to the formData
+
+                              console.log(formData); // Log the formData object
+                              onFileChange(selectedFile); // Pass the selected file to the onFileChange handler
+
+                              console.log("selected file", selectedFile); // Log the selected file
+                            }
+                            onFileChange(formData);
+
+                            console.log("selected file", selectedFile);
                           }}
                         />
                       </div>
@@ -252,20 +231,7 @@ function UserPage() {
           </div>
         </div>
       </Modal>
-      <Modal
-        title="User profile"
-        centered
-        footer={false}
-        bodyStyle={{ width: "100%", padding: "12px" }}
-        open={modalUserDetail}
-        width={"75%"}
-        onOk={() => setModalUserDetail(false)}
-        onCancel={() => setModalUserDetail(false)}
-        key={modalUserDetail ? "visible" : "hidden"}
-      >
-        <UserDetail />
-      </Modal>
-      <Layout style={{ padding: 8, background: "#eee" }}>
+      <Layout style={{ padding: 8, background: "#eee", marginTop: "12px" }}>
         <div style={{ padding: 8, background: "#fff" }}>
           <div
             style={{
@@ -276,85 +242,72 @@ function UserPage() {
               paddingLeft: 4,
               fontSize: 16,
               fontWeight: "500",
-              justifyContent: "space-between",
+              justifyContent: "center",
             }}
           >
-            <span>Manage User</span>
+            User Info
           </div>
-
-          <Table
-            style={{ margin: "8px 0" }}
-            className="playlist-table"
-            dataSource={data}
-            bordered
-            scroll={{ y: 240 }}
-            pagination={{ defaultPageSize: 5, position: ["bottomCenter"] }}
-            rowKey={(record: any) => record.id}
-            columns={[
-              {
-                title: "Id",
-                dataIndex: "id",
-                key: "id",
-                width: "10%",
-              },
-              {
-                title: "Username",
-                dataIndex: "username",
-                key: "username",
-                width: "10%",
-              },
-              {
-                title: "First Name ",
-                dataIndex: "firstName",
-                key: "firstName",
-                width: "10%",
-              },
-              {
-                title: "Last Name",
-                dataIndex: "lastName",
-                key: "lastName",
-                width: "10%",
-              },
-              {
-                title: "email",
-                dataIndex: "email",
-                key: "email",
-                width: "10%",
-              },
-              {
-                title: "Action",
-                key: "action",
-                render: (text: any, record: any, index: any) => (
-                  <Space size="middle">
+          <div style={{ padding: 8, background: "#eee" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: 8,
+                background: "#fff",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  margin: "0px 52px",
+                }}
+              >
+                <Image
+                  width={200}
+                  src={`${userData.avatar.url}`}
+                  style={{ borderRadius: "100px" }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  border: "1px solid black",
+                }}
+              >
+                <Descriptions
+                  extra={
                     <Button
                       type="primary"
                       onClick={() => {
-                        dispatch(userActions.setUsername(record.username));
-                        setModalUserDetail(true);
-                      }}
-                    >
-                      Detail
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        setModalUpdateUser(true);
+                        setModal2Open(true);
                       }}
                     >
                       Edit
                     </Button>
-                  </Space>
-                ),
-                width: "10%",
-              },
-            ]}
-          />
-          <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2023 Created by Ant UED
-          </Footer>
+                  }
+                >
+                  <Descriptions.Item label="UserName">
+                    {userData.username}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Firstname">
+                    {userData.firstName}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Lastname">
+                    {userData.lastName}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="City">empty</Descriptions.Item>
+                  <Descriptions.Item label="Date or birth">
+                    {moment(userData.dob).format("DD-MM-YYYY")}
+                  </Descriptions.Item>
+                </Descriptions>
+              </div>
+            </div>
+          </div>
         </div>
       </Layout>
     </div>
   );
 }
-export default UserPage;
+export default UserInfoPage;
