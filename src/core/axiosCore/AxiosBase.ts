@@ -35,7 +35,6 @@ CallAPI.interceptors.request.use((req) => {
   const token = getAuthKeyFromLocalStorage();
   if (token && req.headers)
     req.headers[KEYS.HEADER_AUTHORIZATION] = `Bearer ${token}`;
-
   return req;
 });
 
@@ -83,5 +82,6 @@ CallAPIMulti.interceptors.response.use(async (res) => {
       store.dispatch(userActions.setToken(response.data));
     }
   }
+
   return res;
 });

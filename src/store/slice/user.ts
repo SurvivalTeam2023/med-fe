@@ -10,6 +10,7 @@ const initialState: UserState = {
   user: null,
   token: getAuthKeyFromLocalStorage(),
   error: null,
+  username: null,
 };
 
 const reducer = createSlice({
@@ -25,6 +26,9 @@ const reducer = createSlice({
     },
     setUser: (state, { payload }: PayloadAction<UserState["user"]>) => {
       state.user = payload;
+    },
+    setUsername: (state, { payload }: PayloadAction<UserState["user"]>) => {
+      state.username = payload;
     },
     setToken: (state, { payload }: PayloadAction<UserState["token"]>) => {
       state.token = payload;

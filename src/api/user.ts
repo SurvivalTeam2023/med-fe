@@ -16,12 +16,12 @@ export const getUserProfileByUserIdApi = (userId: string) => {
   return CallAPI.get(queryUrl);
 };
 
-export const getUserDetailAPI = (username: string): ApiResponse<UserData> => {
+export const getUserDetailAPI = (username: string | null): ApiResponse<UserData> => {
   const url = `/user/${username}`;
   return CallAPI.get(url);
 };
 export const updateUserApi = (payload: Register): ApiResponse<Register> => {
-  const url = "/user/user";
+  const url = "/user";
   const { firstName,
     lastName,
     email,
@@ -29,7 +29,7 @@ export const updateUserApi = (payload: Register): ApiResponse<Register> => {
     address,
     dob,
     avatar } = payload;
-  return CallAPIMulti.post(url, {
+  return CallAPIMulti.put(url, {
     firstName,
     lastName,
     email,

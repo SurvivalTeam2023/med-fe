@@ -15,18 +15,17 @@ import {
 } from "antd";
 import { Playlist, PlaylistsData } from "core/interface/models/playlist";
 import moment from "moment";
-import { Footer, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
-import { FilterConfirmProps } from "antd/es/table/interface";
-import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnType } from "antd/es/table";
 import { toast, ToastContainer } from "react-toastify";
-import { UserOutlined } from "@ant-design/icons";
 import AudioManagePage from "pages/AudioPage/AudioManagePage";
 import { useDispatch } from "react-redux";
 import { audioActions } from "store/slice/audio.slice";
 import { store } from "store";
 import { playlistActions } from "store/slice";
+import { FilterConfirmProps } from "antd/es/table/interface";
+import { SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { Footer } from "antd/es/layout/layout";
 function PlayListMusicPage() {
   const {
     token: { colorBgContainer },
@@ -65,7 +64,7 @@ function PlayListMusicPage() {
     () => fetchPlaylist(page, name, status)
   );
 
-  const onChange: PaginationProps["onChange"] = (current) => {
+  const onChange: PaginationProps["onChange"] = (current: any) => {
     setPage(current);
   };
 

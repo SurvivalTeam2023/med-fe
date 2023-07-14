@@ -66,6 +66,7 @@ const LoginPage: FunctionComponent = () => {
   const onFinish = (values: AuthPayload) => {
     // Perform any necessary actions with the form values here
     const { username, email, password, repassword } = values;
+    console.log(values);
     if (currentForm) {
       handleLogin(username, password);
     } else {
@@ -112,7 +113,6 @@ const LoginPage: FunctionComponent = () => {
             dispatch(adminAction.storeToken(dataRaw));
             saveAuthKeyIntoLocalStorage(access_token);
             const userData = await fetchUserData(access_token);
-            console.log(userData);
             if (userData) {
               dispatch(adminAction.storeUser(userData));
               navigate(DASHBOARD);

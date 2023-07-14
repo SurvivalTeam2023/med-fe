@@ -6,6 +6,7 @@ export interface Playlist extends Base {
   name: string;
   desc: string;
   status: string;
+  currentPage: string;
   user: User;
 }
 export interface PlaylistsData {

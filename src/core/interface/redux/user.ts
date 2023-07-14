@@ -16,6 +16,7 @@ export interface UserState {
   user: User | null;
   token: TokenResponse | null;
   error: string | null;
+  username: User | null
 }
 
 export interface Properties {
