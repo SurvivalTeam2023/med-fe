@@ -253,12 +253,11 @@ function UserPage() {
         </div>
       </Modal>
       <Modal
-        title="User profile"
         centered
         footer={false}
-        bodyStyle={{ width: "100%", padding: "12px" }}
+        bodyStyle={{ width: "100%" }}
         open={modalUserDetail}
-        width={"75%"}
+        width={"80%"}
         onOk={() => setModalUserDetail(false)}
         onCancel={() => setModalUserDetail(false)}
         key={modalUserDetail ? "visible" : "hidden"}

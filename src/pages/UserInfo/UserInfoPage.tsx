@@ -273,7 +273,6 @@ function UserInfoPage() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  border: "1px solid black",
                 }}
               >
                 <Descriptions
