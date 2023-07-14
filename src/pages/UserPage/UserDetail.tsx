@@ -79,10 +79,9 @@ function UserDetail() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                border: "1px solid black",
               }}
             >
-              <Descriptions layout="horizontal" bordered>
+              <Descriptions layout="horizontal">
                 <Descriptions.Item label="First Name">
                   {data?.user_db.firstName}
                 </Descriptions.Item>

@@ -4,7 +4,10 @@ import { User } from "./user";
 export interface Playlist extends Base {
   id: string;
   name: string;
-  desc: string;
+  description: string;
+  imageUrl: string;
+  playlistType: string;
+  lastUpdatedAt: string;
   status: string;
   currentPage: string;
   user: User;

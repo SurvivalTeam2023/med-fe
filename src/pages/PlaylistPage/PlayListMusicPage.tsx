@@ -26,11 +26,10 @@ import { playlistActions } from "store/slice";
 import { FilterConfirmProps } from "antd/es/table/interface";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { Footer } from "antd/es/layout/layout";
+import PlaylistDetailPage from "./PlaylistDetailPage";
 function PlayListMusicPage() {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-  const navigate = useNavigate();
+  const [showAudioDetail, setShowAudioDetail] = useState();
+
   const [page, setPage] = useState(1);
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
@@ -43,19 +42,9 @@ function PlayListMusicPage() {
     return data;
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const [modalAudioListByPlaylistId, setModalAudioListByPlaylistId] =
+    useState(false);
+  const [modalPlaylistDetail, setModalPLaylistDetail] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -155,13 +144,28 @@ function PlayListMusicPage() {
   return (
     <div>
       <Modal
-        open={isModalOpen}
-        onOk={handleOk}
-        footer={null}
-        onCancel={handleCancel}
         centered
+        footer={false}
+        bodyStyle={{ width: "100%", height: "50%", padding: "12px" }}
+        open={modalAudioListByPlaylistId}
+        width={"75%"}
+        onOk={() => setModalAudioListByPlaylistId(false)}
+        onCancel={() => setModalAudioListByPlaylistId(false)}
+        key={modalAudioListByPlaylistId ? "visible" : "hidden"}
       >
         <AudioManagePage />
+      </Modal>
+      <Modal
+        centered
+        footer={false}
+        bodyStyle={{ width: "100%", padding: "12px" }}
+        open={modalPlaylistDetail}
+        width={"75%"}
+        onOk={() => setModalPLaylistDetail(false)}
+        onCancel={() => setModalPLaylistDetail(false)}
+        key={modalPlaylistDetail ? "visible" : "hidden"}
+      >
+        <PlaylistDetailPage />
       </Modal>
       <Layout
         style={{
@@ -237,9 +241,9 @@ function PlayListMusicPage() {
                     <Button
                       type="primary"
                       onClick={() => {
-                        navigate(`/playlist/${record.id}`, {
-                          state: record.id,
-                        });
+                        const id: any = record.id;
+                        dispatch(playlistActions.setPlaylistId(id));
+                        setModalPLaylistDetail(true);
                       }}
                     >
                       Detail
@@ -254,7 +258,7 @@ function PlayListMusicPage() {
                         dispatch(
                           playlistActions.setPlaylistCurrentPage(currentPage)
                         );
-                        showModal();
+                        setModalAudioListByPlaylistId(true);
                       }}
                     >
                       Audios

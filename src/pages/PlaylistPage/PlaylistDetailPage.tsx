@@ -1,6 +1,8 @@
 import { Descriptions, Image, Layout, Menu, MenuProps } from "antd";
 import Sider from "antd/es/layout/Sider";
+import { getPLaylistDetailAPI } from "api/playlist";
 import { getTrackDetailAPI } from "api/playlistTracks";
+import { Playlist } from "core/interface/models/playlist";
 import { Track } from "core/interface/models/track";
 import moment from "moment";
 import { useState } from "react";
@@ -8,12 +10,12 @@ import { useQuery } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { store } from "store";
 
-function AudioDetailPage() {
+function PlaylistDetailPage() {
   const location = useLocation();
-  const audioId: any = store.getState().audio.audioId;
+  const playlistId: any = store.getState().playlist.id;
   const [collapsed, setCollapsed] = useState(false);
-  const fetchAudioInfo = async () => {
-    const res = await getTrackDetailAPI(audioId);
+  const fetchPlaylistInfo = async () => {
+    const res = await getPLaylistDetailAPI(playlistId);
     const data = res.data;
     console.log(data);
     return data;
@@ -23,9 +25,9 @@ function AudioDetailPage() {
   const onClick: MenuProps["onClick"] = (e) => {
     navigate(`/${e.key}`);
   };
-  const { isLoading, isError, error, data } = useQuery<Track, Error>(
-    ["track"],
-    async () => fetchAudioInfo()
+  const { isLoading, isError, error, data } = useQuery<Playlist, Error>(
+    ["playlist"],
+    async () => fetchPlaylistInfo()
   );
 
   if (isLoading) {
@@ -51,7 +53,7 @@ function AudioDetailPage() {
             justifyContent: "center",
           }}
         >
-          Audio info
+          Playlist info
         </div>
         <div style={{ padding: 8, background: "#eee" }}>
           <div
@@ -81,17 +83,14 @@ function AudioDetailPage() {
                 alignItems: "center",
               }}
             >
-              <Descriptions layout="vertical">
-                <Descriptions.Item label="Audio name">
-                  {data?.name}
+              <Descriptions layout="horizontal">
+                <Descriptions.Item label="Name">{data?.name}</Descriptions.Item>
+                <Descriptions.Item label="Description">
+                  {data?.description}
                 </Descriptions.Item>
-                <Descriptions.Item label="Artist">
-                  {data?.artist.artist_name}
+                <Descriptions.Item label="playlistType">
+                  {data?.playlistType}
                 </Descriptions.Item>
-                <Descriptions.Item label="Length">
-                  {data?.length}
-                </Descriptions.Item>
-
                 <Descriptions.Item label="createdAt">
                   {moment(data?.createdAt).format("DD-MM-YYYY")}
                 </Descriptions.Item>
@@ -106,4 +105,4 @@ function AudioDetailPage() {
     </Layout>
   );
 }
-export default AudioDetailPage;
+export default PlaylistDetailPage;
