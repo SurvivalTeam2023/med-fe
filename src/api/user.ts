@@ -20,24 +20,12 @@ export const getUserDetailAPI = (username: string | null): ApiResponse<UserData>
   const url = `/user/${username}`;
   return CallAPI.get(url);
 };
-export const updateUserApi = (payload: Register): ApiResponse<Register> => {
+export const updateUserApi = (form: any): ApiResponse<Register> => {
   const url = "/user";
-  const { firstName,
-    lastName,
-    email,
-    city,
-    address,
-    dob,
-    avatar } = payload;
-  return CallAPIMulti.put(url, {
-    firstName,
-    lastName,
-    email,
-    city,
-    address,
-    dob,
-    avatar
-  })
+
+  return CallAPIMulti.put(url,
+    form
+  )
 };
 
 export const editUserStatusAPI = (

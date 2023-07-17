@@ -58,6 +58,7 @@ CallAPI.interceptors.response.use(async (res) => {
   return res;
 });
 CallAPIMulti.interceptors.request.use((req) => {
+  console.log('okala', req)
   const token = getAuthKeyFromLocalStorage();
   if (token && req.headers)
     req.headers[KEYS.HEADER_AUTHORIZATION] = `Bearer ${token}`;
