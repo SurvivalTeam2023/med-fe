@@ -46,13 +46,13 @@ function UserPage() {
   };
 
   const handleUpdateUser = (
-    firstname: string | null,
-    lastname: string | null,
-    email: string | null,
-    city: string | null,
-    address: string | null,
-    dob: Date | null,
-    avatar: File | null
+    firstname: string | undefined,
+    lastname: string | undefined,
+    email: string | undefined,
+    city: string | undefined,
+    address: string | undefined,
+    dob: Date | undefined,
+    avatar: File | undefined
   ) => {
     mutate(
       {

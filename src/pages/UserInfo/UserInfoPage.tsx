@@ -1,13 +1,41 @@
 import { Layout, Image, Descriptions, Form, Input, Button, Modal } from "antd";
-import { Register } from "core/interface/models";
+import { getUserDetailAPI } from "api/user";
+import { AsyncLocalStorage } from "async_hooks";
+import { ACCOUNT_DETAIL } from "core/constants";
+import { Register, User, UserData } from "core/interface/models";
 import { useUpdateUserApi } from "hooks/user.hook";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { store } from "store";
+import { getAuthKeyFromLocalStorage } from "../../util/localStorage";
+import { parseTokenToUsername } from "util/user";
 
 function UserInfoPage() {
-  const userData: any = store.getState().admin.data;
+  const token: any = getAuthKeyFromLocalStorage();
+  const username = parseTokenToUsername(token);
+  const [userDetail, setUserDetail] = useState<UserData>();
+  const fetchUser = async () => {
+    const res = await getUserDetailAPI(username);
+    const data = res.data;
+    setUserDetail(data);
+    return data;
+  };
+  const { isSuccess, isError, error, data } = useQuery<UserData, Error>(
+    ["user"],
+    async () => fetchUser()
+  );
+  if (isSuccess) {
+    toast.success("Success");
+    toast.clearWaitingQueue();
+  }
+
+  if (isError) {
+    toast.error(error?.message);
+    toast.clearWaitingQueue();
+  }
   const [form] = Form.useForm();
   const { mutate } = useUpdateUserApi();
   const [modal2Open, setModal2Open] = useState(false);
@@ -18,53 +46,48 @@ function UserInfoPage() {
   };
   const formData = new FormData();
 
-  const onFinish = (values: Register) => {
-    // Perform any necessary actions with the form values here
-    console.log("values received", values);
-    const { firstName, lastName, email, city, address, dob, avatar } = values;
-    if (values) {
-      handleUpdateUser(firstName, lastName, email, city, address, dob, avatar);
-    } else {
-      console.log("Can not get input values");
-    }
-  };
-
-  const handleUpdateUser = (
-    firstname: string | null,
-    lastname: string | null,
-    email: string | null,
-    city: string | null,
-    address: string | null,
-    dob: Date | null,
-    avatar: File | null
-  ) => {
-    mutate(
-      {
-        firstName: firstname,
-        lastName: lastname,
-        email: email,
-        city: city,
-        address: address,
-        dob: dob,
-        avatar: avatar,
-      },
-      {
-        onSuccess: (data) => {
-          console.log(data);
-          console.log("Update Success");
-
-          toast.success("Success");
-        },
-        onError: (error) => {
-          console.log("Update Failed", error);
-        },
-      }
-    );
-  };
-  useEffect(() => {}, [selectedFile]);
-
   const onFileChange = (file: any) => {
     setSelectedFile(file);
+    console.log(selectedFile);
+  };
+  const onFinish = (values: Register) => {
+    const { firstName, lastName, email, city, address, dob, avatar } = values;
+    if (firstName) {
+      formData.append("firstName", firstName);
+    }
+    if (lastName) {
+      formData.append("lastName", lastName);
+    }
+    if (email) {
+      formData.append("email", email);
+    }
+    if (city) {
+      formData.append("city", city);
+    }
+    if (address) {
+      formData.append("address", address);
+    }
+    if (dob) {
+      formData.append("dob", dob.toISOString());
+    }
+    if (selectedFile) {
+      formData.append("avatar", selectedFile);
+    }
+    const formDataObject = Object.fromEntries(formData.entries());
+    console.log("checker", formDataObject);
+    handleUpdateUser(formData);
+  };
+
+  const handleUpdateUser = (formData: any) => {
+    mutate(formData, {
+      onSuccess: (data) => {
+        toast.success("Success");
+        setModal2Open(false);
+      },
+      onError: (error) => {
+        console.log("Update Failed", error);
+      },
+    });
   };
 
   return (
@@ -76,8 +99,9 @@ function UserInfoPage() {
         bodyStyle={{ width: "100%", padding: "12px" }}
         open={modal2Open}
         width={"75%"}
-        onOk={() => setModal2Open(false)}
-        onCancel={() => setModal2Open(false)}
+        afterClose={() => {
+          fetchUser();
+        }}
       >
         <div style={{ padding: 8, background: "#eee" }}>
           <div
@@ -88,19 +112,6 @@ function UserInfoPage() {
               background: "#fff",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                margin: "0px 52px",
-              }}
-            >
-              <Image
-                width={200}
-                src={`${userData.avatar.url}`}
-                style={{ borderRadius: "100px" }}
-              />
-            </div>
             <div>
               <Form
                 layout="vertical"
@@ -111,6 +122,7 @@ function UserInfoPage() {
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
                 autoComplete="off"
+                preserve={false}
               >
                 <div
                   style={{
@@ -122,7 +134,7 @@ function UserInfoPage() {
                   <div>
                     <Form.Item
                       label="Firstname"
-                      name="firstname"
+                      name="firstName"
                       style={{ marginBottom: "8px" }}
                     >
                       <Input
@@ -132,7 +144,7 @@ function UserInfoPage() {
                     </Form.Item>
                     <Form.Item
                       label="Lastname"
-                      name="lastname"
+                      name="lastName"
                       style={{ marginBottom: "8px" }}
                     >
                       <Input style={{ width: "100%" }} placeholder="Lastname" />
@@ -182,23 +194,12 @@ function UserInfoPage() {
                           type="file"
                           onChange={(e: any) => {
                             const selectedFile = e.target.files?.[0];
-
                             if (selectedFile) {
-                              const formData = new FormData(); // Create a new FormData instance
-                              formData.append(
-                                "myFile",
-                                selectedFile,
-                                selectedFile.name
-                              ); // Append the selected file to the formData
-
-                              console.log(formData); // Log the formData object
                               onFileChange(selectedFile); // Pass the selected file to the onFileChange handler
 
-                              console.log("selected file", selectedFile); // Log the selected file
+                              // console.log("selected file", selectedFile); // Log the selected file
+                              // onFileChange(formImageData);
                             }
-                            onFileChange(formData);
-
-                            console.log("selected file", selectedFile);
                           }}
                         />
                       </div>
@@ -265,7 +266,7 @@ function UserInfoPage() {
               >
                 <Image
                   width={200}
-                  src={`${userData.avatar.url}`}
+                  src={`${userDetail?.user_db?.avatar?.url}`}
                   style={{ borderRadius: "100px" }}
                 />
               </div>
@@ -287,18 +288,23 @@ function UserInfoPage() {
                     </Button>
                   }
                 >
-                  <Descriptions.Item label="UserName">
-                    {userData.username}
+                  <Descriptions.Item label="Username">
+                    {userDetail?.user_db.username}
                   </Descriptions.Item>
                   <Descriptions.Item label="Firstname">
-                    {userData.firstName}
+                    {userDetail?.user_db.firstName}
                   </Descriptions.Item>
                   <Descriptions.Item label="Lastname">
-                    {userData.lastName}
+                    {userDetail?.user_db.lastName}
                   </Descriptions.Item>
-                  <Descriptions.Item label="City">empty</Descriptions.Item>
+                  <Descriptions.Item label="Email">
+                    {userDetail?.user_db.email}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="City">
+                    {userDetail?.user_db.city}
+                  </Descriptions.Item>
                   <Descriptions.Item label="Date or birth">
-                    {moment(userData.dob).format("DD-MM-YYYY")}
+                    {moment(userDetail?.user_db.dob).format("DD-MM-YYYY")}
                   </Descriptions.Item>
                 </Descriptions>
               </div>
