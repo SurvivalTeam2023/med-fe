@@ -17,6 +17,13 @@ export interface PlaylistsData {
   meta: meta;
 }
 
+export interface newPlaylist {
+  name: string;
+  imageUrl: string;
+  description: string;
+  isPublic: string;
+}
+
 export interface meta {
   totalItems: number;
   itemCount: number;

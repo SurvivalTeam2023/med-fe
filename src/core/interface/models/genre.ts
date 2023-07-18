@@ -1,12 +1,14 @@
 import { Base } from "./base";
 
-export interface Plan extends Base {
+export interface Genre extends Base {
   id: string;
+  createdAt: string;
+  lastUpdatedAt: string;
   name: string;
-  status: string;
   desc: string;
-  usageTime: number;
-  cost: number;
+  image: string;
+  status: string;
+  emotion: string;
 }
 
 export interface newPlan {

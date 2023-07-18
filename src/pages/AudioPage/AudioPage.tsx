@@ -31,11 +31,12 @@ import { playlistActions } from "store/slice";
 import { FilterConfirmProps } from "antd/es/table/interface";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { Footer } from "antd/es/layout/layout";
-import PlaylistDetailPage from "./PlaylistDetailPage";
 import { useCreatePlaylistAPI } from "hooks/playlist.hook";
-function PlayListMusicPage() {
-  const [showAudioDetail, setShowAudioDetail] = useState();
+import { getAudioAPi } from "api/audio";
+import { Audio, AudiosData } from "core/interface/models/audio";
+import { getGenreAPI } from "api/genre";
 
+function AudioPage() {
   const [page, setPage] = useState(1);
   const [name, setName] = useState("");
   const [createPlaylistModal, setCreatePlaylistModal] = useState(false);
@@ -46,8 +47,14 @@ function PlayListMusicPage() {
   const [form] = Form.useForm();
   const { mutate } = useCreatePlaylistAPI();
 
-  const fetchPlaylist = async (page: number, name: string, status: string) => {
-    const res = await getPlaylistByUserIdAPI(page, name, status);
+  const fetchAudio = async (page: number) => {
+    const res = await getAudioAPi(page);
+    const data = res.data;
+    return data;
+  };
+
+  const fetchGenre = async () => {
+    const res = await getGenreAPI();
     const data = res.data;
     return data;
   };
@@ -99,21 +106,21 @@ function PlayListMusicPage() {
       console.log("Can not get input values");
     }
   };
-  const { data, isSuccess, isError, error } = useQuery<PlaylistsData, Error>(
-    ["playlist", page],
-    () => fetchPlaylist(page, name, status)
+  const { data, isSuccess, isError, error } = useQuery<AudiosData, Error>(
+    ["audio", page],
+    () => fetchAudio(page)
   );
 
   const onChange: PaginationProps["onChange"] = (current: any) => {
     setPage(current);
   };
 
-  data?.items.map((playlist) => {
-    let date = moment(new Date(playlist.createdAt));
-    playlist.createdAt = date.format("YYYY-MM-DD");
-    return playlist.createdAt;
+  data?.items.map((audio) => {
+    let date = moment(new Date(audio.createdAt));
+    audio.createdAt = date.format("YYYY-MM-DD");
+    return audio.createdAt;
   });
-  type DataIndex = keyof Playlist;
+  type DataIndex = keyof Audio;
 
   const handleSearch = (
     selectedKeys: string[],
@@ -132,9 +139,7 @@ function PlayListMusicPage() {
     setPage(1);
   };
 
-  const getColumnSearchProps = (
-    dataIndex: DataIndex
-  ): ColumnType<Playlist> => ({
+  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Audio> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -214,9 +219,7 @@ function PlayListMusicPage() {
         onOk={() => setModalPLaylistDetail(false)}
         onCancel={() => setModalPLaylistDetail(false)}
         key={modalPlaylistDetail ? "visible" : "hidden"}
-      >
-        <PlaylistDetailPage />
-      </Modal>
+      ></Modal>
       <Modal
         title="Create playlist"
         centered
@@ -338,7 +341,7 @@ function PlayListMusicPage() {
               justifyContent: "space-between",
             }}
           >
-            <span>Manage Playlist</span>
+            <span>Manage Audio</span>
             <div>
               <Button
                 onClick={() => {
@@ -372,9 +375,9 @@ function PlayListMusicPage() {
                 ...getColumnSearchProps("name"),
               },
               {
-                title: "Description",
-                dataIndex: "description",
-                key: "description",
+                title: "Length",
+                dataIndex: "length",
+                key: "length",
                 render: (text) => <a>{text}</a>,
                 width: "20%",
               },
@@ -434,4 +437,4 @@ function PlayListMusicPage() {
     </div>
   );
 }
-export default PlayListMusicPage;
+export default AudioPage;

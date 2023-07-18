@@ -34,6 +34,7 @@ import { adminAction } from "store/slice/auth.slice";
 import { AUTH_LOGIN } from "core/constants";
 import UserDetail from "./UserPage/UserDetail";
 import UserInfoPage from "./UserInfo/UserInfoPage";
+import AudioPage from "./AudioPage/AudioPage";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState(null);
@@ -86,6 +87,7 @@ function HomePage() {
       getItem("User", "user"),
       getItem("Playlist", "playlist"),
       getItem("Plan", "plan"),
+      getItem("Audio", "audio"),
     ]),
   ];
 
@@ -150,6 +152,7 @@ function HomePage() {
         {currentPage === "user" && <UserPage />}
         {currentPage === "playlist" && <PlayListMusicPage />}
         {currentPage === "plan" && <PlanPage />}
+        {currentPage === "audio" && <AudioPage />}
         {currentPage === "userdetail" && <UserInfoPage />}
         {currentPage === null && null}
       </div>

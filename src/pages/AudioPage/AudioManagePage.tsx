@@ -91,7 +91,7 @@ function AudioManagePage() {
               justifyContent: "center",
             }}
           >
-            Mange Audio
+            Manage Audio
           </div>
           <Table
             className="audio-table"
