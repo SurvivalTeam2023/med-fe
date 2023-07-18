@@ -1,8 +1,8 @@
 import { CallAPI } from "core/axiosCore";
 import { ApiResponse } from "core/interface/api";
-import { Genre } from "core/interface/models/genre";
+import { GenreData } from "core/interface/models/genre";
 
-export const getGenreAPI = (): ApiResponse<Genre> => {
+export const getGenreAPI = (page: number): ApiResponse<GenreData> => {
   const url = `/genres`;
   return CallAPI.get(url);
 };

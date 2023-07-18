@@ -11,9 +11,15 @@ export interface Genre extends Base {
   emotion: string;
 }
 
-export interface newPlan {
-  name: string;
-  desc: string;
-  usageTime: number;
-  cost: number;
+export interface GenreData {
+  items: Genre[];
+  meta: Meta;
+}
+
+export interface Meta {
+  totalItems: number;
+  itemCount: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
 }

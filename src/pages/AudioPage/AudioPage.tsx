@@ -35,6 +35,7 @@ import { useCreatePlaylistAPI } from "hooks/playlist.hook";
 import { getAudioAPi } from "api/audio";
 import { Audio, AudiosData } from "core/interface/models/audio";
 import { getGenreAPI } from "api/genre";
+import { GenreData } from "core/interface/models/genre";
 
 function AudioPage() {
   const [page, setPage] = useState(1);
@@ -53,10 +54,10 @@ function AudioPage() {
     return data;
   };
 
-  const fetchGenre = async () => {
-    const res = await getGenreAPI();
-    const data = res.data;
-    return data;
+  const fetchGenre = async (page: number) => {
+    const res = await getGenreAPI(page);
+    const dataGenre = res.data;
+    return dataGenre;
   };
 
   const [modalAudioListByPlaylistId, setModalAudioListByPlaylistId] =
@@ -110,6 +111,12 @@ function AudioPage() {
     ["audio", page],
     () => fetchAudio(page)
   );
+
+  const { data: dataGenre } = useQuery<GenreData, Error>(["genre", page], () =>
+    fetchGenre(page)
+  );
+
+  console.log("dataGenre", dataGenre);
 
   const onChange: PaginationProps["onChange"] = (current: any) => {
     setPage(current);
@@ -221,7 +228,7 @@ function AudioPage() {
         key={modalPlaylistDetail ? "visible" : "hidden"}
       ></Modal>
       <Modal
-        title="Create playlist"
+        title="Create audio"
         centered
         footer={true}
         bodyStyle={{ width: "100%", padding: "12px" }}
@@ -378,7 +385,6 @@ function AudioPage() {
                 title: "Length",
                 dataIndex: "length",
                 key: "length",
-                render: (text) => <a>{text}</a>,
                 width: "20%",
               },
               {
