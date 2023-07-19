@@ -1,5 +1,4 @@
 import { Descriptions, Image, Layout, Menu, MenuProps } from "antd";
-import Sider from "antd/es/layout/Sider";
 import { getTrackDetailAPI } from "api/playlistTracks";
 import { Track } from "core/interface/models/track";
 import moment from "moment";
@@ -9,9 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { store } from "store";
 
 function AudioDetailPage() {
-  const location = useLocation();
   const audioId: any = store.getState().audio.audioId;
-  const [collapsed, setCollapsed] = useState(false);
   const fetchAudioInfo = async () => {
     const res = await getTrackDetailAPI(audioId);
     const data = res.data;
@@ -20,9 +17,6 @@ function AudioDetailPage() {
   };
   const navigate = useNavigate();
 
-  const onClick: MenuProps["onClick"] = (e) => {
-    navigate(`/${e.key}`);
-  };
   const { isLoading, isError, error, data } = useQuery<Track, Error>(
     ["track"],
     async () => fetchAudioInfo()

@@ -241,7 +241,7 @@ function UserInfoPage() {
               display: "flex",
               alignItems: "center",
               paddingLeft: 4,
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: "500",
               justifyContent: "center",
             }}
@@ -253,7 +253,8 @@ function UserInfoPage() {
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                padding: 8,
+                alignContent: "center",
+                padding: 4,
                 background: "#fff",
               }}
             >
@@ -261,13 +262,15 @@ function UserInfoPage() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  margin: "0px 52px",
+                  marginTop: "20px",
+                  paddingLeft: "10px",
                 }}
               >
                 <Image
-                  width={200}
+                  width={"100px"}
+                  height={"100px"}
+                  style={{ borderRadius: 20 }}
                   src={`${userDetail?.user_db?.avatar?.url}`}
-                  style={{ borderRadius: "100px" }}
                 />
               </div>
               <div
@@ -287,6 +290,17 @@ function UserInfoPage() {
                       Edit
                     </Button>
                   }
+                  style={{
+                    paddingLeft: "10px",
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                  contentStyle={{
+                    fontSize: "10px",
+                    display: "flex",
+                    alignContent: "center",
+                  }}
+                  labelStyle={{ fontSize: "12px" }}
                 >
                   <Descriptions.Item label="Username">
                     {userDetail?.user_db.username}
