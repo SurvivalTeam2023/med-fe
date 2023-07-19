@@ -9,6 +9,7 @@ import {
   MenuProps,
   Space,
   Avatar,
+  Image,
 } from "antd";
 import {
   UploadOutlined,
@@ -64,19 +65,10 @@ function HomePage() {
     } as MenuItem;
   };
 
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
   const [collapsed, setCollapsed] = useState(false);
-  const fetchUsers = async () => {
-    const res = await getUsersAPI();
-    const data = res.data;
-    return data;
-  };
+
   const navigate = useNavigate();
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+
   const { Sider } = Layout;
 
   const items: MenuItem[] = [
@@ -88,21 +80,6 @@ function HomePage() {
       getItem("Plan", "plan"),
     ]),
   ];
-
-  const { isSuccess, isError, error, data } = useQuery<User[], Error>(
-    ["users"],
-    async () => fetchUsers()
-  );
-
-  if (isSuccess) {
-    toast.success("Success");
-    toast.clearWaitingQueue();
-  }
-
-  if (isError) {
-    toast.error(error?.message);
-    toast.clearWaitingQueue();
-  }
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -145,7 +122,32 @@ function HomePage() {
         />
       </Sider>
       <div style={{ width: "100%" }}>
-        <div style={{ padding: "12px" }}>Hello</div>
+        <div
+          style={{
+            padding: "12px",
+            display: "flex",
+            justifyContent: "space-between",
+            background: "#eee",
+          }}
+        >
+          <div
+            style={{
+              border: "1px solid black",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            Welcome
+          </div>
+          <div>
+            <span>Username</span>
+            <Image
+              width={50}
+              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+              style={{ borderRadius: 30 }}
+            />
+          </div>
+        </div>
 
         {currentPage === "user" && <UserPage />}
         {currentPage === "playlist" && <PlayListMusicPage />}
