@@ -1,7 +1,7 @@
-import { Base } from "./base";
+export type GenreData = Genre[];
 
-export interface Genre extends Base {
-  id: string;
+export interface Genre {
+  id: number;
   createdAt: string;
   lastUpdatedAt: string;
   name: string;
@@ -9,11 +9,23 @@ export interface Genre extends Base {
   image: string;
   status: string;
   emotion: string;
+  audioGenre: AudioGenre[];
 }
 
-export interface GenreData {
-  items: Genre[];
-  meta: Meta;
+export interface AudioGenre {
+  id: number;
+  audio: Audio;
+}
+
+export interface Audio {
+  id: number;
+  createdAt: string;
+  lastUpdatedAt: string;
+  name: string;
+  imageUrl: string;
+  status: string;
+  length: string;
+  liked: number;
 }
 
 export interface Meta {

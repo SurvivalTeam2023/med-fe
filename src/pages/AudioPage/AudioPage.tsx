@@ -1,6 +1,6 @@
 import { getPlaylistByUserIdAPI } from "api/playlist";
 import { useQuery } from "react-query";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   PaginationProps,
   Space,
@@ -13,7 +13,9 @@ import {
   Avatar,
   Modal,
   Form,
+  Select,
 } from "antd";
+
 import {
   Playlist,
   PlaylistsData,
@@ -40,13 +42,19 @@ import { GenreData } from "core/interface/models/genre";
 function AudioPage() {
   const [page, setPage] = useState(1);
   const [name, setName] = useState("");
-  const [createPlaylistModal, setCreatePlaylistModal] = useState(false);
+  const [createAudioModal, setCreateAudioModal] = useState(false);
   const [status, setStatus] = useState("");
   const navigate = useNavigate();
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
   const [form] = Form.useForm();
   const { mutate } = useCreatePlaylistAPI();
+  const { Option } = Select;
+  const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null);
+
+  const handleGenreChange = (value: number) => {
+    setSelectedGenreId(value);
+  };
 
   const fetchAudio = async (page: number) => {
     const res = await getAudioAPi(page);
@@ -112,11 +120,11 @@ function AudioPage() {
     () => fetchAudio(page)
   );
 
-  const { data: dataGenre } = useQuery<GenreData, Error>(["genre", page], () =>
-    fetchGenre(page)
-  );
-
-  console.log("dataGenre", dataGenre);
+  const {
+    data: dataGenre,
+    isLoading,
+    error: errorGenre,
+  } = useQuery<GenreData, Error>(["genre", page], () => fetchGenre(page));
 
   const onChange: PaginationProps["onChange"] = (current: any) => {
     setPage(current);
@@ -232,11 +240,11 @@ function AudioPage() {
         centered
         footer={true}
         bodyStyle={{ width: "100%", padding: "12px" }}
-        open={createPlaylistModal}
+        open={createAudioModal}
         width={"75%"}
-        onOk={() => setCreatePlaylistModal(false)}
-        onCancel={() => setCreatePlaylistModal(false)}
-        key={createPlaylistModal ? "visible" : "hidden"}
+        onOk={() => setCreateAudioModal(false)}
+        onCancel={() => setCreateAudioModal(false)}
+        key={createAudioModal ? "visible" : "hidden"}
       >
         <div style={{ padding: 8, background: "#eee" }}>
           <div
@@ -300,6 +308,24 @@ function AudioPage() {
                         placeholder="Description"
                       />
                     </Form.Item>
+                    <Form.Item
+                      label="Genre"
+                      name="Genre"
+                      style={{ marginBottom: "8px" }}
+                    >
+                      <Select
+                        style={{ width: "100%" }}
+                        placeholder="Select a Genre"
+                        onChange={handleGenreChange} // Handle the onChange event
+                        value={selectedGenreId} // Set the selected value from state
+                      >
+                        {dataGenre?.map((genre) => (
+                          <Option key={genre.id} value={genre.id}>
+                            {genre.name}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
                   </div>
                 </div>
 
@@ -352,7 +378,7 @@ function AudioPage() {
             <div>
               <Button
                 onClick={() => {
-                  setCreatePlaylistModal(true);
+                  setCreateAudioModal(true);
                 }}
               >
                 Create
