@@ -35,9 +35,10 @@ import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { Footer } from "antd/es/layout/layout";
 import { useCreatePlaylistAPI } from "hooks/playlist.hook";
 import { getAudioAPi } from "api/audio";
-import { Audio, AudiosData } from "core/interface/models/audio";
+import { Audio, AudiosData, newAudio } from "core/interface/models/audio";
 import { getGenreAPI } from "api/genre";
 import { GenreData } from "core/interface/models/genre";
+import { useCreateAudio } from "hooks/audio.hook";
 
 function AudioPage() {
   const [page, setPage] = useState(1);
@@ -48,15 +49,21 @@ function AudioPage() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
   const [form] = Form.useForm();
-  const { mutate } = useCreatePlaylistAPI();
+  const { mutate } = useCreateAudio();
   const { Option } = Select;
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedImageFile, setSelectedImageFile] = useState(null);
+  const [selectedAudioFile, setSelectedAudioFile] = useState(null);
+  const [fileError, setFileError] = useState("");
 
   const formData = new FormData();
 
-  const onFileChange = (file: any) => {
-    setSelectedFile(file);
+  const onImageFileChange = (file: any) => {
+    setSelectedImageFile(file);
+  };
+
+  const onAudioFileChange = (file: any) => {
+    setSelectedAudioFile(file);
   };
 
   const handleGenreChange = (value: number) => {
@@ -84,43 +91,64 @@ function AudioPage() {
     // Trigger the form submission manually
     form.submit();
   };
-  const handleCreateAudio = (
-    name: string,
-    imageUrl: string,
-    description: string,
-    isPublic: string = "PUBLIC"
-  ) => {
-    mutate(
-      {
-        name: name,
-        imageUrl: imageUrl,
-        description: description,
-        isPublic: isPublic,
+
+  const handleCreateAudio = (formData: any) => {
+    mutate(formData, {
+      onSuccess: (data) => {
+        toast.success("Success");
       },
-      {
-        onSuccess: (data) => {
-          console.log("Create Success");
-          alert("Success");
-          toast.success("Success", {
-            // Toggles the success state of the toast notification.
-            closeButton: true,
-          });
-        },
-        onError: (error) => {
-          console.log("Create Failed r bro", error);
-        },
-      }
-    );
+      onError: (error) => {
+        console.log("Update Failed", error);
+      },
+    });
   };
-  const onFinish = (values: newPlaylist) => {
-    // Perform any necessary actions with the form values here
-    console.log("values received", values);
-    const { name, imageUrl, description } = values;
-    if (values) {
-      handleCreateAudio(name, imageUrl, description);
-    } else {
-      console.log("Can not get input values");
+
+  const handleAudioFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedAudioFile = e.target.files?.[0];
+    if (selectedAudioFile) {
+      // Validate the file type
+      if (
+        selectedAudioFile.type === "audio/mpeg" ||
+        selectedAudioFile.type === "audio/mp3"
+      ) {
+        setFileError(""); // Clear any previous error message
+        onAudioFileChange(selectedAudioFile);
+      } else {
+        setFileError("Invalid file format. Please select an MP3 file."); // Show an error message for invalid file format
+      }
     }
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      // Validate the file type
+      if (selectedFile.type.startsWith("image/")) {
+        setFileError(""); // Clear any previous error message
+        onImageFileChange(selectedFile);
+      } else {
+        setFileError("Invalid file format. Please select an image file."); // Show an error message for an invalid file format
+      }
+    }
+  };
+
+  const onFinish = (values: newAudio) => {
+    const { name, genreId, audio, image } = values;
+    if (name) {
+      formData.append("name", name);
+    }
+    if (genreId) {
+      formData.append("genreId", genreId);
+    }
+    if (selectedImageFile) {
+      formData.append("audio", selectedImageFile);
+    }
+    if (selectedAudioFile) {
+      formData.append("image", selectedAudioFile);
+    }
+    const formDataObject = Object.fromEntries(formData.entries());
+    console.log("checker", formDataObject);
+    handleCreateAudio(formData);
   };
 
   const { data, isSuccess, isError, error } = useQuery<AudiosData, Error>(
@@ -297,56 +325,35 @@ function AudioPage() {
                       <Input style={{ width: "100%" }} placeholder="Name" />
                     </Form.Item>
                     <Form.Item
-                      label="imageUrl"
-                      name="imageUrl"
-                      style={{ marginBottom: "8px" }}
-                    >
-                      <Input
-                        style={{ width: "100%" }}
-                        placeholder="Image Url"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label="description"
-                      name="description"
-                      style={{ marginBottom: "8px" }}
-                    >
-                      <Input
-                        style={{ width: "100%" }}
-                        placeholder="Description"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label="Avatar"
-                      name="avatar"
+                      label="audio"
+                      name="audio"
                       style={{ marginBottom: "1px" }}
+                      validateStatus={fileError ? "error" : ""}
+                      help={fileError}
+                    >
+                      <input
+                        type="file"
+                        onChange={handleAudioFileChange}
+                        accept=".mp3"
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="image"
+                      name="image"
+                      style={{ marginBottom: "1px" }}
+                      validateStatus={fileError ? "error" : ""}
+                      help={fileError}
                     >
                       <div>
                         <input
                           type="file"
-                          onChange={(e: any) => {
-                            const selectedFile = e.target.files?.[0];
-
-                            if (selectedFile) {
-                              const formData = new FormData(); // Create a new FormData instance
-                              formData.append(
-                                "myFile",
-                                selectedFile,
-                                selectedFile.name
-                              ); // Append the selected file to the formData
-
-                              console.log(formData); // Log the formData object
-                              onFileChange(selectedFile); // Pass the selected file to the onFileChange handler
-
-                              console.log("selected file", selectedFile); // Log the selected file
-                            }
-                            onFileChange(formData);
-
-                            console.log("selected file", selectedFile);
-                          }}
+                          onChange={handleImageFileChange}
+                          accept="image/*"
                         />
                       </div>
                     </Form.Item>
+
                     <Form.Item
                       label="Genre"
                       name="Genre"
