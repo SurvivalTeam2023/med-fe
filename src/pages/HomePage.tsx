@@ -9,6 +9,7 @@ import {
   MenuProps,
   Space,
   Avatar,
+  Image,
 } from "antd";
 import {
   UploadOutlined,
@@ -16,8 +17,8 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Footer, Header } from "antd/es/layout/layout";
-import { getUsersAPI } from "api/user";
-import { User } from "core/interface/models";
+import { getUserDetailAPI, getUsersAPI } from "api/user";
+import { User, UserData } from "core/interface/models";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AntDesignOutlined } from "@ant-design/icons";
@@ -35,8 +36,30 @@ import { AUTH_LOGIN } from "core/constants";
 import UserDetail from "./UserPage/UserDetail";
 import UserInfoPage from "./UserInfo/UserInfoPage";
 import AudioPage from "./AudioPage/AudioPage";
+import { getAuthKeyFromLocalStorage } from "../util/localStorage";
+import { parseTokenToUsername } from "util/user";
 
 function HomePage() {
+  const token: any = getAuthKeyFromLocalStorage();
+  const username = parseTokenToUsername(token);
+  const fetchUser = async () => {
+    const res = await getUserDetailAPI(username);
+    const data = res.data;
+    return data;
+  };
+  const { isSuccess, isError, error, data } = useQuery<UserData, Error>(
+    ["user"],
+    async () => fetchUser()
+  );
+  if (isSuccess) {
+    toast.success("Success");
+    toast.clearWaitingQueue();
+  }
+
+  if (isError) {
+    toast.error(error?.message);
+    toast.clearWaitingQueue();
+  }
   const [currentPage, setCurrentPage] = useState(null);
   type MenuItem = Required<MenuProps>["items"][number];
   const dispatch = useDispatch();
@@ -65,46 +88,22 @@ function HomePage() {
     } as MenuItem;
   };
 
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
   const [collapsed, setCollapsed] = useState(false);
-  const fetchUsers = async () => {
-    const res = await getUsersAPI();
-    const data = res.data;
-    return data;
-  };
+
   const navigate = useNavigate();
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+
   const { Sider } = Layout;
 
   const items: MenuItem[] = [
-    getItem("DashBoard", "dashbord", <DesktopOutlined />),
-    getItem("User Info", "userdetail", <DesktopOutlined />),
-    getItem("Manage", "sub1", <MailOutlined />, [
+    getItem("DashBoard", "dashbord"),
+    getItem("User Info", "userdetail"),
+    getItem("Manage", "sub1", undefined, [
       getItem("User", "user"),
       getItem("Playlist", "playlist"),
       getItem("Plan", "plan"),
       getItem("Audio", "audio"),
     ]),
   ];
-
-  const { isSuccess, isError, error, data } = useQuery<User[], Error>(
-    ["users"],
-    async () => fetchUsers()
-  );
-
-  if (isSuccess) {
-    toast.success("Success");
-    toast.clearWaitingQueue();
-  }
-
-  if (isError) {
-    toast.error(error?.message);
-    toast.clearWaitingQueue();
-  }
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -124,7 +123,7 @@ function HomePage() {
             justifyContent: "space-between",
             padding: "12px 16px",
             color: "#eee",
-            fontSize: "18px",
+            fontSize: "16px",
             background: "rgba(255, 255, 255, 0.2)",
           }}
         >
@@ -140,6 +139,7 @@ function HomePage() {
         <Menu
           style={{
             background: "#D76710",
+            fontSize: "12px",
           }}
           mode="inline"
           items={items}
@@ -147,7 +147,33 @@ function HomePage() {
         />
       </Sider>
       <div style={{ width: "100%" }}>
-        <div style={{ padding: "24px", border: "1px solid black" }}>Hello</div>
+        <div
+          style={{
+            height: "5%",
+            padding: "4px",
+            display: "flex",
+            justifyContent: "space-between",
+            background: "#eee",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              fontSize: "12px",
+            }}
+          >
+            Welcome
+          </div>
+          <div style={{ fontSize: "12px" }}>
+            <span style={{ paddingRight: "4px" }}>Username</span>
+            <Image
+              width={20}
+              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+              style={{ borderRadius: 30 }}
+            />
+          </div>
+        </div>
 
         {currentPage === "user" && <UserPage />}
         {currentPage === "playlist" && <PlayListMusicPage />}

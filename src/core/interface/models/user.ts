@@ -36,13 +36,13 @@ export interface DecodedToken {
 }
 
 export interface Register {
-  firstName: string | null
-  lastName: string | null
-  email: string | null
-  city: string | null
-  address: string | null
-  dob: Date | null
-  avatar: File | null
+  firstName: string
+  lastName: string
+  email: string
+  city: string
+  address: string
+  dob: Date
+  avatar: File
 }
 
 export type ILogin = {

@@ -201,7 +201,11 @@ function PlayListMusicPage() {
         width={"75%"}
         onOk={() => setModalAudioListByPlaylistId(false)}
         onCancel={() => setModalAudioListByPlaylistId(false)}
-        key={modalAudioListByPlaylistId ? "visible" : "hidden"}
+        key={
+          modalAudioListByPlaylistId
+            ? "visibleAudioPlayList"
+            : "hiddenAudioPlaylist"
+        }
       >
         <AudioManagePage />
       </Modal>
@@ -213,7 +217,9 @@ function PlayListMusicPage() {
         width={"75%"}
         onOk={() => setModalPLaylistDetail(false)}
         onCancel={() => setModalPLaylistDetail(false)}
-        key={modalPlaylistDetail ? "visible" : "hidden"}
+        key={
+          modalPlaylistDetail ? "visiblePlayListDetail" : "hiddenPlaylistDetail"
+        }
       >
         <PlaylistDetailPage />
       </Modal>
