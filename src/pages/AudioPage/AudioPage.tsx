@@ -51,6 +51,13 @@ function AudioPage() {
   const { mutate } = useCreatePlaylistAPI();
   const { Option } = Select;
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const formData = new FormData();
+
+  const onFileChange = (file: any) => {
+    setSelectedFile(file);
+  };
 
   const handleGenreChange = (value: number) => {
     setSelectedGenreId(value);
@@ -77,7 +84,7 @@ function AudioPage() {
     // Trigger the form submission manually
     form.submit();
   };
-  const handleCreatePlaylist = (
+  const handleCreateAudio = (
     name: string,
     imageUrl: string,
     description: string,
@@ -110,11 +117,12 @@ function AudioPage() {
     console.log("values received", values);
     const { name, imageUrl, description } = values;
     if (values) {
-      handleCreatePlaylist(name, imageUrl, description);
+      handleCreateAudio(name, imageUrl, description);
     } else {
       console.log("Can not get input values");
     }
   };
+
   const { data, isSuccess, isError, error } = useQuery<AudiosData, Error>(
     ["audio", page],
     () => fetchAudio(page)
@@ -307,6 +315,37 @@ function AudioPage() {
                         style={{ width: "100%" }}
                         placeholder="Description"
                       />
+                    </Form.Item>
+                    <Form.Item
+                      label="Avatar"
+                      name="avatar"
+                      style={{ marginBottom: "1px" }}
+                    >
+                      <div>
+                        <input
+                          type="file"
+                          onChange={(e: any) => {
+                            const selectedFile = e.target.files?.[0];
+
+                            if (selectedFile) {
+                              const formData = new FormData(); // Create a new FormData instance
+                              formData.append(
+                                "myFile",
+                                selectedFile,
+                                selectedFile.name
+                              ); // Append the selected file to the formData
+
+                              console.log(formData); // Log the formData object
+                              onFileChange(selectedFile); // Pass the selected file to the onFileChange handler
+
+                              console.log("selected file", selectedFile); // Log the selected file
+                            }
+                            onFileChange(formData);
+
+                            console.log("selected file", selectedFile);
+                          }}
+                        />
+                      </div>
                     </Form.Item>
                     <Form.Item
                       label="Genre"
