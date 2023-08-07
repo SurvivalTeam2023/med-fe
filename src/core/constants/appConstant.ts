@@ -20,6 +20,7 @@ export const AUDIOID = "/audio/:audioid";
 export const PLAN = "/plan";
 export const EDITUSER = "/user/edit/:username";
 export const ACCOUNT_DETAIL = "/userdetail";
+export const SUBSCRIPTION = "/subscription";
 
 export const config = {
   SERVER_URL: process.env.REACT_APP_SERVER_URL || "http://localhost:8081/api",
