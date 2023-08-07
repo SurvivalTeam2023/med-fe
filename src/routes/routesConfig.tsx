@@ -13,6 +13,7 @@ import {
   PLAN,
   EDITUSER,
   ACCOUNT_DETAIL,
+  SUBSCRIPTION,
 } from "core/constants";
 import UnAuthGuard from "core/guard/UnAuth";
 import { ReactNode } from "react";
@@ -28,6 +29,7 @@ import UserPage from "pages/UserPage/userPage";
 import PlanPage from "pages/PlanPage/PlanPage";
 import EditUser from "pages/UserPage/editUser";
 import UserInfoPage from "pages/UserInfo/UserInfoPage";
+import SubscriptionPage from "pages/SubscriptionPage/SubscriptionPage";
 
 export interface SingleRoute {
   path?: string;
@@ -66,6 +68,7 @@ export const ROUTES: SingleRoute[] = [
   { path: AUDIOS, component: <AudioPage /> },
   { path: EDITUSER, component: <EditUser /> },
   { path: AUDIOID, component: <AudioDetail /> },
+  { path: SUBSCRIPTION, component: <SubscriptionPage /> },
   {
     path: PLAN,
     component: <PlanPage />,

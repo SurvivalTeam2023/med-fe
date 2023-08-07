@@ -37,6 +37,7 @@ import UserDetail from "./UserPage/UserDetail";
 import UserInfoPage from "./UserInfo/UserInfoPage";
 import { getAuthKeyFromLocalStorage } from "../util/localStorage";
 import { parseTokenToUsername } from "util/user";
+import SubscriptionPage from "./SubscriptionPage/SubscriptionPage";
 
 function HomePage() {
   const token: any = getAuthKeyFromLocalStorage();
@@ -96,6 +97,7 @@ function HomePage() {
   const items: MenuItem[] = [
     getItem("DashBoard", "dashbord"),
     getItem("User Info", "userdetail"),
+    getItem("Suscription", "subscription"),
     getItem("Manage", "sub1", undefined, [
       getItem("User", "user"),
       getItem("Playlist", "playlist"),
@@ -177,6 +179,7 @@ function HomePage() {
         {currentPage === "playlist" && <PlayListMusicPage />}
         {currentPage === "plan" && <PlanPage />}
         {currentPage === "userdetail" && <UserInfoPage />}
+        {currentPage === "subscription" && <SubscriptionPage />}
         {currentPage === null && null}
       </div>
     </Layout>
