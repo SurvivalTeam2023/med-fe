@@ -3,8 +3,12 @@ import LandingIntro from "./LandingIntro";
 import ErrorText from "../../components/Typography/ErrorText";
 import InputText from "../../components/Input/InputText";
 import { loginApi } from "../../Axios/Apis/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../redux/slice/user";
+import { fetchUserData } from "../../redux/action/auth";
 
 function Login() {
+  const dispatch = useDispatch();
   const INITIAL_LOGIN_OBJ = {
     username: "",
     password: "",
@@ -26,11 +30,18 @@ function Login() {
       setLoading(true);
       loginApi(loginObj)
         .then((res) => {
-          localStorage.setItem("token", "DumyTokenHere");
-          setLoading(false);
-          window.location.href = "/app/welcome";
+          localStorage.setItem("token", res.data.access_token);
+          dispatch(userActions.setToken(res.data.access_token));
+          console.log("here");
+          const userData = fetchUserData(res.data.access_token);
+          if (userData) {
+            setLoading(false);
+            dispatch(userActions.setUser(userData));
+            window.location.href = "/app/welcome";
+          }
         })
         .catch((error) => {
+          console.log(error);
           setLoading(false);
         });
     }

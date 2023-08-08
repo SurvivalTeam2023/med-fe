@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAuthKeyFromLocalStorage } from "util/";
 
 const initialState = {
   isTriedLogin: false,
   user: null,
-  token: getAuthKeyFromLocalStorage(),
+  token: null,
   error: null,
   username: null,
 };
@@ -27,7 +26,7 @@ const reducer = createSlice({
       state.token = payload;
     },
     removeToken: (state, { payload }) => {
-      clearAuthKeyFromLocalStorage();
+      // clearAuthKeyFromLocalStorage();
       state.token = null;
     },
     loginStart: (state) => {
