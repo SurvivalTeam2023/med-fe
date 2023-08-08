@@ -16,63 +16,45 @@ import {
   Form,
   Select,
 } from "antd";
-
-import {
-  Playlist,
-  PlaylistsData,
-  newPlaylist,
-} from "core/interface/models/playlist";
 import moment from "moment";
 import { useNavigate } from "react-router";
 import type { ColumnType } from "antd/es/table";
 import { toast, ToastContainer } from "react-toastify";
 import AudioManagePage from "pages/AudioPage/AudioManagePage";
 import { useDispatch } from "react-redux";
-import { audioActions } from "store/slice/audio.slice";
 import { store } from "store";
 import { playlistActions } from "store/slice";
 import { FilterConfirmProps } from "antd/es/table/interface";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { Footer } from "antd/es/layout/layout";
-import { useCreatePlaylistAPI } from "hooks/playlist.hook";
-import { getAudioAPi } from "api/audio";
-import { Audio, AudiosData, newAudio } from "core/interface/models/audio";
+import {
+  MentalHealth,
+  newMentalHealth,
+} from "core/interface/models/mentalHeath";
 import { getGenreAPI } from "api/genre";
 import { GenreData } from "core/interface/models/genre";
-import { useCreateAudio } from "hooks/audio.hook";
+import { getMentalHeathAPI } from "api/mentalHealth";
+import { MentalHealthData } from "core/interface/models/mentalHeath";
+import { useCreateMentalHealth } from "hooks/mentalHealth.hook";
+import { STATUS_CODES } from "http";
 
-function AudioPage() {
+function MentalHeathPage() {
   const [page, setPage] = useState(1);
   const [name, setName] = useState("");
-  const [createAudioModal, setCreateAudioModal] = useState(false);
+  const [createMentalHealthModal, setCreateMentalHealthModal] = useState(false);
   const [status, setStatus] = useState("");
   const navigate = useNavigate();
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
   const [form] = Form.useForm();
-  const { mutate } = useCreateAudio();
+  const { mutate } = useCreateMentalHealth();
   const { Option } = Select;
-  const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null);
-  const [selectedImageFile, setSelectedImageFile] = useState(null);
-  const [selectedAudioFile, setSelectedAudioFile] = useState(null);
   const [fileError, setFileError] = useState("");
 
   const formData = new FormData();
 
-  const onImageFileChange = (file: any) => {
-    setSelectedImageFile(file);
-  };
-
-  const onAudioFileChange = (file: any) => {
-    setSelectedAudioFile(file);
-  };
-
-  const handleGenreChange = (value: number) => {
-    setSelectedGenreId(value);
-  };
-
-  const fetchAudio = async (page: number) => {
-    const res = await getAudioAPi(page);
+  const fetchMentalHealth = async (page: number) => {
+    const res = await getMentalHeathAPI(page);
     const data = res.data;
     return data;
   };
@@ -88,76 +70,60 @@ function AudioPage() {
   const [modalPlaylistDetail, setModalPLaylistDetail] = useState(false);
 
   const dispatch = useDispatch();
-  const handleCreatePlaylistClick = () => {
+  const handleCreateMentalHealthClick = () => {
     // Trigger the form submission manually
     form.submit();
   };
 
-  const handleCreateAudio = (formData: any) => {
-    mutate(formData, {
-      onSuccess: (data) => {
-        toast.success("Success");
+  const handleCreateMentalHealth = (
+    name: string,
+    status: string = "ACTIVE"
+  ) => {
+    mutate(
+      {
+        name: name,
+        status: status,
       },
-      onError: (error) => {
-        console.log("Update Failed", error);
-      },
-    });
-  };
-
-  const handleAudioFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedAudioFile = e.target.files?.[0];
-    if (selectedAudioFile) {
-      // Validate the file type
-      if (
-        selectedAudioFile.type === "audio/mpeg" ||
-        selectedAudioFile.type === "audio/mp3"
-      ) {
-        setFileError(""); // Clear any previous error message
-        onAudioFileChange(selectedAudioFile);
-      } else {
-        setFileError("Invalid file format. Please select an MP3 file."); // Show an error message for invalid file format
+      {
+        onSuccess: (data) => {
+          console.log("Create Success");
+          alert("Success");
+          toast.success("Success", {
+            // Toggles the success state of the toast notification.
+            closeButton: true,
+          });
+        },
+        onError: (error) => {
+          console.log("Create Failed mental health r bro", error);
+          console.log("name la gi the bro?", name);
+          console.log("status la gi the bro?", status);
+        },
       }
-    }
+    );
   };
 
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      // Validate the file type
-      if (selectedFile.type.startsWith("image/")) {
-        setFileError(""); // Clear any previous error message
-        onImageFileChange(selectedFile);
-      } else {
-        setFileError("Invalid file format. Please select an image file."); // Show an error message for an invalid file format
-      }
+  const onFinish = (values: newMentalHealth) => {
+    // Perform any necessary actions with the form values here
+    console.log("values received", values);
+    const { name } = values;
+    if (values) {
+      handleCreateMentalHealth(name);
+    } else {
+      console.log("Can not get input values");
     }
   };
-
-  const onFinish = (values: newAudio) => {
-    const { name, genreId, audio, image } = values;
-    if (name) {
-      formData.append("name", name);
-    }
-    if (genreId) {
-      formData.append("genreId", genreId);
-    }
-    if (selectedImageFile) {
-      formData.append("audio", selectedImageFile);
-    }
-    if (selectedAudioFile) {
-      formData.append("image", selectedAudioFile);
-    }
-    const formDataObject = Object.fromEntries(formData.entries());
-    console.log("checker", formDataObject);
-    handleCreateAudio(formData);
-  };
-
-  const { data, isSuccess, isError, error } = useQuery<AudiosData, Error>(
-    ["audio", page],
-    () => fetchAudio(page)
+  const { data, isSuccess, isError, error } = useQuery<MentalHealthData, Error>(
+    ["mentalHeath", page],
+    () => fetchMentalHealth(page)
   );
 
-  console.log("data", data?.items);
+  data?.map((mentalhealth) => {
+    let date = moment(new Date(mentalhealth.createdAt));
+    mentalhealth.createdAt = date.format("YYYY-MM-DD");
+    mentalhealth.lastUpdatedAt = date.format("YYYY-MM-DD");
+    return mentalhealth.createdAt;
+  });
+  type DataIndex = keyof MentalHealth;
 
   const {
     data: dataGenre,
@@ -168,13 +134,6 @@ function AudioPage() {
   const onChange: PaginationProps["onChange"] = (current: any) => {
     setPage(current);
   };
-
-  data?.items.map((audio) => {
-    let date = moment(new Date(audio.createdAt));
-    audio.createdAt = date.format("YYYY-MM-DD");
-    return audio.createdAt;
-  });
-  type DataIndex = keyof Audio;
 
   const handleSearch = (
     selectedKeys: string[],
@@ -193,7 +152,9 @@ function AudioPage() {
     setPage(1);
   };
 
-  const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<Audio> => ({
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): ColumnType<MentalHealth> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -275,15 +236,15 @@ function AudioPage() {
         key={modalPlaylistDetail ? "visible" : "hidden"}
       ></Modal>
       <Modal
-        title="Create audio"
+        title="Create Mental Health"
         centered
         footer={true}
         bodyStyle={{ width: "100%", padding: "12px" }}
-        open={createAudioModal}
+        open={createMentalHealthModal}
         width={"75%"}
-        onOk={() => setCreateAudioModal(false)}
-        onCancel={() => setCreateAudioModal(false)}
-        key={createAudioModal ? "visible" : "hidden"}
+        onOk={() => setCreateMentalHealthModal(false)}
+        onCancel={() => setCreateMentalHealthModal(false)}
+        key={createMentalHealthModal ? "visible" : "hidden"}
       >
         <div style={{ padding: 8, background: "#eee" }}>
           <div
@@ -327,54 +288,6 @@ function AudioPage() {
                     >
                       <Input style={{ width: "100%" }} placeholder="Name" />
                     </Form.Item>
-                    <Form.Item
-                      label="audio"
-                      name="audio"
-                      style={{ marginBottom: "1px" }}
-                      validateStatus={fileError ? "error" : ""}
-                      help={fileError}
-                    >
-                      <input
-                        type="file"
-                        onChange={handleAudioFileChange}
-                        accept=".mp3"
-                      />
-                    </Form.Item>
-
-                    <Form.Item
-                      label="image"
-                      name="image"
-                      style={{ marginBottom: "1px" }}
-                      validateStatus={fileError ? "error" : ""}
-                      help={fileError}
-                    >
-                      <div>
-                        <input
-                          type="file"
-                          onChange={handleImageFileChange}
-                          accept="image/*"
-                        />
-                      </div>
-                    </Form.Item>
-
-                    <Form.Item
-                      label="Genre"
-                      name="Genre"
-                      style={{ marginBottom: "8px" }}
-                    >
-                      <Select
-                        style={{ width: "100%" }}
-                        placeholder="Select a Genre"
-                        onChange={handleGenreChange} // Handle the onChange event
-                        value={selectedGenreId} // Set the selected value from state
-                      >
-                        {dataGenre?.map((genre) => (
-                          <Option key={genre.id} value={genre.id}>
-                            {genre.name}
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
                   </div>
                 </div>
 
@@ -391,7 +304,7 @@ function AudioPage() {
                         borderRadius: 16,
                       }}
                       onClick={() => {
-                        handleCreatePlaylistClick();
+                        handleCreateMentalHealthClick();
                       }}
                     >
                       Save
@@ -423,11 +336,11 @@ function AudioPage() {
               justifyContent: "space-between",
             }}
           >
-            <span>Manage Audio</span>
+            <span>Manage Mental Health</span>
             <div>
               <Button
                 onClick={() => {
-                  setCreateAudioModal(true);
+                  setCreateMentalHealthModal(true);
                 }}
               >
                 Create
@@ -437,17 +350,11 @@ function AudioPage() {
 
           <Table
             style={{ margin: "8px 0" }}
-            className="playlist-table"
-            dataSource={data?.items}
+            className="MentalHealth-table"
+            dataSource={data}
             scroll={{ y: 240 }}
             bordered
             rowKey={(record) => record.id}
-            pagination={{
-              total: data?.meta.totalItems,
-              current: page,
-              onChange: onChange,
-              position: ["bottomCenter"],
-            }}
             columns={[
               {
                 title: "Name",
@@ -457,9 +364,9 @@ function AudioPage() {
                 ...getColumnSearchProps("name"),
               },
               {
-                title: "Length",
-                dataIndex: "length",
-                key: "length",
+                title: "Last updated",
+                dataIndex: "lastUpdatedAt",
+                key: "lastUpdatedAt",
                 width: "20%",
               },
               {
@@ -518,4 +425,4 @@ function AudioPage() {
     </div>
   );
 }
-export default AudioPage;
+export default MentalHeathPage;

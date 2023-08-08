@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getPlaylistByUserIdAPI } from "api/playlist";
 import { useQuery } from "react-query";
 import { useRef, useState } from "react";

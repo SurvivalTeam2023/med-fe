@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery } from "react-query";
 import { useState } from "react";
 import {
@@ -39,6 +40,8 @@ import AudioPage from "./AudioPage/AudioPage";
 import { getAuthKeyFromLocalStorage } from "../util/localStorage";
 import { parseTokenToUsername } from "util/user";
 import SubscriptionPage from "./SubscriptionPage/SubscriptionPage";
+import MentalHeathDetailPage from "./MentalHeathPage/MentalHeathDetailPage";
+import MentalHealthPage from "./MentalHeathPage/MentalHealthPage";
 
 function HomePage() {
   const token: any = getAuthKeyFromLocalStorage();
@@ -104,6 +107,7 @@ function HomePage() {
       getItem("Playlist", "playlist"),
       getItem("Plan", "plan"),
       getItem("Audio", "audio"),
+      getItem("Mental Health", "mentalhealth"),
     ]),
   ];
 
@@ -183,6 +187,7 @@ function HomePage() {
         {currentPage === "audio" && <AudioPage />}
         {currentPage === "userdetail" && <UserInfoPage />}
         {currentPage === "subscription" && <SubscriptionPage />}
+        {currentPage === "mentalhealth" && <MentalHealthPage />}
         {currentPage === null && null}
       </div>
     </Layout>
