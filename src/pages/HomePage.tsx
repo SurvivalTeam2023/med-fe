@@ -114,6 +114,7 @@ function HomePage() {
         style={{
           background:
             "linear-gradient( rgba(255, 124, 0, 1), rgba(41, 10, 89, 1))",
+          height: "100%",
         }}
       >
         <div

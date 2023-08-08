@@ -21,14 +21,13 @@ import { useDispatch } from "react-redux";
 import { audioActions } from "store/slice/audio.slice";
 import { getSubscriptionAPI } from "api/subscription";
 import { Subscription } from "core/interface/models/subscription";
+import { DeleteOutlined } from "@ant-design/icons";
 function SubscriptionPage() {
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
-
   const fetchSubscriptions = async () => {
     const res = await getSubscriptionAPI();
     const data = res.data;
-    console.log(data);
     return data;
   };
 
@@ -52,16 +51,19 @@ function SubscriptionPage() {
     setPage(current);
   };
   data?.items.map((subscription) => {
-    let createdAt = moment(new Date(subscription.createdAt));
-    let endDate = moment(new Date(subscription.endDate));
-    subscription.endDate = endDate.calendar();
-    subscription.createdAt = createdAt.calendar();
+    // let createdAt = moment(new Date(subscription.createdAt));
+    // let endDate = moment(new Date(subscription.endDate));
+    subscription.endDate = moment(subscription.endDate).format("DD/MM/YYYY");
+    // subscription.createdAt = createdAt.calendar();
+    subscription.createdAt = moment(subscription.createdAt).format(
+      "DD/MM/YYYY"
+    );
   });
 
   return (
     <div>
       <Layout style={{ padding: 8, background: "#eee" }}>
-        <div style={{ padding: 8, background: "#fff" }}>
+        <div style={{ padding: 8, background: "#fff", width: "100%" }}>
           <div
             style={{
               padding: "12px 8px",
@@ -79,8 +81,7 @@ function SubscriptionPage() {
           <Table
             className="audio-table"
             dataSource={data?.items}
-            bordered
-            style={{ padding: "8px, 0px" }}
+            showSorterTooltip={true}
             pagination={{
               total: data?.meta.totalItems,
               current: page,
@@ -88,18 +89,18 @@ function SubscriptionPage() {
               position: ["bottomCenter"],
             }}
             columns={[
-              { title: "id", dataIndex: "id", key: "id", width: "20%" },
+              { title: "id", dataIndex: "id", key: "id", width: "30%" },
               {
                 title: "Plan",
                 dataIndex: ["plan", "name"],
                 key: "plan",
-                width: "20%",
+                width: "30%",
               },
               {
                 title: "Plan price",
                 dataIndex: ["plan", "cost"],
                 key: "plan",
-                width: "20%",
+                width: "10%",
               },
               {
                 title: "User",
@@ -108,9 +109,9 @@ function SubscriptionPage() {
                 width: "20%",
               },
               {
-                title: "User",
+                title: "Email",
                 dataIndex: ["user", "email"],
-                key: "user",
+                key: "email",
                 width: "20%",
               },
 
@@ -118,7 +119,8 @@ function SubscriptionPage() {
                 title: "Created Date",
                 dataIndex: "createdAt",
                 key: "createdAt",
-                width: "20%",
+                width: "80%",
+                defaultSortOrder: "ascend",
               },
               {
                 title: "Expired Date",
@@ -131,13 +133,28 @@ function SubscriptionPage() {
                 dataIndex: "status",
                 key: "status",
                 width: "20%",
+                render: (text) => (
+                  <p
+                    style={{
+                      backgroundColor:
+                        text === "EXPIRED" ? "#F30F10" : "#00BA28",
+                      color: "white",
+                      borderRadius: "5px",
+                      fontWeight: "500",
+                      fontSize: "12px",
+                      padding: "4px",
+                      textAlign: "center",
+                      width: "100%",
+                    }}
+                  >
+                    {text}
+                  </p>
+                ),
               },
               {
                 title: "Action",
                 key: "action",
-                render: (text, record, index) => (
-                  <Button type="primary">Delete</Button>
-                ),
+                render: (text, record, index) => <DeleteOutlined />,
                 width: "20%",
               },
             ]}
