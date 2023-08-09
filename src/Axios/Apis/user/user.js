@@ -13,3 +13,18 @@ export const getUserProfileByUserIdApi = (userId) => {
   const queryUrl = `/user/getProfile/${userId}`;
   return CallAPI.get(queryUrl);
 };
+
+export const getTotalActiveUser = () => {
+  const url = "/user?status=ACTIVE"
+  return CallAPI.get(url)
+}
+
+export const getNewUser = (month) => {
+  const url = `/user?month=${month}`
+  return CallAPI.get(url)
+}
+
+export const getTotalSubscribeUser = () => {
+  const url = `/subscriptions/user/count`
+  return CallAPI.get(url)
+}
