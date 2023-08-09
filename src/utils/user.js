@@ -1,10 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { USER_KEY_STORAGE } from "core/constants";
+// import { USER_KEY_STORAGE } from "core/constants";
 import jwtDecode from "jwt-decode";
 
-export const removeTokenFromStorage = () => {
-  AsyncStorage.removeItem(USER_KEY_STORAGE);
-};
+// export const removeTokenFromStorage = () => {
+//   AsyncStorage.removeItem(USER_KEY_STORAGE);
+// };
 
 export const parseTokenToUserId = (token) => {
   let token_decoded = jwtDecode(token);

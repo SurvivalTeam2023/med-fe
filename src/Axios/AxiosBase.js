@@ -1,7 +1,8 @@
 import axios from "axios";
 import { baseUrl } from "../config/env.config";
-
-let store;
+import { store } from "../app/store";
+import { AUTH_KEY } from "../constants/app";
+import { useSelector } from "react-redux";
 
 export const CallAPI = axios.create({
   baseURL: baseUrl,
@@ -13,7 +14,11 @@ export const CallAPI = axios.create({
 });
 
 CallAPI.interceptors.request.use((req) => {
-  console.debug("req", req);
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers[AUTH_KEY.HEADER_AUTHORIZATION] = `Bearer ${token}`;
+  }
+  console.log("request_url:", `${req.baseURL}${req.url}`);
   return req;
 });
 

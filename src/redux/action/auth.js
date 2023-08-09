@@ -1,5 +1,8 @@
-import { getUserDataByUsernameApi, getUserProfileByUserIdApi } from "api/user";
-import { parseTokenToUserId, parseTokenToUsername } from "util/user";
+import {
+  getUserDataByUsernameApi,
+  getUserProfileByUserIdApi,
+} from "../../Axios/Apis/user/user";
+import { parseTokenToUserId, parseTokenToUsername } from "../../utils/user";
 
 export const fetchUserData = async (token) => {
   if (!token) return;

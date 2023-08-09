@@ -20,7 +20,7 @@ const Documentation = lazy(() => import("./pages/Documentation"));
 // Initializing different libraries
 initializeApp();
 // const token = checkAuth();
-const token = "123";
+let token;
 function App() {
   useEffect(() => {
     // 👆 daisy UI themes initialization
