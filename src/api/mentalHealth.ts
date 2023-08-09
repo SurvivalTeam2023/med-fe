@@ -17,5 +17,5 @@ export const createMentalHealthAPI = (
 ): ApiResponse<newMentalHealth> => {
   const url = "/mentalHealth";
 
-  return CallAPIMulti.post(url, form);
+  return CallAPI.post(url, form);
 };
