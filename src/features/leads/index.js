@@ -68,7 +68,7 @@ function Leads() {
         title: "Confirmation",
         bodyType: MODAL_BODY_TYPES.CONFIRMATION,
         extraObject: {
-          message: `Are you sure you want to delete this lead?`,
+          message: `Are you sure you want to delete this user?`,
           type: CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE,
           index,
         },
@@ -79,7 +79,7 @@ function Leads() {
   return (
     <>
       <TitleCard
-        title="Current Leads"
+        title="Users List"
         topMargin="mt-2"
         TopSideButtons={<TopSideButtons />}
       >

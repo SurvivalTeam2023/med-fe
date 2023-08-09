@@ -29,8 +29,8 @@ const routes = [
     name: "Dashboard",
   },
   {
-    path: "/app/leads", // url
-    icon: <InboxArrowDownIcon className={iconClasses} />, // icon component
+    path: "/app/users", // url
+    icon: <UsersIcon className={iconClasses} />, // icon component
     name: "Users", // name that appear in Sidebar
   },
   {
