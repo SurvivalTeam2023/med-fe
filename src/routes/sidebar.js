@@ -50,17 +50,17 @@ const routes = [
     name: "Manage", // name that appear in Sidebar
     submenu: [
       {
-        path: "/login",
+        path: "/app/audio",
         icon: <ArrowRightOnRectangleIcon className={submenuIconClasses} />,
         name: "Audio",
       },
       {
-        path: "/register", //url
+        path: "/app/playlist", //url
         icon: <UserIcon className={submenuIconClasses} />, // icon component
         name: "PlayList", // name that appear in Sidebar
       },
       {
-        path: "/forgot-password",
+        path: "/app/genre",
         icon: <KeyIcon className={submenuIconClasses} />,
         name: "Genre",
       },
@@ -74,7 +74,7 @@ const routes = [
   {
     path: "/app/calendar", // url
     icon: <CalendarDaysIcon className={iconClasses} />, // icon component
-    name: "Mental Heal", // name that appear in Sidebar
+    name: "Mental Health", // name that appear in Sidebar
   },
   {
     path: "", //no url needed as this has submenu

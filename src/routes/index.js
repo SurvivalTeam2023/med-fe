@@ -8,6 +8,10 @@ const Page404 = lazy(() => import("../pages/protected/404"));
 const Blank = lazy(() => import("../pages/protected/Blank"));
 const Charts = lazy(() => import("../pages/protected/Charts"));
 const Leads = lazy(() => import("../pages/protected/Leads"));
+const Audio = lazy(() => import("../pages/protected/Audio"));
+const Genre = lazy(() => import("../pages/protected/Genre"));
+const Playlist = lazy(() => import("../pages/protected/Playlist"));
+
 const Integration = lazy(() => import("../pages/protected/Integration"));
 const Calendar = lazy(() => import("../pages/protected/Calendar"));
 const Team = lazy(() => import("../pages/protected/Team"));
@@ -32,6 +36,18 @@ const routes = [
   {
     path: "/users",
     component: Leads,
+  },
+  {
+    path: "/audio",
+    component: Audio,
+  },
+  {
+    path: "/playlist",
+    component: Playlist,
+  },
+  {
+    path: "/genre",
+    component: Genre,
   },
   {
     path: "/settings-team",
