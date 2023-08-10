@@ -72,9 +72,14 @@ const routes = [
     name: "Plans", // name that appear in Sidebar
   },
   {
-    path: "/app/calendar", // url
+    path: "/app/mentalHealth", // url
     icon: <CalendarDaysIcon className={iconClasses} />, // icon component
     name: "Mental Health", // name that appear in Sidebar
+  },
+  {
+    path: "/app/question", // url
+    icon: <CalendarDaysIcon className={iconClasses} />, // icon component
+    name: "Question", // name that appear in Sidebar
   },
   {
     path: "", //no url needed as this has submenu
