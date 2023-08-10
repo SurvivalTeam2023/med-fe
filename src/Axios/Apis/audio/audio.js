@@ -1,5 +1,6 @@
+import { CallAPI } from "../../AxiosBase"
 
 export const getTotalAudio = () => {
-    const url = `/subscriptions/user/count/totalAudio`
+    const url = `/audio/count/totalAudio`
     return CallAPI.get(url)
 }
