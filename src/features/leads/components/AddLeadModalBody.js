@@ -5,7 +5,7 @@ import ErrorText from "../../../components/Typography/ErrorText";
 import InputSelect from "../../../components/Input/InputSelect";
 import { showNotification } from "../../common/headerSlice";
 import { addNewLead } from "../leadSlice";
-import { createUserAPI } from "../../../Axios/Apis/user/user";
+import { useCreateUser } from "../../../hooks/user.hook";
 
 const INITIAL_LEAD_OBJ = {
   username: "",
@@ -14,7 +14,7 @@ const INITIAL_LEAD_OBJ = {
   repassword: "",
   first_name: "",
   last_name: "",
-  gender: "",
+  gender: "MALE",
   city: "",
   address: "",
   dob: "1997-09-25T18:35:41.428Z",
@@ -32,59 +32,34 @@ function AddLeadModalBody({ closeModal }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
-  // const saveNewLead = () => {
-  //   if (leadObj.first_name.trim() === "")
-  //     return setErrorMessage("First Name is required!");
-  //   else if (leadObj.email.trim() === "")
-  //     return setErrorMessage("Email id is required!");
-  //   else {
-  //     let newLeadObj = {
-  //       id: 7,
-  //       email: leadObj.email,
-  //       first_name: leadObj.first_name,
-  //       last_name: leadObj.last_name,
-  //       avatar: "https://reqres.in/img/faces/1-image.jpg",
-  //     };
-  //     dispatch(addNewLead({ newLeadObj }));
-  //     dispatch(showNotification({ message: "New Lead Added!", status: 1 }));
-  //     closeModal();
-  //   }
-  // };
+  const { mutate } = useCreateUser();
 
-  const saveNewLead = async () => {
+  const saveNewLead = () => {
     if (leadObj.first_name.trim() === "")
       return setErrorMessage("First Name is required!");
     else if (leadObj.email.trim() === "")
       return setErrorMessage("Email id is required!");
     else {
-      try {
-        setLoading(true);
-        await createUserAPI({
-          username: leadObj.email,
-          email: leadObj.email,
-          password: leadObj.password,
-          repassword: leadObj.repassword,
-          firstName: leadObj.first_name,
-          lastName: leadObj.last_name,
-          gender: leadObj.gender,
-          city: leadObj.city,
-          address: leadObj.address,
-          dob: leadObj.dob,
-        });
-        dispatch(addNewLead({ newLeadObj: leadObj }));
-        dispatch(showNotification({ message: "New Lead Added!", status: 1 }));
-        closeModal();
-      } catch (error) {
-        console.error("API Error:", error);
-        dispatch(showNotification({ message: "Error adding lead", status: 0 }));
-      } finally {
-        setLoading(false);
-      }
+      console.log("leadObj", leadObj);
+      let newLeadObj = {
+        id: 7,
+        email: leadObj.email,
+        first_name: leadObj.first_name,
+        last_name: leadObj.last_name,
+        avatar: "https://reqres.in/img/faces/1-image.jpg",
+      };
+      dispatch(addNewLead({ newLeadObj }));
+      dispatch(showNotification({ message: "New Lead Added!", status: 1 }));
+      closeModal();
     }
   };
+
   const updateFormValue = ({ updateType, value }) => {
     setErrorMessage("");
-    setLeadObj({ ...leadObj, [updateType]: value });
+    setLeadObj((prevLeadObj) => ({
+      ...prevLeadObj,
+      [updateType]: value,
+    }));
   };
 
   return (
@@ -184,7 +159,12 @@ function AddLeadModalBody({ closeModal }) {
         <button className="btn btn-ghost" onClick={() => closeModal()}>
           Cancel
         </button>
-        <button className="btn btn-primary px-6" onClick={() => saveNewLead()}>
+        <button
+          className="btn btn-primary px-6"
+          onClick={() => {
+            saveNewLead();
+          }}
+        >
           Save
         </button>
       </div>
