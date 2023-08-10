@@ -61,7 +61,6 @@ function Genre() {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const genreData = genre?.data;
-  console.log(genreData);
   const visibleLeads = genreData?.slice(startIndex, startIndex + itemsPerPage);
 
   const deleteCurrentLead = (index) => {
