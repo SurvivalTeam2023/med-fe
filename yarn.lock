@@ -7,11 +7,25 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
+"@aashutoshrathi/word-wrap@^1.2.3":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
+  integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
+
 "@adobe/css-tools@^4.0.1":
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.3.0.tgz#1991d273fb29edbd2f63060f5bdaf0af26aa64e3"
   integrity sha512-+RNNcQvw2V1bmnBTPAtOLfW/9mhH2vC67+rUSi5T8EtEWt6lEnGNY2GuhZ1/YwbgikT1TkhvidCDmN5Q5YCo/w==
 
+"@alloc/quick-lru@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz#7bf68b20c0a350f936915fcae06f58e32007ce30"
+  integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
+
+"@ampproject/remapping@^2.2.0":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.2.1.tgz#99e8e11851128b8702cd57c33684f1d0f260b630"
+  integrity sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==
 "@alloc/quick-lru@^5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz#7bf68b20c0a350f936915fcae06f58e32007ce30"
@@ -74,6 +88,8 @@
   integrity sha512-0J8DNPRXQRLeR9rPaUMM3fA+RbixjnVLe/MRMYCkp3hzgsSuxCHQ8NN8xQG1wIHKJ4a1DTROTvFJdW+B5/eOsg==
   dependencies:
     "@nicolo-ribaudo/eslint-scope-5-internals" "5.1.1-v1"
+    eslint-visitor-keys "^2.1.0"
+    semver "^6.3.1"
     eslint-visitor-keys "^2.1.0"
     semver "^6.3.1"
 
