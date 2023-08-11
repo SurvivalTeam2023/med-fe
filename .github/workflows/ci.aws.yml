@@ -15,6 +15,6 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Clean cache
-        run: npm cache clean --force
+        run: npm cache clean -force
       - name: Build
         run: yarn build
