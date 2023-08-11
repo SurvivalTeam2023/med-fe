@@ -17,7 +17,7 @@ function TemplatePointers() {
         ✓ User-friendly <span className="font-semibold">documentation</span>
       </p>
       <p className="py-2  mb-4">
-        ✓ <span className="font-semibold">Daisy UI</span> components,{" "}
+        ✓ <span className="font-semibold">Mediatation Admin</span> components,{" "}
         <span className="font-semibold">Tailwind CSS</span> support
       </p>
     </>
