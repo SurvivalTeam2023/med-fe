@@ -17,7 +17,7 @@ const TopSideButtons = () => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New Lead",
+        title: "Add New User",
         bodyType: MODAL_BODY_TYPES.LEAD_ADD_NEW,
       })
     );
@@ -94,7 +94,7 @@ function Leads() {
                 <th>First Name </th>
                 <th>Last Name </th>
                 <th>Delete</th>
-                <th></th>
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
@@ -103,8 +103,8 @@ function Leads() {
                 return (
                   <tr key={l.id}>
                     <td>{l.id}</td>
-                    <td>{l.email}</td>
                     <td>{l.username}</td>
+                    <td>{l.email}</td>
                     <td>{l.firstName}</td>
                     <td>{l.lastName}</td>
                     <td>
