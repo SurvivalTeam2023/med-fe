@@ -4,8 +4,6 @@ import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import InputSelect from "../../../components/Input/InputSelect";
 import { showNotification } from "../../common/headerSlice";
-import { addNewLead } from "../leadSlice";
-import { createUserAPI } from "../../../Axios/Apis/user/user";
 import { useCreateUser } from "../../../hooks/user.hook.ts";
 
 const INITIAL_LEAD_OBJ = {
@@ -34,25 +32,6 @@ function AddLeadModalBody({ closeModal }) {
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
   const { mutate } = useCreateUser();
 
-  // const saveNewLead = () => {
-  //   if (leadObj.first_name.trim() === "")
-  //     return setErrorMessage("First Name is required!");
-  //   else if (leadObj.email.trim() === "")
-  //     return setErrorMessage("Email id is required!");
-  //   else {
-  //     console.log("leadObj", leadObj);
-  //     let newLeadObj = {
-  //       id: 7,
-  //       email: leadObj.email,
-  //       first_name: leadObj.first_name,
-  //       last_name: leadObj.last_name,
-  //       avatar: "https://reqres.in/img/faces/1-image.jpg",
-  //     };
-  //     dispatch(addNewLead({ newLeadObj }));
-  //     dispatch(showNotification({ message: "New Lead Added!", status: 1 }));
-  //     closeModal();
-  //   }
-  // };
   const saveNewLead = async () => {
     if (leadObj.first_name.trim() === "") {
       return setErrorMessage("First Name is required!");
