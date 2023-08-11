@@ -9,44 +9,72 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import TitleCard from '../../../components/Cards/TitleCard';
+import { getUserLog } from '../../../Axios/Apis/user/user';
+import { useQuery } from '@tanstack/react-query';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function BarChart(){
+function BarChart() {
 
-    const options = {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          }
-        },
-      };
-      
-      const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-      
-      const data = {
-        labels,
-        datasets: [
-          {
-            label: 'Store 1',
-            data: labels.map(() => { return Math.random() * 1000 + 500 }),
-            backgroundColor: 'rgba(255, 99, 132, 1)',
-          },
-          {
-            label: 'Store 2',
-            data: labels.map(() => { return Math.random() * 1000 + 500 }),
-            backgroundColor: 'rgba(53, 162, 235, 1)',
-          },
-        ],
-      };
 
-    return(
-      <TitleCard title={"Revenue"}>
-            <Bar options={options} data={data} />
-      </TitleCard>
+  const fetchUserLog = async () => {
+    const res = await getUserLog()
+    const data = res.data;
+    return data;
+  };
 
-    )
+  const { isLoading, data, isError, isSuccess, error } = useQuery({
+    queryKey: ['userLog'],
+    queryFn: fetchUserLog,
+
+  });
+  if (isLoading) {
+    // Return loading indicator or message
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    console.log(error.message);
+  }
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      }
+    },
+  };
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const months = data.map(item => monthNames[item.month - 1]);
+
+  const datasets = [
+    {
+      label: 'isActive',
+      data: data.map(item => item.isActive),
+      backgroundColor: 'rgba(255, 99, 132, 1)',
+    },
+    {
+      label: 'isInactive',
+      data: data.map(item => item.isInactive),
+      backgroundColor: 'rgba(53, 162, 235, 1)',
+    },
+  ];
+
+  const chartData = {
+    labels: months,
+    datasets,
+  };
+
+  return (
+    <TitleCard title={"User Log"}>
+      <Bar options={options} data={chartData} />
+    </TitleCard>
+
+  )
 }
 
 

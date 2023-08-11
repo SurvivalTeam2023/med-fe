@@ -8,9 +8,9 @@ import {
   MODAL_BODY_TYPES,
 } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import { showNotification } from "../common/headerSlice";
 import { useQuery } from "@tanstack/react-query";
-import { getPlaylistList } from "../../Axios/Apis/playlist/playlist";
+import { getMentalHealthList } from "../../Axios/Apis/mentalHealth/mentalHealth";
+import { getQuestionList } from "../../Axios/Apis/question/question";
 
 const TopSideButtons = () => {
   const dispatch = useDispatch();
@@ -36,31 +36,32 @@ const TopSideButtons = () => {
   );
 };
 
-function Playlist() {
+function Question() {
+  const {
+    data: question,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["getQuestionList"],
+    queryFn: async () => {
+      try {
+        const result = await getQuestionList();
+        return result;
+      } catch (error) {
+        throw new Error(`Error fetching audio: ${error.message}`);
+      }
+    },
+  });
   const dispatch = useDispatch();
   const itemsPerPage = 5; // Number of items to display per page
   const [currentPage, setCurrentPage] = useState(1);
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-  const {
-    data: playlist,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["getPLaylistList"],
-    queryFn: async () => {
-      try {
-        const result = await getPlaylistList();
-        return result;
-      } catch (error) {
-        throw new Error(`Error fetching genre: ${error.message}`);
-      }
-    },
-  });
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const playlistData = playlist?.data?.items;
-  const visibleLeads = playlistData?.slice(
+  const questionData = question?.data?.items;
+
+  const visibleLeads = questionData?.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -82,7 +83,7 @@ function Playlist() {
   return (
     <>
       <TitleCard
-        title="Playlist List"
+        title="Mental Health List"
         topMargin="mt-2"
         TopSideButtons={<TopSideButtons />}
       >
@@ -92,49 +93,37 @@ function Playlist() {
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Playlist</th>
-                <th>Updated Date </th>
-                <th>Status </th>
+                <th>Question</th>
+                <th>Created Date</th>
+                <th>Status</th>
                 <th>Delete</th>
-                <th></th>
               </tr>
             </thead>
-            <tbody>
-              {visibleLeads?.map((l, index) => {
-                const leadIndex = startIndex + index;
-                return (
-                  <tr key={l.id}>
-                    <td>{l.id}</td>
-                    <td>
-                      {" "}
-                      <div className="flex items-center space-x-3">
-                        <div className="avatar">
-                          <div className="mask mask-squircle w-12 h-12">
-                            <img src={l.imageUrl} alt="Avatar" />
-                          </div>
-                        </div>
-                        <div>
-                          <div className="font-bold">{l.name}</div>
-                          <div className="font">
-                            {l.author.lastName} {l.author.firstName}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{moment(l.createdAt).format("DD/MM/YYYY")}</td>
-                    <td>{l.status}</td>
-                    <td>
-                      <button
-                        className="btn btn-square btn-ghost"
-                        onClick={() => deleteCurrentLead(index)}
-                      >
-                        <TrashIcon className="w-5" />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
+            {questionData ? (
+              <tbody>
+                {visibleLeads.map((l, index) => {
+                  const leadIndex = startIndex + index;
+                  return (
+                    <tr key={l.id}>
+                      <td>{l.id}</td>
+                      <td>{l.question}</td>
+                      <td>{moment(l.createdDate).format("DD/MM/YYYY")}</td>
+                      <td>{l.status}</td>
+                      <td>
+                        <button
+                          className="btn btn-square btn-ghost"
+                          onClick={() => deleteCurrentLead(index)}
+                        >
+                          <TrashIcon className="w-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            ) : (
+              <p> No Value</p>
+            )}
           </table>
           <div className="flex justify-center mt-4">
             <button
@@ -146,7 +135,7 @@ function Playlist() {
             </button>
             <button
               className="btn btn-primary"
-              disabled={startIndex + itemsPerPage >= playlistData?.length}
+              disabled={startIndex + itemsPerPage >= questionData?.length}
               onClick={() => handlePageChange(currentPage + 1)}
             >
               Next
@@ -158,4 +147,4 @@ function Playlist() {
   );
 }
 
-export default Playlist;
+export default Question;
