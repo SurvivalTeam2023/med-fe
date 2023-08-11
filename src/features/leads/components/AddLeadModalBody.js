@@ -103,7 +103,7 @@ function AddLeadModalBody({ closeModal }) {
         defaultValue={leadObj.username}
         updateType="username"
         containerStyle="mt-4"
-        labelTitle="username"
+        labelTitle="Username"
         updateFormValue={updateFormValue}
       />
 
@@ -112,7 +112,7 @@ function AddLeadModalBody({ closeModal }) {
         defaultValue={leadObj.password}
         updateType="password"
         containerStyle="mt-4"
-        labelTitle="password"
+        labelTitle="Password"
         updateFormValue={updateFormValue}
       />
 
@@ -121,7 +121,7 @@ function AddLeadModalBody({ closeModal }) {
         defaultValue={leadObj.repassword}
         updateType="repassword"
         containerStyle="mt-4"
-        labelTitle="repassword"
+        labelTitle="Re-password"
         updateFormValue={updateFormValue}
       />
 
@@ -157,7 +157,7 @@ function AddLeadModalBody({ closeModal }) {
         defaultValue={leadObj.gender}
         updateType="gender"
         containerStyle="mt-4"
-        labelTitle="gender"
+        labelTitle="Gender"
         updateFormValue={updateFormValue}
       />
 
@@ -166,7 +166,7 @@ function AddLeadModalBody({ closeModal }) {
         defaultValue={leadObj.city}
         updateType="city"
         containerStyle="mt-4"
-        labelTitle="city"
+        labelTitle="City"
         updateFormValue={updateFormValue}
       />
 
@@ -175,7 +175,7 @@ function AddLeadModalBody({ closeModal }) {
         defaultValue={leadObj.address}
         updateType="address"
         containerStyle="mt-4"
-        labelTitle="address"
+        labelTitle="Address"
         updateFormValue={updateFormValue}
       />
 
@@ -184,7 +184,7 @@ function AddLeadModalBody({ closeModal }) {
         defaultValue={leadObj.dob}
         updateType="dob"
         containerStyle="mt-4"
-        labelTitle="dob"
+        labelTitle="Dob"
         updateFormValue={updateFormValue}
       />
 
