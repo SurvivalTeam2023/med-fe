@@ -14,6 +14,8 @@ const Playlist = lazy(() => import("../pages/protected/Playlist"));
 
 const Integration = lazy(() => import("../pages/protected/Integration"));
 const Calendar = lazy(() => import("../pages/protected/Calendar"));
+const MentalHealth = lazy(() => import("../pages/protected/MentalHealth"));
+const Question = lazy(() => import("../pages/protected/Question"));
 const Team = lazy(() => import("../pages/protected/Team"));
 const Transactions = lazy(() => import("../pages/protected/Transactions"));
 const Bills = lazy(() => import("../pages/protected/Bills"));
@@ -48,6 +50,15 @@ const routes = [
   {
     path: "/genre",
     component: Genre,
+  },
+
+  {
+    path: "/mentalHealth",
+    component: MentalHealth,
+  },
+  {
+    path: "/question",
+    component: Question,
   },
   {
     path: "/settings-team",
