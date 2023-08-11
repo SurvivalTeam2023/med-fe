@@ -13,8 +13,6 @@ jobs:
         with:
           node-version: "16"
       - name: Install dependencies
-        run: yarn
-      - name: Clean cache
-        run: yarn cache clean --force
+        run: npm install
       - name: Build
-        run: yarn build
+        run: npm build
