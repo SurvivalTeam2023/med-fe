@@ -39,10 +39,10 @@ function Dashboard() {
 
 
     const statsData = [
-        { title: "Total Active Users", value: totalActiveUsers, icon: <UserGroupIcon className='w-8 h-8' />, description: "↗︎ 2300 (22%)" },
+        { title: "Total Active Users", value: totalActiveUsers, icon: <UserGroupIcon className='w-8 h-8' />, description: "" },
         { title: "New User this month", value: totalNewUser, icon: <UsersIcon className='w-8 h-8' />, description: "Current month" },
         { title: "Total User Subscribe", value: totalSubscribeUser, icon: <CreditCardIcon className='w-8 h-8' />, description: "50 in hot leads" },
-        { title: "Total Audio", value: totalAudio, icon: <PlayIcon className='w-8 h-8' />, description: "↙ 300 (18%)" },
+        { title: "Total Audio", value: totalAudio, icon: <PlayIcon className='w-8 h-8' />, description: "" },
     ]
 
     const updateDashboardPeriod = (newRange) => {

@@ -28,3 +28,13 @@ export const getTotalSubscribeUser = () => {
   const url = `/subscriptions/user/count`
   return CallAPI.get(url)
 }
+
+export const getUserLog = () => {
+  const url = "/userLog"
+  return CallAPI.get(url)
+}
+
+export const getUserByAge = () => {
+  const url = "/age"
+  return CallAPI.get(url)
+}
