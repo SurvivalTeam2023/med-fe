@@ -14,12 +14,13 @@ const INITIAL_LEAD_OBJ = {
   dob: "",
 };
 
-function EditLeadModalBody({ closeModal }) {
+function EditLeadModalBody({ closeModal, extraObject }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
-  const selectedLeadId = useSelector((state) => state.lead.selectedLeadId);
+  // const selectedLeadId = useSelector((state) => state.lead.selectedLeadId);
+  const selectedLeadId = extraObject.selectedLeadId;
 
   const { mutate } = useUpdateUser();
 

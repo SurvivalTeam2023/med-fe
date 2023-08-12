@@ -83,17 +83,16 @@ function Leads() {
     );
   };
 
-  const openEditNewLead = () => {
+  const openEditNewLead = (selectedLeadId) => {
     dispatch(
       openModal({
         title: "Edit User",
         bodyType: MODAL_BODY_TYPES.LEAD_EDIT,
+        extraObject: {
+          selectedLeadId: selectedLeadId,
+        },
       })
     );
-  };
-
-  const handleEditLeadClick = (selectedLeadId) => {
-    dispatch(setSelectedLeadId(selectedLeadId));
   };
 
   return (
@@ -140,9 +139,7 @@ function Leads() {
                       <button
                         className="btn btn-square btn-ghost"
                         onClick={() => {
-                          openEditNewLead(index);
-                          handleEditLeadClick(l.id);
-                          // dispatch(setSelectedLeadId(l.id));
+                          openEditNewLead(l.id);
                         }}
                       >
                         <PencilSquareIcon className="w-5" />
