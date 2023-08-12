@@ -77,6 +77,11 @@ const routes = [
     name: "Mental Health", // name that appear in Sidebar
   },
   {
+    path: "/app/degree", // url
+    icon: <CalendarDaysIcon className={iconClasses} />, // icon component
+    name: "Degree", // name that appear in Sidebar
+  },
+  {
     path: "/app/question", // url
     icon: <CalendarDaysIcon className={iconClasses} />, // icon component
     name: "Question", // name that appear in Sidebar

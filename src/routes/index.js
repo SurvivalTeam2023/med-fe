@@ -11,6 +11,7 @@ const Leads = lazy(() => import("../pages/protected/Leads"));
 const Audio = lazy(() => import("../pages/protected/Audio"));
 const Genre = lazy(() => import("../pages/protected/Genre"));
 const Playlist = lazy(() => import("../pages/protected/Playlist"));
+const Degree = lazy(() => import("../pages/protected/Degree"));
 
 const Integration = lazy(() => import("../pages/protected/Integration"));
 const Calendar = lazy(() => import("../pages/protected/Calendar"));
@@ -38,6 +39,10 @@ const routes = [
   {
     path: "/users",
     component: Leads,
+  },
+  {
+    path: "/degree",
+    component: Degree,
   },
   {
     path: "/audio",

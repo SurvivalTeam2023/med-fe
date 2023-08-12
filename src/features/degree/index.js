@@ -10,15 +10,16 @@ import {
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import { useQuery } from "@tanstack/react-query";
 import { getMentalHealthList } from "../../Axios/Apis/mentalHealth/mentalHealth";
+import { getDegreeList } from "../../Axios/Apis/degree/degree";
 
 const TopSideButtons = () => {
   const dispatch = useDispatch();
 
-  const openAddNewMentalModal = (id, mentalName) => {
+  const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New Mental",
-        bodyType: MODAL_BODY_TYPES.MENTAL_HEALTH_ADD_NEW,
+        title: "Add New Lead",
+        bodyType: MODAL_BODY_TYPES.LEAD_ADD_NEW,
       })
     );
   };
@@ -27,7 +28,7 @@ const TopSideButtons = () => {
     <div className="inline-block float-right">
       <button
         className="btn px-6 btn-sm normal-case btn-primary"
-        onClick={() => openAddNewMentalModal()}
+        onClick={() => openAddNewLeadModal()}
       >
         Add New
       </button>
@@ -35,16 +36,16 @@ const TopSideButtons = () => {
   );
 };
 
-function MentalHealth() {
+function Degree() {
   const {
-    data: mental,
+    data: degree,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["getMentalHealthList"],
+    queryKey: ["getDegreeList"],
     queryFn: async () => {
       try {
-        const result = await getMentalHealthList();
+        const result = await getDegreeList();
         return result;
       } catch (error) {
         throw new Error(`Error fetching audio: ${error.message}`);
@@ -58,22 +59,28 @@ function MentalHealth() {
     setCurrentPage(newPage);
   };
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const mentalData = mental?.data;
+  const degreeData = degree?.data;
 
-  const visibleLeads = mentalData?.slice(startIndex, startIndex + itemsPerPage);
-  const openUpdateMentalModal = (id, mentalName) => {
+  const visibleLeads = degreeData?.slice(startIndex, startIndex + itemsPerPage);
+
+  const deleteCurrentLead = (index) => {
     dispatch(
       openModal({
         title: "Confirmation",
-        bodyType: MODAL_BODY_TYPES.MENTAL_HEALTH_UPDATE,
-        extraObject: { id, mentalName },
+        bodyType: MODAL_BODY_TYPES.CONFIRMATION,
+        extraObject: {
+          message: `Are you sure you want to delete this user?`,
+          type: CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE,
+          index,
+        },
       })
     );
   };
+
   return (
     <>
       <TitleCard
-        title="Mental Health List"
+        title="Degree List"
         topMargin="mt-2"
         TopSideButtons={<TopSideButtons />}
       >
@@ -83,26 +90,30 @@ function MentalHealth() {
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Mental Name</th>
+                <th>Degree</th>
+                <th>Point Start</th>
+                <th>Point End</th>
                 <th>Created Date</th>
                 <th>Status</th>
                 <th>Delete</th>
               </tr>
             </thead>
-            {mentalData ? (
+            {degreeData ? (
               <tbody>
                 {visibleLeads.map((l, index) => {
                   const leadIndex = startIndex + index;
                   return (
                     <tr key={l.id}>
                       <td>{l.id}</td>
-                      <td>{l.name}</td>
+                      <td>{l.title}</td>
+                      <td>{l.pointStart}</td>
+                      <td>{l.pointEnd}</td>
                       <td>{moment(l.createdDate).format("DD/MM/YYYY")}</td>
                       <td>{l.status}</td>
                       <td>
                         <button
                           className="btn btn-square btn-ghost"
-                          onClick={() => openUpdateMentalModal(l.id, l.name)}
+                          onClick={() => deleteCurrentLead(index)}
                         >
                           <TrashIcon className="w-5" />
                         </button>
@@ -125,7 +136,7 @@ function MentalHealth() {
             </button>
             <button
               className="btn btn-primary"
-              disabled={startIndex + itemsPerPage >= mentalData?.length}
+              disabled={startIndex + itemsPerPage >= degreeData?.length}
               onClick={() => handlePageChange(currentPage + 1)}
             >
               Next
@@ -137,4 +148,4 @@ function MentalHealth() {
   );
 }
 
-export default MentalHealth;
+export default Degree;
