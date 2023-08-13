@@ -35,7 +35,6 @@ function EditLeadModalBody({ closeModal, extraObject }) {
       if (leadObj.address) payload.address = leadObj.address;
       if (leadObj.dob) payload.dob = leadObj.dob;
 
-      console.log("payload la gi bro?", payload);
       await mutate({ selectedLeadId, payload });
 
       dispatch(

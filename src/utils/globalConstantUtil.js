@@ -5,6 +5,7 @@ module.exports = Object.freeze({
     CONFIRMATION: "CONFIRMATION",
     LEAD_EDIT: "LEAD_EDIT",
     DEFAULT: "",
+    GENRE_ADD_NEW: "GENRE_ADD_NEW",
   },
 
   RIGHT_DRAWER_TYPES: {

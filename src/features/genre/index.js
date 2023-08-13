@@ -18,8 +18,8 @@ const TopSideButtons = () => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New Lead",
-        bodyType: MODAL_BODY_TYPES.LEAD_ADD_NEW,
+        title: "Add New Genre",
+        bodyType: MODAL_BODY_TYPES.GENRE_ADD_NEW,
       })
     );
   };
@@ -38,11 +38,7 @@ const TopSideButtons = () => {
 
 function Genre() {
   const dispatch = useDispatch();
-  const {
-    data: genre,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: genre } = useQuery({
     queryKey: ["getGenreList"],
     queryFn: async () => {
       try {
