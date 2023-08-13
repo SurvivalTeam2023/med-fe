@@ -11,6 +11,7 @@ import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import { showNotification } from "../common/headerSlice";
 import { getGenreList } from "../../Axios/Apis/genre/genre";
 import { useQuery } from "@tanstack/react-query";
+import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 
 const TopSideButtons = () => {
   const dispatch = useDispatch();
@@ -73,6 +74,23 @@ function Genre() {
     );
   };
 
+  const openEditNewLead = (data) => {
+    dispatch(
+      openModal({
+        title: "Edit User",
+        bodyType: MODAL_BODY_TYPES.GENRE_EDIT,
+        extraObject: {
+          selectedGenreId: data.id,
+          name: data.name,
+          desc: data.desc,
+          image: data.image,
+          status: data.status,
+          emotion: data.emotion,
+        },
+      })
+    );
+  };
+
   return (
     <>
       <TitleCard
@@ -91,6 +109,7 @@ function Genre() {
                 <th>Created Date</th>
                 <th>Status</th>
                 <th>Delete</th>
+                <th>Edit</th>
               </tr>
             </thead>
             {Array.isArray(genreData) && genreData.length > 0 ? (
@@ -122,6 +141,17 @@ function Genre() {
                           onClick={() => deleteCurrentLead(index)}
                         >
                           <TrashIcon className="w-5" />
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-square btn-ghost"
+                          onClick={() => {
+                            openEditNewLead(l);
+                            console.log("data", l);
+                          }}
+                        >
+                          <PencilSquareIcon className="w-5" />
                         </button>
                       </td>
                     </tr>

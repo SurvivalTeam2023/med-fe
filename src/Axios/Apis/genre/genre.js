@@ -16,3 +16,15 @@ export const createGenreAPI = (payload) => {
     emotion,
   });
 };
+
+export const updateGenreAPI = (selectedGenreId, payload) => {
+  const url = `/genres/${selectedGenreId}`;
+  const { name, desc, image, status, emotion } = payload;
+  return CallAPI.put(url, {
+    name,
+    desc,
+    image,
+    status,
+    emotion,
+  });
+};

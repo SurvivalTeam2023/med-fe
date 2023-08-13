@@ -7,6 +7,7 @@ import ConfirmationModalBody from "../features/common/components/ConfirmationMod
 import EditLeadModalBody from "../features/leads/components/EditLeadModalBody";
 import AddGenreModalBody from "../features/genre/components/AddGenreModalBody";
 import AddPlaylistModalBody from "../features/playlist/components/AddPlaylistModalBody";
+import EditGenreModalBody from "../features/genre/components/EditGenreModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -50,6 +51,12 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.GENRE_ADD_NEW]: (
                 <AddGenreModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.GENRE_EDIT]: (
+                <EditGenreModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />
