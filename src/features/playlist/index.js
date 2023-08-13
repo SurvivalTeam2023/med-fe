@@ -18,8 +18,8 @@ const TopSideButtons = () => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New Lead",
-        bodyType: MODAL_BODY_TYPES.LEAD_ADD_NEW,
+        title: "Add New Playlist",
+        bodyType: MODAL_BODY_TYPES.PLAYLIST_ADD_NEW,
       })
     );
   };

@@ -6,6 +6,7 @@ module.exports = Object.freeze({
     LEAD_EDIT: "LEAD_EDIT",
     DEFAULT: "",
     GENRE_ADD_NEW: "GENRE_ADD_NEW",
+    PLAYLIST_ADD_NEW: "PLAYLIST_ADD_NEW",
   },
 
   RIGHT_DRAWER_TYPES: {

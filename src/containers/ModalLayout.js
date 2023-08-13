@@ -6,6 +6,7 @@ import AddLeadModalBody from "../features/leads/components/AddLeadModalBody";
 import ConfirmationModalBody from "../features/common/components/ConfirmationModalBody";
 import EditLeadModalBody from "../features/leads/components/EditLeadModalBody";
 import AddGenreModalBody from "../features/genre/components/AddGenreModalBody";
+import AddPlaylistModalBody from "../features/playlist/components/AddPlaylistModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -49,6 +50,12 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.GENRE_ADD_NEW]: (
                 <AddGenreModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.PLAYLIST_ADD_NEW]: (
+                <AddPlaylistModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />
