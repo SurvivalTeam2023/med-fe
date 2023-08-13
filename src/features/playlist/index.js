@@ -11,6 +11,7 @@ import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import { showNotification } from "../common/headerSlice";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaylistList } from "../../Axios/Apis/playlist/playlist";
+import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 
 const TopSideButtons = () => {
   const dispatch = useDispatch();
@@ -79,6 +80,22 @@ function Playlist() {
     );
   };
 
+  const openEditNewLead = (data) => {
+    dispatch(
+      openModal({
+        title: "Edit User",
+        bodyType: MODAL_BODY_TYPES.PLAYLIST_EDIT,
+        extraObject: {
+          selectedPlaylistId: data.id,
+          name: data.name,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          status: data.status,
+        },
+      })
+    );
+  };
+
   return (
     <>
       <TitleCard
@@ -96,7 +113,7 @@ function Playlist() {
                 <th>Updated Date </th>
                 <th>Status </th>
                 <th>Delete</th>
-                <th></th>
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
@@ -129,6 +146,16 @@ function Playlist() {
                         onClick={() => deleteCurrentLead(index)}
                       >
                         <TrashIcon className="w-5" />
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-square btn-ghost"
+                        onClick={() => {
+                          openEditNewLead(l);
+                        }}
+                      >
+                        <PencilSquareIcon className="w-5" />
                       </button>
                     </td>
                   </tr>
