@@ -3,61 +3,45 @@ import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import InputSelect from "../../../components/Input/InputSelect";
-import {
-  useCreatePlaylist,
-  useUpdatePlaylist,
-} from "../../../hooks/playlist.hook";
+import { useCreateMentalHealth } from "../../../hooks/mentalHealth.hook";
 
-const statusOptions = [
-  { value: "ACTIVE", label: "ACTIVE" },
-  { value: "INACTIVE", label: "INACTIVE" },
-];
+const INITIAL_LEAD_OBJ = {
+  name: "",
+  description: "",
+  status: "ACTIVE",
+};
 
-function EditPlaylistModalBody({ closeModal, extraObject }) {
+function AddMentalHealthModalBody({ closeModal }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { mutate } = useUpdatePlaylist();
-
-  const INITIAL_LEAD_OBJ = {
-    name: extraObject.name,
-    description: extraObject.description,
-    imageUrl: extraObject.imageUrl,
-    status: extraObject.status,
-  };
-
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
-  const selectedPlaylistId = extraObject.selectedPlaylistId;
+  const { mutate } = useCreateMentalHealth();
 
   const saveNewLead = async () => {
-    if (!leadObj?.name?.trim()) {
+    if (leadObj.name.trim() === "") {
       return setErrorMessage("Name is required!");
-    } else if (!leadObj?.description?.trim()) {
+    } else if (leadObj.description.trim() === "") {
       return setErrorMessage("Description is required!");
     } else {
       try {
         const payload = {
           name: leadObj.name,
-          image_url: leadObj.imageUrl,
-          status: leadObj.status,
           description: leadObj.description,
+          status: leadObj.status,
         };
 
-        await mutate({ selectedPlaylistId, payload });
-
+        await mutate(payload);
         dispatch(
-          showNotification({ message: "New Playlist added!", status: 1 })
+          showNotification({ message: "New Mental Health Added!", status: 1 })
         );
-
         closeModal();
-
         setTimeout(() => {
           window.location.reload();
         }, 1000);
       } catch (error) {
-        console.error("Error adding new Playlist:", error);
-        setErrorMessage("Error adding new Playlist. Please try again.");
+        console.error("Error adding new Mental Health:", error);
+        setErrorMessage("Error adding new Mental Health. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -79,7 +63,7 @@ function EditPlaylistModalBody({ closeModal, extraObject }) {
         defaultValue={leadObj.name}
         updateType="name"
         containerStyle="mt-4"
-        labelTitle="Playlist Name"
+        labelTitle="Name"
         updateFormValue={updateFormValue}
       />
 
@@ -89,24 +73,6 @@ function EditPlaylistModalBody({ closeModal, extraObject }) {
         updateType="description"
         containerStyle="mt-4"
         labelTitle="Description"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="text"
-        defaultValue={leadObj.imageUrl}
-        updateType="imageUrl"
-        containerStyle="mt-4"
-        labelTitle="Image URL"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputSelect
-        options={statusOptions}
-        defaultValue={leadObj.status}
-        updateType="status"
-        containerStyle="mt-4"
-        labelTitle="Status"
         updateFormValue={updateFormValue}
       />
 
@@ -128,4 +94,4 @@ function EditPlaylistModalBody({ closeModal, extraObject }) {
   );
 }
 
-export default EditPlaylistModalBody;
+export default AddMentalHealthModalBody;

@@ -31,7 +31,6 @@ export const leadsSlice = createSlice({
     },
     [getLeadsContent.fulfilled]: (state, action) => {
       state.leads = action.payload;
-      console.log(state.leads);
       state.isLoading = false;
     },
     [getLeadsContent.rejected]: (state) => {

@@ -5,22 +5,23 @@ import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { useUpdateUser } from "../../../hooks/user.hook";
 
-const INITIAL_LEAD_OBJ = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  city: "",
-  address: "",
-  dob: "",
-};
-
 function EditLeadModalBody({ closeModal, extraObject }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
-  // const selectedLeadId = useSelector((state) => state.lead.selectedLeadId);
+
   const selectedLeadId = extraObject.selectedLeadId;
+
+  const INITIAL_LEAD_OBJ = {
+    firstName: extraObject.firstName,
+    lastName: extraObject.lastName,
+    email: extraObject.email,
+    city: extraObject.city,
+    address: extraObject.address,
+    dob: extraObject.dob,
+  };
+
+  const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   const { mutate } = useUpdateUser();
 

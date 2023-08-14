@@ -1,4 +1,4 @@
-import { CallAPI } from "../../AxiosBase";
+import { CallAPI, CallDeleteAPI } from "../../AxiosBase";
 
 export const getGenreList = () => {
   const url = "/genres";
@@ -27,4 +27,9 @@ export const updateGenreAPI = (selectedGenreId, payload) => {
     status,
     emotion,
   });
+};
+
+export const deleteGenreAPI = (selectedGenreId) => {
+  const url = `/genres/${selectedGenreId}`;
+  return CallDeleteAPI.delete(url);
 };

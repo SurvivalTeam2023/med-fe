@@ -1,8 +1,6 @@
 import axios from "axios";
 import { baseUrl } from "../config/env.config";
-import { store } from "../app/store";
 import { AUTH_KEY } from "../constants/app";
-import { useSelector } from "react-redux";
 
 export const CallAPI = axios.create({
   baseURL: baseUrl,
@@ -11,6 +9,11 @@ export const CallAPI = axios.create({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
   },
+});
+
+export const CallDeleteAPI = axios.create({
+  baseURL: baseUrl,
+  withCredentials: false,
 });
 
 export const CallAPIMulti = axios.create({
@@ -46,5 +49,18 @@ CallAPIMulti.interceptors.request.use((req) => {
 });
 
 CallAPIMulti.interceptors.response.use(async (res) => {
+  return res;
+});
+
+CallDeleteAPI.interceptors.request.use((req) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers[AUTH_KEY.HEADER_AUTHORIZATION] = `Bearer ${token}`;
+  }
+  console.log("request_url:", `${req.baseURL}${req.url}`);
+  return req;
+});
+
+CallDeleteAPI.interceptors.response.use(async (res) => {
   return res;
 });

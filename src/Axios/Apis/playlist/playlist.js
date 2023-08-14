@@ -1,4 +1,4 @@
-import { CallAPI } from "../../AxiosBase";
+import { CallAPI, CallDeleteAPI } from "../../AxiosBase";
 
 export const getPlaylistList = () => {
   const url = "/playlist";
@@ -26,4 +26,9 @@ export const updatePlaylistAPI = (selectedPlaylistId, payload) => {
     status,
     description,
   });
+};
+
+export const deletePlaylistAPI = (selectedPlaylistId) => {
+  const url = `/playlist/${selectedPlaylistId}`;
+  return CallDeleteAPI.delete(url);
 };
