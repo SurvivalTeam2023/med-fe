@@ -148,7 +148,6 @@ function Genre() {
                           className="btn btn-square btn-ghost"
                           onClick={() => {
                             openEditNewLead(l);
-                            console.log("data", l);
                           }}
                         >
                           <PencilSquareIcon className="w-5" />

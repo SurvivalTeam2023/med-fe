@@ -7,9 +7,9 @@ export const useCreateGenre = () =>
   });
 
 export const useUpdateGenre = () => {
-  const updateUser = async ({ selectedGenreId, payload }) => {
+  const updateGenre = async ({ selectedGenreId, payload }) => {
     const result = await updateGenreAPI(selectedGenreId, payload);
     return result;
   };
-  return useMutation(updateUser);
+  return useMutation(updateGenre);
 };

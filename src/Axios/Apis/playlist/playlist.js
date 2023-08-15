@@ -16,3 +16,14 @@ export const createPlaylistAPI = (payload) => {
     isPublic,
   });
 };
+
+export const updatePlaylistAPI = (selectedPlaylistId, payload) => {
+  const url = `/playlist/${selectedPlaylistId}`;
+  const { name, image_url, status, description } = payload;
+  return CallAPI.put(url, {
+    name,
+    image_url,
+    status,
+    description,
+  });
+};
