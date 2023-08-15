@@ -3,13 +3,19 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
-import { deleteLead, getLeadsContent } from "./leadSlice";
+import {
+  deleteLead,
+  getLeadsContent,
+  leadsSlice,
+  setSelectedLeadId,
+} from "./leadSlice";
 import {
   CONFIRMATION_MODAL_CLOSE_TYPES,
   MODAL_BODY_TYPES,
 } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import { showNotification } from "../common/headerSlice";
+import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 
 const TopSideButtons = () => {
   const dispatch = useDispatch();
@@ -40,6 +46,7 @@ function Leads() {
   const dispatch = useDispatch();
   const itemsPerPage = 5; // Number of items to display per page
   const [currentPage, setCurrentPage] = useState(1);
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -71,6 +78,18 @@ function Leads() {
           message: `Are you sure you want to delete this user?`,
           type: CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE,
           index,
+        },
+      })
+    );
+  };
+
+  const openEditNewLead = (selectedLeadId) => {
+    dispatch(
+      openModal({
+        title: "Edit User",
+        bodyType: MODAL_BODY_TYPES.LEAD_EDIT,
+        extraObject: {
+          selectedLeadId: selectedLeadId,
         },
       })
     );
@@ -113,6 +132,17 @@ function Leads() {
                         onClick={() => deleteCurrentLead(index)}
                       >
                         <TrashIcon className="w-5" />
+                      </button>
+                    </td>
+
+                    <td>
+                      <button
+                        className="btn btn-square btn-ghost"
+                        onClick={() => {
+                          openEditNewLead(l.id);
+                        }}
+                      >
+                        <PencilSquareIcon className="w-5" />
                       </button>
                     </td>
                   </tr>

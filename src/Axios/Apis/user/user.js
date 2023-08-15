@@ -1,4 +1,5 @@
-import { CallAPI } from "../../AxiosBase";
+import { CallAPI, CallAPIMulti } from "../../AxiosBase";
+import { useSelector } from "react-redux";
 
 export const getUserListApi = (payload) => {
   const url = "/user/userList";
@@ -65,4 +66,17 @@ export const getUserLog = () => {
 export const getUserByAge = () => {
   const url = "/age";
   return CallAPI.get(url);
+};
+
+export const updateUserAPI = (selectedLeadId, payload) => {
+  const url = `/user/${selectedLeadId}`;
+  const { firstName, lastName, email, city, address, dob } = payload;
+  return CallAPIMulti.put(url, {
+    firstName,
+    lastName,
+    email,
+    city,
+    address,
+    dob,
+  });
 };

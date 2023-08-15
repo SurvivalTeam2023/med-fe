@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { CallAPI } from "../../Axios/AxiosBase";
 
 export const getLeadsContent = createAsyncThunk("/leads/content", async () => {

@@ -4,7 +4,7 @@ import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import InputSelect from "../../../components/Input/InputSelect";
 import { showNotification } from "../../common/headerSlice";
-import { useCreateUser } from "../../../hooks/user.hook.ts";
+import { useCreateUser } from "../../../hooks/user.hook";
 
 const INITIAL_LEAD_OBJ = {
   username: "",
@@ -70,13 +70,7 @@ function AddLeadModalBody({ closeModal }) {
           address: leadObj.address,
           dob: leadObj.dob,
         };
-
-        console.log("apiPayload", payload);
-
-        // Assuming mutate function handles the API call internally
         await mutate(payload);
-
-        // Assuming showNotification and closeModal are actions/functions
         dispatch(showNotification({ message: "New user Added!", status: 1 }));
         closeModal();
       } catch (error) {
