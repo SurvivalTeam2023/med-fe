@@ -73,6 +73,9 @@ function AddLeadModalBody({ closeModal }) {
         await mutate(payload);
         dispatch(showNotification({ message: "New user Added!", status: 1 }));
         closeModal();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } catch (error) {
         console.error("Error adding new user:", error);
         setErrorMessage("Error adding new user. Please try again.");
