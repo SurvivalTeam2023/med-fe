@@ -12,9 +12,33 @@ import { showNotification } from "../common/headerSlice";
 import { getGenreList } from "../../Axios/Apis/genre/genre";
 import { useQuery } from "@tanstack/react-query";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
+import SearchBar from "../../components/Input/SearchBar";
+import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
+import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 
-const TopSideButtons = () => {
+const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
+  const [filterParam, setFilterParam] = useState("");
+  const [searchText, setSearchText] = useState("");
+
+  const showFiltersAndApply = (params) => {
+    applyFilter(params);
+    setFilterParam(params);
+  };
+
+  const removeAppliedFilter = () => {
+    removeFilter();
+    setFilterParam("");
+    setSearchText("");
+  };
+
+  useEffect(() => {
+    if (searchText === "") {
+      removeAppliedFilter();
+    } else {
+      applySearch(searchText);
+    }
+  }, [searchText]);
 
   const openAddNewLeadModal = () => {
     dispatch(
@@ -27,12 +51,57 @@ const TopSideButtons = () => {
 
   return (
     <div className="inline-block float-right">
-      <button
-        className="btn px-6 btn-sm normal-case btn-primary"
-        onClick={() => openAddNewLeadModal()}
-      >
-        Add New
-      </button>
+      <SearchBar
+        searchText={searchText}
+        styleClass="mr-4"
+        setSearchText={setSearchText}
+      />
+      {filterParam !== "" && (
+        <button
+          onClick={() => removeAppliedFilter()}
+          className="btn btn-xs mr-2 btn-active btn-ghost normal-case"
+        >
+          {filterParam}
+          <XMarkIcon className="w-4 ml-2" />
+        </button>
+      )}
+      <div className="dropdown dropdown-bottom dropdown-end">
+        <div className="flex items-center">
+          <label tabIndex={0} className="btn btn-sm btn-outline">
+            <FunnelIcon className="w-5 mr-2" />
+            Filter
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu p-2 text-sm shadow bg-base-100 rounded-box w-52"
+          >
+            <li>
+              <button onClick={() => showFiltersAndApply("ACTIVE")}>
+                Active
+              </button>
+            </li>
+            <li>
+              <button onClick={() => showFiltersAndApply("INACTIVE")}>
+                Inactive
+              </button>
+            </li>
+
+            <div className="divider mt-0 mb-0"></div>
+            <li>
+              <button onClick={() => removeAppliedFilter()}>
+                Remove Filter
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <button
+          className="btn px-6 btn-sm normal-case btn-primary"
+          onClick={() => openAddNewLeadModal()}
+        >
+          Add New
+        </button>
+      </div>
     </div>
   );
 };
@@ -58,17 +127,62 @@ function Genre() {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const genreData = genre?.data;
-  const visibleLeads = genreData?.slice(startIndex, startIndex + itemsPerPage);
+  const [genres, setGenres] = useState(genreData);
+  const visibleGenres = genres?.slice(startIndex, startIndex + itemsPerPage);
 
-  const deleteCurrentLead = (index) => {
+  useEffect(() => {
+    setGenres(genreData);
+  }, [genreData]);
+
+  const removeFilter = () => {
+    setGenres(genreData);
+  };
+
+  const applyFilter = (status) => {
+    let filteredGenres = genreData.filter((t) => {
+      return t.status === status;
+    });
+
+    setGenres(filteredGenres);
+  };
+
+  // Search according to name
+  const applySearch = (value) => {
+    let filteredGenres = genreData.filter((genre) => {
+      return (
+        genre.name.toLowerCase().includes(value.toLowerCase()) ||
+        genre.desc.toLowerCase().includes(value.toLowerCase()) ||
+        genre.id.toString().includes(value.toLowerCase())
+      );
+    });
+    setGenres(filteredGenres);
+  };
+
+  const deleteCurrentLead = (data) => {
     dispatch(
       openModal({
         title: "Confirmation",
-        bodyType: MODAL_BODY_TYPES.CONFIRMATION,
+        bodyType: MODAL_BODY_TYPES.GENRE_DELETE,
         extraObject: {
           message: `Are you sure you want to delete this user?`,
-          type: CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE,
-          index,
+          selectedGenreId: data.id,
+        },
+      })
+    );
+  };
+
+  const openEditNewLead = (data) => {
+    dispatch(
+      openModal({
+        title: "Edit User",
+        bodyType: MODAL_BODY_TYPES.GENRE_EDIT,
+        extraObject: {
+          selectedGenreId: data.id,
+          name: data.name,
+          desc: data.desc,
+          image: data.image,
+          status: data.status,
+          emotion: data.emotion,
         },
       })
     );
@@ -96,7 +210,13 @@ function Genre() {
       <TitleCard
         title="Genre List"
         topMargin="mt-2"
-        TopSideButtons={<TopSideButtons />}
+        TopSideButtons={
+          <TopSideButtons
+            applySearch={applySearch}
+            applyFilter={applyFilter}
+            removeFilter={removeFilter}
+          />
+        }
       >
         {/* Leads List in table format loaded from slice after api call */}
         <div className="overflow-x-auto w-full">
@@ -114,7 +234,7 @@ function Genre() {
             </thead>
             {Array.isArray(genreData) && genreData.length > 0 ? (
               <tbody>
-                {visibleLeads?.map((l, index) => {
+                {visibleGenres?.map((l, index) => {
                   const leadIndex = startIndex + index;
                   return (
                     <tr key={l.id}>
@@ -138,7 +258,7 @@ function Genre() {
                       <td>
                         <button
                           className="btn btn-square btn-ghost"
-                          onClick={() => deleteCurrentLead(index)}
+                          onClick={() => deleteCurrentLead(l)}
                         >
                           <TrashIcon className="w-5" />
                         </button>

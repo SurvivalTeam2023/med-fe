@@ -8,10 +8,13 @@ import EditLeadModalBody from "../features/leads/components/EditLeadModalBody";
 import AddGenreModalBody from "../features/genre/components/AddGenreModalBody";
 import AddPlaylistModalBody from "../features/playlist/components/AddPlaylistModalBody";
 import EditGenreModalBody from "../features/genre/components/EditGenreModalBody";
-<<<<<<< HEAD
 import EditPlaylistModalBody from "../features/playlist/components/EditPlaylistModalBody";
-=======
->>>>>>> develop
+import DeletePlaylistModalBody from "../features/playlist/components/DeletePlaylistModalBody";
+import DeleteGenreModalBody from "../features/genre/components/DeleteGenreModalBody";
+import AddMentalHealthModalBody from "../features/mentalHealth/components/AddMentalHealthModalBody";
+import EditMentalHealthModalBody from "../features/mentalHealth/components/EditMentalHealthModalBody";
+import DeleteMentalHealthModalBody from "../features/mentalHealth/components/DeleteMentalHealthModalBody";
+import AddQuestionModalBody from "../features/question/components/AddQuestionModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -71,6 +74,12 @@ function ModalLayout() {
                   extraObject={extraObject}
                 />
               ),
+              [MODAL_BODY_TYPES.MENTALHEALTH_ADD_NEW]: (
+                <AddMentalHealthModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
               [MODAL_BODY_TYPES.PLAYLIST_EDIT]: (
                 <EditPlaylistModalBody
                   closeModal={close}
@@ -81,6 +90,36 @@ function ModalLayout() {
                 <ConfirmationModalBody
                   extraObject={extraObject}
                   closeModal={close}
+                />
+              ),
+              [MODAL_BODY_TYPES.PLAYLIST_DELETE]: (
+                <DeletePlaylistModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.GENRE_DELETE]: (
+                <DeleteGenreModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.MENTALHEALTH_EDIT]: (
+                <EditMentalHealthModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.MENTALHEALTH_DELETE]: (
+                <DeleteMentalHealthModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.QUESTION_ADD_NEW]: (
+                <AddQuestionModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
                 />
               ),
               [MODAL_BODY_TYPES.DEFAULT]: <div></div>,

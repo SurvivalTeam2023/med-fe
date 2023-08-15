@@ -48,7 +48,6 @@ function AddPlaylistModalBody({ closeModal }) {
           playlistType: leadObj.playlistType,
           isPublic: leadObj.isPublic,
         };
-        console.log("payload la gi v bro?", payload);
         await mutate(payload);
 
         dispatch(

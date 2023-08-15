@@ -12,9 +12,33 @@ import { showNotification } from "../common/headerSlice";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaylistList } from "../../Axios/Apis/playlist/playlist";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
+import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
+import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
+import SearchBar from "../../components/Input/SearchBar";
 
-const TopSideButtons = () => {
+const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
+  const [filterParam, setFilterParam] = useState("");
+  const [searchText, setSearchText] = useState("");
+
+  const showFiltersAndApply = (params) => {
+    applyFilter(params);
+    setFilterParam(params);
+  };
+
+  const removeAppliedFilter = () => {
+    removeFilter();
+    setFilterParam("");
+    setSearchText("");
+  };
+
+  useEffect(() => {
+    if (searchText === "") {
+      removeAppliedFilter();
+    } else {
+      applySearch(searchText);
+    }
+  }, [searchText]);
 
   const openAddNewLeadModal = () => {
     dispatch(
@@ -27,28 +51,63 @@ const TopSideButtons = () => {
 
   return (
     <div className="inline-block float-right">
-      <button
-        className="btn px-6 btn-sm normal-case btn-primary"
-        onClick={() => openAddNewLeadModal()}
-      >
-        Add New
-      </button>
+      <SearchBar
+        searchText={searchText}
+        styleClass="mr-4"
+        setSearchText={setSearchText}
+      />
+      {filterParam !== "" && (
+        <button
+          onClick={() => removeAppliedFilter()}
+          className="btn btn-xs mr-2 btn-active btn-ghost normal-case"
+        >
+          {filterParam}
+          <XMarkIcon className="w-4 ml-2" />
+        </button>
+      )}
+      <div className="dropdown dropdown-bottom dropdown-end">
+        <div className="flex items-center">
+          <label tabIndex={0} className="btn btn-sm btn-outline">
+            <FunnelIcon className="w-5 mr-2" />
+            Filter
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu p-2 text-sm shadow bg-base-100 rounded-box w-52"
+          >
+            <li>
+              <button onClick={() => showFiltersAndApply("ACTIVE")}>
+                Active
+              </button>
+            </li>
+            <li>
+              <button onClick={() => showFiltersAndApply("INACTIVE")}>
+                Inactive
+              </button>
+            </li>
+
+            <div className="divider mt-0 mb-0"></div>
+            <li>
+              <button onClick={() => removeAppliedFilter()}>
+                Remove Filter
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <button
+          className="btn px-6 btn-sm normal-case btn-primary mt-2"
+          onClick={() => openAddNewLeadModal()}
+        >
+          Add New
+        </button>
+      </div>
     </div>
   );
 };
 
 function Playlist() {
-  const dispatch = useDispatch();
-  const itemsPerPage = 5; // Number of items to display per page
-  const [currentPage, setCurrentPage] = useState(1);
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
-  const {
-    data: playlist,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: playlist } = useQuery({
     queryKey: ["getPLaylistList"],
     queryFn: async () => {
       try {
@@ -59,22 +118,74 @@ function Playlist() {
       }
     },
   });
+  const dispatch = useDispatch();
+  const itemsPerPage = 5; // Number of items to display per page
+  const [currentPage, setCurrentPage] = useState(1);
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const playlistData = playlist?.data?.items;
-  const visibleLeads = playlistData?.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
 
-  const deleteCurrentLead = (index) => {
+  const [playlists, setPlaylists] = useState(playlistData);
+
+  useEffect(() => {
+    setPlaylists(playlistData);
+  }, [playlistData]);
+
+  const removeFilter = () => {
+    setPlaylists(playlistData);
+  };
+
+  const visibleLeads = playlists?.slice(startIndex, startIndex + itemsPerPage);
+
+  const applyFilter = (status) => {
+    let filteredTransactions = playlistData.filter((t) => {
+      return t.status === status;
+    });
+
+    setPlaylists(filteredTransactions);
+  };
+
+  // Search according to name
+  const applySearch = (value) => {
+    let searchedPlaylists = playlistData.filter((playlist) => {
+      return (
+        playlist.name.toLowerCase().includes(value.toLowerCase()) ||
+        playlist.author.firstName.toLowerCase().includes(value.toLowerCase()) ||
+        playlist.author.lastName.toLowerCase().includes(value.toLowerCase()) ||
+        playlist.id.toString().includes(value.toLowerCase())
+      );
+    });
+    setPlaylists(searchedPlaylists);
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const deleteCurrentLead = (data) => {
     dispatch(
       openModal({
         title: "Confirmation",
-        bodyType: MODAL_BODY_TYPES.CONFIRMATION,
+        bodyType: MODAL_BODY_TYPES.PLAYLIST_DELETE,
         extraObject: {
           message: `Are you sure you want to delete this user?`,
-          type: CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE,
-          index,
+          selectedPlaylistId: data.id,
+        },
+      })
+    );
+  };
+
+  const openEditNewLead = (data) => {
+    dispatch(
+      openModal({
+        title: "Edit User",
+        bodyType: MODAL_BODY_TYPES.PLAYLIST_EDIT,
+        extraObject: {
+          selectedPlaylistId: data.id,
+          name: data.name,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          status: data.status,
         },
       })
     );
@@ -99,9 +210,15 @@ function Playlist() {
   return (
     <>
       <TitleCard
-        title="Playlist List"
+        title="Playlists"
         topMargin="mt-2"
-        TopSideButtons={<TopSideButtons />}
+        TopSideButtons={
+          <TopSideButtons
+            applySearch={applySearch}
+            applyFilter={applyFilter}
+            removeFilter={removeFilter}
+          />
+        }
       >
         {/* Leads List in table format loaded from slice after api call */}
         <div className="overflow-x-auto w-full">
@@ -143,7 +260,7 @@ function Playlist() {
                     <td>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => deleteCurrentLead(index)}
+                        onClick={() => deleteCurrentLead(l)}
                       >
                         <TrashIcon className="w-5" />
                       </button>
