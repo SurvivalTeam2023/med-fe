@@ -191,6 +191,22 @@ function Playlist() {
     );
   };
 
+  const openEditNewLead = (data) => {
+    dispatch(
+      openModal({
+        title: "Edit User",
+        bodyType: MODAL_BODY_TYPES.PLAYLIST_EDIT,
+        extraObject: {
+          selectedPlaylistId: data.id,
+          name: data.name,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          status: data.status,
+        },
+      })
+    );
+  };
+
   return (
     <>
       <TitleCard

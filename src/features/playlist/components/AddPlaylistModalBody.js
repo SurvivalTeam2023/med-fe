@@ -48,7 +48,6 @@ function AddPlaylistModalBody({ closeModal }) {
           playlistType: leadObj.playlistType,
           isPublic: leadObj.isPublic,
         };
-
         await mutate(payload);
 
         dispatch(
