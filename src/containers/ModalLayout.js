@@ -8,7 +8,10 @@ import EditLeadModalBody from "../features/leads/components/EditLeadModalBody";
 import AddGenreModalBody from "../features/genre/components/AddGenreModalBody";
 import AddPlaylistModalBody from "../features/playlist/components/AddPlaylistModalBody";
 import EditGenreModalBody from "../features/genre/components/EditGenreModalBody";
+<<<<<<< HEAD
 import EditPlaylistModalBody from "../features/playlist/components/EditPlaylistModalBody";
+=======
+>>>>>>> develop
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
