@@ -6,19 +6,6 @@ import { getLeadsContent } from "./leadSlice";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 import SearchBar from "../../components/Input/SearchBar";
-import {
-  deleteLead,
-  getLeadsContent,
-  leadsSlice,
-  setSelectedLeadId,
-} from "./leadSlice";
-import {
-  CONFIRMATION_MODAL_CLOSE_TYPES,
-  MODAL_BODY_TYPES,
-} from "../../utils/globalConstantUtil";
-import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import { showNotification } from "../common/headerSlice";
-import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 
 const TopSideButtons = ({ applySearch }) => {
   const dispatch = useDispatch();
@@ -106,18 +93,6 @@ function Leads() {
           city: data.city,
           address: data.address,
           dob: data.dob,
-        },
-      })
-    );
-  };
-
-  const openEditNewLead = (selectedLeadId) => {
-    dispatch(
-      openModal({
-        title: "Edit User",
-        bodyType: MODAL_BODY_TYPES.LEAD_EDIT,
-        extraObject: {
-          selectedLeadId: selectedLeadId,
         },
       })
     );

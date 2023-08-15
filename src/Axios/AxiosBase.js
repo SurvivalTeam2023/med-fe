@@ -51,7 +51,6 @@ CallAPIMulti.interceptors.request.use((req) => {
 CallAPIMulti.interceptors.response.use(async (res) => {
   return res;
 });
-<<<<<<< HEAD
 
 CallDeleteAPI.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
@@ -65,5 +64,3 @@ CallDeleteAPI.interceptors.request.use((req) => {
 CallDeleteAPI.interceptors.response.use(async (res) => {
   return res;
 });
-=======
->>>>>>> develop

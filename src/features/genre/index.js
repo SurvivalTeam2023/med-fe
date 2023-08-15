@@ -188,23 +188,6 @@ function Genre() {
     );
   };
 
-  const openEditNewLead = (data) => {
-    dispatch(
-      openModal({
-        title: "Edit User",
-        bodyType: MODAL_BODY_TYPES.GENRE_EDIT,
-        extraObject: {
-          selectedGenreId: data.id,
-          name: data.name,
-          desc: data.desc,
-          image: data.image,
-          status: data.status,
-          emotion: data.emotion,
-        },
-      })
-    );
-  };
-
   return (
     <>
       <TitleCard
