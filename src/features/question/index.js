@@ -1,6 +1,6 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
 import {
@@ -9,8 +9,7 @@ import {
 } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import { useQuery } from "@tanstack/react-query";
-import { getMentalHealthList } from "../../Axios/Apis/mentalHealth/mentalHealth";
-import { getQuestionList } from "../../Axios/Apis/question/question";
+import { getQuestionListNextPage } from "../../Axios/Apis/question/question";
 import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
@@ -106,11 +105,11 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
 };
 
 function Question() {
-  const { data: question } = useQuery({
+  const { data: question, refetch } = useQuery({
     queryKey: ["getQuestionList"],
     queryFn: async () => {
       try {
-        const result = await getQuestionList();
+        const result = await getQuestionListNextPage(currentPage);
         return result;
       } catch (error) {
         throw new Error(`Error fetching question: ${error.message}`);
@@ -118,23 +117,30 @@ function Question() {
     },
   });
   const dispatch = useDispatch();
-  const itemsPerPage = 5; // Number of items to display per page
   const [currentPage, setCurrentPage] = useState(1);
+  const [visibleQuestion, setVisibleQuestion] = useState([]);
+  const questionData = question?.data?.items;
+  const [questions, setQuestion] = useState(questionData);
+  const maxPage = question?.data?.meta?.totalPages - 1;
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const questionData = question?.data?.items;
+  useEffect(() => {
+    const fetchData = async () => {
+      await refetch();
+    };
 
-  const [questions, setQuestion] = useState(questionData);
-  const visibleQuestion = questions?.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+    fetchData();
+  }, [currentPage, refetch]);
+
+  useEffect(() => {
+    const newVisibleQuestion = questions?.slice();
+    setVisibleQuestion(newVisibleQuestion);
+  }, [questions, currentPage]);
 
   useEffect(() => {
     setQuestion(questionData);
-  }, [questionData]);
+  }, [question, questionData]);
 
   const removeFilter = () => {
     setQuestion(questionData);
@@ -200,7 +206,6 @@ function Question() {
             {questionData ? (
               <tbody>
                 {visibleQuestion?.map((l, index) => {
-                  const leadIndex = startIndex + index;
                   return (
                     <tr key={l.id}>
                       <td>{l.id}</td>
@@ -227,14 +232,18 @@ function Question() {
             <button
               className="btn btn-primary mr-2"
               disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
+              onClick={() => {
+                handlePageChange(currentPage - 1);
+              }}
             >
               Previous
             </button>
             <button
               className="btn btn-primary"
-              disabled={startIndex + itemsPerPage >= questionData?.length}
-              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage > maxPage}
+              onClick={() => {
+                handlePageChange(currentPage + 1);
+              }}
             >
               Next
             </button>

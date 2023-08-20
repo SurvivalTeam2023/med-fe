@@ -1,7 +1,7 @@
 import { CallAPI, CallDeleteAPI } from "../../AxiosBase";
 
-export const getPlaylistList = () => {
-  const url = "/playlist";
+export const getPlaylistList = (currentPage) => {
+  const url = `/playlist?page=${currentPage}`;
   return CallAPI.get(url);
 };
 
