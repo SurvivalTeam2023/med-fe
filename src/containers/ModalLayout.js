@@ -15,6 +15,10 @@ import AddMentalHealthModalBody from "../features/mentalHealth/components/AddMen
 import EditMentalHealthModalBody from "../features/mentalHealth/components/EditMentalHealthModalBody";
 import DeleteMentalHealthModalBody from "../features/mentalHealth/components/DeleteMentalHealthModalBody";
 import AddQuestionModalBody from "../features/question/components/AddQuestionModalBody";
+import AddAudioModalBody from "../features/audio/components/AddAudioModalBody";
+import DeleteAudioModalBody from "../features/audio/components/DeleteAudioModalBody";
+import AddPlaylistToAudioModalBody from "../features/audio/components/AddPlaylistToAudioModalBody";
+import AddAudioToPlaylistModalBody from "../features/playlist/components/AddAudioToPlaylistModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -118,6 +122,30 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.QUESTION_ADD_NEW]: (
                 <AddQuestionModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.AUDIO_ADD_NEW]: (
+                <AddAudioModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.AUDIO_DELETE]: (
+                <DeleteAudioModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.PLAYLIST_AUDIO_ADD]: (
+                <AddPlaylistToAudioModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.AUDIO_PLAYLIST_ADD]: (
+                <AddAudioToPlaylistModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />

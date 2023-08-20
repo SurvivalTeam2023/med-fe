@@ -1,20 +1,22 @@
 import { useState } from "react";
 
-function InputText({
+function InputNumber({
   labelTitle,
   labelStyle,
-  type,
   containerStyle,
   defaultValue,
   placeholder,
   updateFormValue,
   updateType,
 }) {
-  const [value, setValue] = useState(defaultValue);
+  const initialValue =
+    typeof defaultValue === "number" ? defaultValue : Number(defaultValue);
+  const [value, setValue] = useState(initialValue);
 
   const updateInputValue = (val) => {
-    setValue(val);
-    updateFormValue({ updateType, value: val });
+    const numericValue = Number(val); // Ensure numeric value
+    setValue(numericValue);
+    updateFormValue({ updateType, value: numericValue });
   };
 
   return (
@@ -25,14 +27,14 @@ function InputText({
         </span>
       </label>
       <input
-        type={type || "text"}
+        type="number"
         value={value}
         placeholder={placeholder || ""}
         onChange={(e) => updateInputValue(e.target.value)}
-        className="input  input-bordered w-full "
+        className="input input-bordered w-full"
       />
     </div>
   );
 }
 
-export default InputText;
+export default InputNumber;

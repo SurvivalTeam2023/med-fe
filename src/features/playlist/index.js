@@ -1,20 +1,18 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
-import {
-  CONFIRMATION_MODAL_CLOSE_TYPES,
-  MODAL_BODY_TYPES,
-} from "../../utils/globalConstantUtil";
+import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import { showNotification } from "../common/headerSlice";
 import { useQuery } from "@tanstack/react-query";
 import { getPlaylistList } from "../../Axios/Apis/playlist/playlist";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import SearchBar from "../../components/Input/SearchBar";
+
+import PlusCircleIcon from "@heroicons/react/24/outline/PlusCircleIcon";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
@@ -107,11 +105,11 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
 };
 
 function Playlist() {
-  const { data: playlist } = useQuery({
+  const { data: playlist, refetch } = useQuery({
     queryKey: ["getPLaylistList"],
     queryFn: async () => {
       try {
-        const result = await getPlaylistList();
+        const result = await getPlaylistList(currentPage);
         return result;
       } catch (error) {
         throw new Error(`Error fetching genre: ${error.message}`);
@@ -119,13 +117,25 @@ function Playlist() {
     },
   });
   const dispatch = useDispatch();
-  const itemsPerPage = 5; // Number of items to display per page
   const [currentPage, setCurrentPage] = useState(1);
+  const [visiblePlaylist, setVisiblePlaylist] = useState([]);
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
   const playlistData = playlist?.data?.items;
-
   const [playlists, setPlaylists] = useState(playlistData);
+  const maxPage = playlist?.data?.meta?.totalPages - 1;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await refetch();
+    };
+
+    fetchData();
+  }, [currentPage, refetch]);
+
+  useEffect(() => {
+    const newVisiblePlaylist = playlists?.slice();
+    setVisiblePlaylist(newVisiblePlaylist);
+  }, [playlists, currentPage]);
 
   useEffect(() => {
     setPlaylists(playlistData);
@@ -135,8 +145,6 @@ function Playlist() {
     setPlaylists(playlistData);
   };
 
-  const visibleLeads = playlists?.slice(startIndex, startIndex + itemsPerPage);
-
   const applyFilter = (status) => {
     let filteredTransactions = playlistData.filter((t) => {
       return t.status === status;
@@ -145,7 +153,6 @@ function Playlist() {
     setPlaylists(filteredTransactions);
   };
 
-  // Search according to name
   const applySearch = (value) => {
     let searchedPlaylists = playlistData.filter((playlist) => {
       return (
@@ -167,6 +174,19 @@ function Playlist() {
       openModal({
         title: "Confirmation",
         bodyType: MODAL_BODY_TYPES.PLAYLIST_DELETE,
+        extraObject: {
+          message: `Are you sure you want to delete this user?`,
+          selectedPlaylistId: data.id,
+        },
+      })
+    );
+  };
+
+  const AddAudioToPlaylist = (data) => {
+    dispatch(
+      openModal({
+        title: "Confirmation",
+        bodyType: MODAL_BODY_TYPES.AUDIO_PLAYLIST_ADD,
         extraObject: {
           message: `Are you sure you want to delete this user?`,
           selectedPlaylistId: data.id,
@@ -215,11 +235,11 @@ function Playlist() {
                 <th>Status </th>
                 <th>Delete</th>
                 <th>Edit</th>
+                <th>Add into Playlist</th>
               </tr>
             </thead>
             <tbody>
-              {visibleLeads?.map((l, index) => {
-                const leadIndex = startIndex + index;
+              {visiblePlaylist?.map((l, index) => {
                 return (
                   <tr key={l.id}>
                     <td>{l.id}</td>
@@ -259,6 +279,14 @@ function Playlist() {
                         <PencilSquareIcon className="w-5" />
                       </button>
                     </td>
+                    <td>
+                      <button
+                        className="btn btn-square btn-ghost"
+                        onClick={() => AddAudioToPlaylist(l)}
+                      >
+                        <PlusCircleIcon className="w-5" />
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -274,7 +302,7 @@ function Playlist() {
             </button>
             <button
               className="btn btn-primary"
-              disabled={startIndex + itemsPerPage >= playlistData?.length}
+              disabled={currentPage > maxPage}
               onClick={() => handlePageChange(currentPage + 1)}
             >
               Next

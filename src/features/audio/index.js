@@ -1,6 +1,5 @@
-import moment from "moment";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
 import {
@@ -8,8 +7,8 @@ import {
   MODAL_BODY_TYPES,
 } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import { showNotification } from "../common/headerSlice";
-import { getAudioList } from "../../Axios/Apis/audio/audio";
+import PlusCircleIcon from "@heroicons/react/24/outline/PlusCircleIcon";
+import { getNextAudioList } from "../../Axios/Apis/audio/audio";
 import { useQuery } from "@tanstack/react-query";
 
 const TopSideButtons = () => {
@@ -18,8 +17,8 @@ const TopSideButtons = () => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New Lead",
-        bodyType: MODAL_BODY_TYPES.LEAD_ADD_NEW,
+        title: "Add New Audio",
+        bodyType: MODAL_BODY_TYPES.AUDIO_ADD_NEW,
       })
     );
   };
@@ -37,15 +36,12 @@ const TopSideButtons = () => {
 };
 
 function Audio() {
-  const {
-    data: audio,
-    isLoading,
-    isError,
-  } = useQuery({
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: audio, refetch } = useQuery({
     queryKey: ["getAudioList"],
     queryFn: async () => {
       try {
-        const result = await getAudioList();
+        const result = await getNextAudioList(currentPage);
         return result;
       } catch (error) {
         throw new Error(`Error fetching audio: ${error.message}`);
@@ -53,25 +49,53 @@ function Audio() {
     },
   });
   const dispatch = useDispatch();
-  const itemsPerPage = 5; // Number of items to display per page
-  const [currentPage, setCurrentPage] = useState(1);
+  const [visibleAudio, setVisibleAudio] = useState([]);
+  const audioData = audio?.data?.items;
+  const maxPage = audio?.data?.meta?.totalPages - 1;
+  const [audios, setAudio] = useState(audioData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await refetch();
+    };
+
+    fetchData();
+  }, [currentPage, refetch]);
+
+  useEffect(() => {
+    const newVisibleAudio = audios?.slice();
+    setVisibleAudio(newVisibleAudio);
+  }, [audios, currentPage]);
+
+  useEffect(() => {
+    setAudio(audioData);
+  }, [audio, audioData]);
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const audioData = audio?.data?.items;
 
-  const visibleLeads = audioData?.slice(startIndex, startIndex + itemsPerPage);
-
-  const deleteCurrentLead = (index) => {
+  const deleteCurrentLead = (data) => {
     dispatch(
       openModal({
         title: "Confirmation",
-        bodyType: MODAL_BODY_TYPES.CONFIRMATION,
+        bodyType: MODAL_BODY_TYPES.AUDIO_DELETE,
         extraObject: {
           message: `Are you sure you want to delete this user?`,
-          type: CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE,
-          index,
+          selectedAudioId: data.id,
+        },
+      })
+    );
+  };
+
+  const AddAudioToPlaylist = (data) => {
+    dispatch(
+      openModal({
+        title: "Confirmation",
+        bodyType: MODAL_BODY_TYPES.PLAYLIST_AUDIO_ADD,
+        extraObject: {
+          message: `Are you sure you want to delete this user?`,
+          selectedAudioId: data.id,
         },
       })
     );
@@ -92,13 +116,14 @@ function Audio() {
                 <th>Id</th>
                 <th>Audio</th>
                 <th>Liked</th>
+                <th>Status</th>
                 <th>Delete</th>
+                <th>Add into Playlist</th>
               </tr>
             </thead>
             {audioData ? (
               <tbody>
-                {visibleLeads.map((l, index) => {
-                  const leadIndex = startIndex + index;
+                {visibleAudio?.map((l, index) => {
                   return (
                     <tr key={l.id}>
                       <td>{l.id}</td>
@@ -117,12 +142,21 @@ function Audio() {
                         </div>
                       </td>
                       <td>{l.liked}</td>
+                      <td>{l.status}</td>
                       <td>
                         <button
                           className="btn btn-square btn-ghost"
-                          onClick={() => deleteCurrentLead(index)}
+                          onClick={() => deleteCurrentLead(l)}
                         >
                           <TrashIcon className="w-5" />
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-square btn-ghost"
+                          onClick={() => AddAudioToPlaylist(l)}
+                        >
+                          <PlusCircleIcon className="w-5" />
                         </button>
                       </td>
                     </tr>
@@ -143,7 +177,7 @@ function Audio() {
             </button>
             <button
               className="btn btn-primary"
-              disabled={startIndex + itemsPerPage >= audioData?.length}
+              disabled={currentPage > maxPage}
               onClick={() => handlePageChange(currentPage + 1)}
             >
               Next
