@@ -198,7 +198,7 @@ function Playlist() {
   const openEditNewLead = (data) => {
     dispatch(
       openModal({
-        title: "Edit User",
+        title: "Edit Playlist",
         bodyType: MODAL_BODY_TYPES.PLAYLIST_EDIT,
         extraObject: {
           selectedPlaylistId: data.id,

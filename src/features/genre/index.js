@@ -164,7 +164,7 @@ function Genre() {
         title: "Confirmation",
         bodyType: MODAL_BODY_TYPES.GENRE_DELETE,
         extraObject: {
-          message: `Are you sure you want to delete this user?`,
+          message: `Are you sure you want to delete this Genre?`,
           selectedGenreId: data.id,
         },
       })
@@ -174,7 +174,7 @@ function Genre() {
   const openEditNewLead = (data) => {
     dispatch(
       openModal({
-        title: "Edit User",
+        title: "Edit Genre",
         bodyType: MODAL_BODY_TYPES.GENRE_EDIT,
         extraObject: {
           selectedGenreId: data.id,
