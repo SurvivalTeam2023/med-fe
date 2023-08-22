@@ -3,16 +3,14 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
-import {
-  CONFIRMATION_MODAL_CLOSE_TYPES,
-  MODAL_BODY_TYPES,
-} from "../../utils/globalConstantUtil";
+import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import { useQuery } from "@tanstack/react-query";
 import { getQuestionListNextPage } from "../../Axios/Apis/question/question";
 import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
+import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
@@ -116,15 +114,18 @@ function Question() {
       }
     },
   });
+
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [visibleQuestion, setVisibleQuestion] = useState([]);
   const questionData = question?.data?.items;
   const [questions, setQuestion] = useState(questionData);
   const maxPage = question?.data?.meta?.totalPages - 1;
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+
   useEffect(() => {
     const fetchData = async () => {
       await refetch();
@@ -169,10 +170,24 @@ function Question() {
     dispatch(
       openModal({
         title: "Confirmation",
-        bodyType: MODAL_BODY_TYPES.GENRE_DELETE,
+        bodyType: MODAL_BODY_TYPES.QUESTION_DELETE,
         extraObject: {
-          message: `Are you sure you want to delete this user?`,
-          selectedGenreId: data.id,
+          message: `Are you sure you want to delete this Question?`,
+          selectedQuestionId: data.id,
+        },
+      })
+    );
+  };
+
+  const openEditNewLead = (data) => {
+    dispatch(
+      openModal({
+        title: "Edit Question",
+        bodyType: MODAL_BODY_TYPES.QUESTION_EDIT,
+        extraObject: {
+          selectedQuestionId: data.id,
+          question: data.question,
+          status: data.status,
         },
       })
     );
@@ -201,6 +216,7 @@ function Question() {
                 <th>Created Date</th>
                 <th>Status</th>
                 <th>Delete</th>
+                <th>Edit</th>
               </tr>
             </thead>
             {questionData ? (
@@ -215,9 +231,29 @@ function Question() {
                       <td>
                         <button
                           className="btn btn-square btn-ghost"
-                          onClick={() => deleteCurrentLead(index)}
+                          onClick={() => deleteCurrentLead(l)}
                         >
                           <TrashIcon className="w-5" />
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-square btn-ghost"
+                          onClick={() => {
+                            openEditNewLead(l);
+                          }}
+                        >
+                          <PencilSquareIcon className="w-5" />
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-square btn-ghost"
+                          onClick={() => {
+                            openEditNewLead(l);
+                          }}
+                        >
+                          <PencilSquareIcon className="w-5" />
                         </button>
                       </td>
                     </tr>

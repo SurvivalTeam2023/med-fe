@@ -2,31 +2,31 @@ import { useDispatch } from "react-redux";
 import { showNotification } from "../../common/headerSlice";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { useState } from "react";
-import { deleteMentalHealthAPI } from "../../../Axios/Apis/mentalHealth/mentalHealth";
+import { deleteOptionAPI } from "../../../Axios/Apis/options/options";
 
-function DeleteMentalHealthModalBody({ extraObject, closeModal }) {
+function DeleteOptionModalBody({ extraObject, closeModal }) {
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
 
-  const selectedMentalId = extraObject.selectedMentalId;
+  const selectedOptionId = extraObject.selectedOptionId;
   const message = extraObject.message;
 
   const proceedWithYes = async () => {
     try {
-      await deleteMentalHealthAPI(selectedMentalId);
+      await deleteOptionAPI(selectedOptionId);
       dispatch(
         showNotification({
-          message: "Delete Mental Health successfully!",
+          message: "Delete Option successfully!",
           status: 1,
         })
       );
       closeModal();
       setTimeout(() => {
         window.location.reload();
-      }, 1000);
+      }, 2000);
     } catch (error) {
       console.error("An error occurred:", error);
-      setErrorMessage("Error deleting selected Mental Health!");
+      setErrorMessage("Error deleting selected Option!");
     }
   };
 
@@ -50,4 +50,4 @@ function DeleteMentalHealthModalBody({ extraObject, closeModal }) {
   );
 }
 
-export default DeleteMentalHealthModalBody;
+export default DeleteOptionModalBody;

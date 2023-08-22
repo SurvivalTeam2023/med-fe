@@ -5,12 +5,12 @@ import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import { getGenreList } from "../../Axios/Apis/genre/genre";
 import { useQuery } from "@tanstack/react-query";
-import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
+import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
+import { getOptionsAPI } from "../../Axios/Apis/options/options";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
@@ -39,8 +39,8 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New Genre",
-        bodyType: MODAL_BODY_TYPES.GENRE_ADD_NEW,
+        title: "Add New Option",
+        bodyType: MODAL_BODY_TYPES.OPTIONS_ADD,
       })
     );
   };
@@ -102,66 +102,78 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   );
 };
 
-function Genre() {
-  const dispatch = useDispatch();
-  const { data: genre } = useQuery({
-    queryKey: ["getGenreList"],
+function Options() {
+  const { data: option, refetch } = useQuery({
+    queryKey: ["getOptionList"],
     queryFn: async () => {
       try {
-        const result = await getGenreList();
+        const result = await getOptionsAPI(currentPage);
         return result;
       } catch (error) {
-        throw new Error(`Error fetching genre: ${error.message}`);
+        throw new Error(`Error fetching option: ${error.message}`);
       }
     },
   });
-  const itemsPerPage = 5; // Number of items to display per page
+
+  const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
+  const [visibleOption, setVisibleOption] = useState([]);
+  const optionData = option?.data?.items;
+  const [options, setOption] = useState(optionData);
+  const maxPage = option?.data?.meta?.totalPages - 1;
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const genreData = genre?.data;
-  const [genres, setGenres] = useState(genreData);
-  const visibleGenres = genres?.slice(startIndex, startIndex + itemsPerPage);
+  useEffect(() => {
+    const fetchData = async () => {
+      await refetch();
+    };
+
+    fetchData();
+  }, [currentPage, refetch]);
 
   useEffect(() => {
-    setGenres(genreData);
-  }, [genreData]);
+    const newVisibleOption = options?.slice();
+    setVisibleOption(newVisibleOption);
+  }, [options, currentPage]);
+
+  useEffect(() => {
+    setOption(optionData);
+  }, [option, optionData]);
 
   const removeFilter = () => {
-    setGenres(genreData);
+    setOption(optionData);
   };
 
   const applyFilter = (status) => {
-    let filteredGenres = genreData.filter((t) => {
+    let filteredOptions = optionData.filter((t) => {
       return t.status === status;
     });
 
-    setGenres(filteredGenres);
+    setOption(filteredOptions);
   };
 
   // Search according to name
   const applySearch = (value) => {
-    let filteredGenres = genreData.filter((genre) => {
+    let filteredOptions = optionData?.filter((option) => {
       return (
-        genre.name.toLowerCase().includes(value.toLowerCase()) ||
-        genre.desc.toLowerCase().includes(value.toLowerCase()) ||
-        genre.id.toString().includes(value.toLowerCase())
+        option.id.toString().includes(value.toLowerCase()) ||
+        option.option.toLowerCase().includes(value.toLowerCase())
       );
     });
-    setGenres(filteredGenres);
+    setOption(filteredOptions);
   };
 
   const deleteCurrentLead = (data) => {
     dispatch(
       openModal({
         title: "Confirmation",
-        bodyType: MODAL_BODY_TYPES.GENRE_DELETE,
+        bodyType: MODAL_BODY_TYPES.OPTIONS_DELETE,
         extraObject: {
-          message: `Are you sure you want to delete this Genre?`,
-          selectedGenreId: data.id,
+          message: `Are you sure you want to delete this Option?`,
+          selectedOptionId: data.id,
         },
       })
     );
@@ -170,15 +182,13 @@ function Genre() {
   const openEditNewLead = (data) => {
     dispatch(
       openModal({
-        title: "Edit Genre",
-        bodyType: MODAL_BODY_TYPES.GENRE_EDIT,
+        title: "Edit Option",
+        bodyType: MODAL_BODY_TYPES.OPTIONS_EDIT,
         extraObject: {
-          selectedGenreId: data.id,
-          name: data.name,
-          desc: data.desc,
-          image: data.image,
+          selectedOptionId: data.id,
+          option: data.option,
           status: data.status,
-          emotion: data.emotion,
+          point: data.points,
         },
       })
     );
@@ -187,7 +197,7 @@ function Genre() {
   return (
     <>
       <TitleCard
-        title="Genre List"
+        title="Mental Health List"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
@@ -203,35 +213,22 @@ function Genre() {
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Genre</th>
-                <th>Emotion</th>
+                <th>Option</th>
+                <th>Question ID</th>
                 <th>Created Date</th>
                 <th>Status</th>
                 <th>Delete</th>
                 <th>Edit</th>
               </tr>
             </thead>
-            {Array.isArray(genreData) && genreData.length > 0 ? (
+            {optionData ? (
               <tbody>
-                {visibleGenres?.map((l, index) => {
-                  const leadIndex = startIndex + index;
+                {visibleOption?.map((l, index) => {
                   return (
                     <tr key={l.id}>
                       <td>{l.id}</td>
-                      <td>
-                        {" "}
-                        <div className="flex items-center space-x-3">
-                          <div className="avatar">
-                            <div className="mask mask-squircle w-12 h-12">
-                              <img src={l.image} alt="Avatar" />
-                            </div>
-                          </div>
-                          <div>
-                            <div className="font-bold">{l.name}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td>{l.emotion}</td>
+                      <td>{l.option}</td>
+                      <td>{l.questionId}</td>
                       <td>{moment(l.createdAt).format("DD/MM/YYYY")}</td>
                       <td>{l.status}</td>
                       <td>
@@ -257,21 +254,25 @@ function Genre() {
                 })}
               </tbody>
             ) : (
-              <p>No value</p>
+              <p> No Value</p>
             )}
           </table>
           <div className="flex justify-center mt-4">
             <button
               className="btn btn-primary mr-2"
               disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
+              onClick={() => {
+                handlePageChange(currentPage - 1);
+              }}
             >
               Previous
             </button>
             <button
               className="btn btn-primary"
-              disabled={startIndex + itemsPerPage >= genreData?.length}
-              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage > maxPage}
+              onClick={() => {
+                handlePageChange(currentPage + 1);
+              }}
             >
               Next
             </button>
@@ -282,4 +283,4 @@ function Genre() {
   );
 }
 
-export default Genre;
+export default Options;

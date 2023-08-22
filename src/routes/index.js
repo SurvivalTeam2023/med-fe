@@ -10,6 +10,7 @@ const Charts = lazy(() => import("../pages/protected/Charts"));
 const Leads = lazy(() => import("../pages/protected/Leads"));
 const Audio = lazy(() => import("../pages/protected/Audio"));
 const Genre = lazy(() => import("../pages/protected/Genre"));
+
 const Playlist = lazy(() => import("../pages/protected/Playlist"));
 
 const Integration = lazy(() => import("../pages/protected/Integration"));
@@ -22,6 +23,9 @@ const Bills = lazy(() => import("../pages/protected/Bills"));
 const ProfileSettings = lazy(() =>
   import("../pages/protected/ProfileSettings")
 );
+const Plan = lazy(() => import("../pages/protected/Plan"));
+const Degree = lazy(() => import("../pages/protected/Degree"));
+const Options = lazy(() => import("../pages/protected/Options"));
 const GettingStarted = lazy(() => import("../pages/GettingStarted"));
 const DocFeatures = lazy(() => import("../pages/DocFeatures"));
 const DocComponents = lazy(() => import("../pages/DocComponents"));
@@ -107,6 +111,18 @@ const routes = [
   {
     path: "/blank",
     component: Blank,
+  },
+  {
+    path: "/plan",
+    component: Plan,
+  },
+  {
+    path: "/degree",
+    component: Degree,
+  },
+  {
+    path: "/option",
+    component: Options,
   },
 ];
 

@@ -19,6 +19,17 @@ import AddAudioModalBody from "../features/audio/components/AddAudioModalBody";
 import DeleteAudioModalBody from "../features/audio/components/DeleteAudioModalBody";
 import AddPlaylistToAudioModalBody from "../features/audio/components/AddPlaylistToAudioModalBody";
 import AddAudioToPlaylistModalBody from "../features/playlist/components/AddAudioToPlaylistModalBody";
+import AddPlanModalBody from "../features/plan/components/AddPlanModalBody";
+import DeletePlanModalBody from "../features/plan/components/DeletePlanModalBody";
+import EditPlanModalBody from "../features/plan/components/EditPlanModalBody";
+import AddDegreeModalBody from "../features/degree/components/AddDegreeModalBody";
+import DeleteDegreeModalBody from "../features/degree/components/DeleteDegreeModalBody";
+import EditDegreeModalBody from "../features/degree/components/EditDegreeModalBody";
+import DeleteQuestionModalBody from "../features/question/components/DeleteQuestionModalBody";
+import EditQuestionModalBody from "../features/question/components/EditQuestionModalBody";
+import AddOptionsModalBody from "../features/options/components/AddOptionsModalBody";
+import DeleteOptionModalBody from "../features/options/components/DeleteOptionModalBody";
+import EditOptionModalBody from "../features/options/components/EditOptionModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -146,6 +157,72 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.AUDIO_PLAYLIST_ADD]: (
                 <AddAudioToPlaylistModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.PLAN_ADD]: (
+                <AddPlanModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.PLAN_DELETE]: (
+                <DeletePlanModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.PLAN_EDIT]: (
+                <EditPlanModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.MENTAL_DEGREE_ADD]: (
+                <AddDegreeModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.MENTAL_DEGREE_DELETE]: (
+                <DeleteDegreeModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.MENTAL_DEGREE_EDIT]: (
+                <EditDegreeModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.QUESTION_DELETE]: (
+                <DeleteQuestionModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.QUESTION_EDIT]: (
+                <EditQuestionModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.OPTIONS_ADD]: (
+                <AddOptionsModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.OPTIONS_DELETE]: (
+                <DeleteOptionModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.OPTIONS_EDIT]: (
+                <EditOptionModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />
