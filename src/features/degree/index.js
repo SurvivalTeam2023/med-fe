@@ -5,12 +5,12 @@ import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import { getGenreList } from "../../Axios/Apis/genre/genre";
 import { useQuery } from "@tanstack/react-query";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
+import { getDegreeList } from "../../Axios/Apis/degree/degree";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
@@ -39,8 +39,8 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New Genre",
-        bodyType: MODAL_BODY_TYPES.GENRE_ADD_NEW,
+        title: "Add New degree",
+        bodyType: MODAL_BODY_TYPES.MENTAL_DEGREE_ADD,
       })
     );
   };
@@ -102,66 +102,67 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   );
 };
 
-function Genre() {
+function Degree() {
   const dispatch = useDispatch();
-  const { data: genre } = useQuery({
-    queryKey: ["getGenreList"],
+  const { data: degree } = useQuery({
+    queryKey: ["getDegreeList"],
     queryFn: async () => {
       try {
-        const result = await getGenreList();
+        const result = await getDegreeList();
         return result;
       } catch (error) {
-        throw new Error(`Error fetching genre: ${error.message}`);
+        throw new Error(`Error fetching degree: ${error.message}`);
       }
     },
   });
-  const itemsPerPage = 5; // Number of items to display per page
+  const itemsPerPage = 10; // Number of items to display per page
   const [currentPage, setCurrentPage] = useState(1);
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const genreData = genre?.data;
-  const [genres, setGenres] = useState(genreData);
-  const visibleGenres = genres?.slice(startIndex, startIndex + itemsPerPage);
+  const degreeData = degree?.data;
+  const [degrees, setDegrees] = useState(degreeData);
+  const visibleDegrees = degrees?.slice(startIndex, startIndex + itemsPerPage);
+  console.log("visibleDegrees", visibleDegrees);
 
   useEffect(() => {
-    setGenres(genreData);
-  }, [genreData]);
+    setDegrees(degreeData);
+  }, [degreeData]);
 
   const removeFilter = () => {
-    setGenres(genreData);
+    setDegrees(degreeData);
   };
 
   const applyFilter = (status) => {
-    let filteredGenres = genreData.filter((t) => {
+    let filteredDegrees = degreeData.filter((t) => {
       return t.status === status;
     });
 
-    setGenres(filteredGenres);
+    setDegrees(filteredDegrees);
   };
 
   // Search according to name
   const applySearch = (value) => {
-    let filteredGenres = genreData.filter((genre) => {
+    let filteredDegrees = degreeData.filter((degree) => {
       return (
-        genre.name.toLowerCase().includes(value.toLowerCase()) ||
-        genre.desc.toLowerCase().includes(value.toLowerCase()) ||
-        genre.id.toString().includes(value.toLowerCase())
+        degree.name.toLowerCase().includes(value.toLowerCase()) ||
+        degree.desc.toLowerCase().includes(value.toLowerCase()) ||
+        degree.id.toString().includes(value.toLowerCase())
       );
     });
-    setGenres(filteredGenres);
+    setDegrees(filteredDegrees);
   };
 
   const deleteCurrentLead = (data) => {
     dispatch(
       openModal({
         title: "Confirmation",
-        bodyType: MODAL_BODY_TYPES.GENRE_DELETE,
+        bodyType: MODAL_BODY_TYPES.MENTAL_DEGREE_DELETE,
         extraObject: {
-          message: `Are you sure you want to delete this Genre?`,
-          selectedGenreId: data.id,
+          message: `Are you sure you want to delete this degree?`,
+          selectedDegreeId: data.id,
         },
       })
     );
@@ -170,15 +171,14 @@ function Genre() {
   const openEditNewLead = (data) => {
     dispatch(
       openModal({
-        title: "Edit Genre",
-        bodyType: MODAL_BODY_TYPES.GENRE_EDIT,
+        title: "Edit degree",
+        bodyType: MODAL_BODY_TYPES.MENTAL_DEGREE_EDIT,
         extraObject: {
-          selectedGenreId: data.id,
-          name: data.name,
-          desc: data.desc,
-          image: data.image,
+          selectedDegreeId: data.id,
+          title: data.title,
           status: data.status,
-          emotion: data.emotion,
+          pointStart: data.pointStart,
+          pointEnd: data.pointEnd,
         },
       })
     );
@@ -187,7 +187,7 @@ function Genre() {
   return (
     <>
       <TitleCard
-        title="Genre List"
+        title="Degree List"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
@@ -203,35 +203,29 @@ function Genre() {
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Genre</th>
-                <th>Emotion</th>
+                <th>Tilte</th>
+                <th>Description</th>
                 <th>Created Date</th>
                 <th>Status</th>
                 <th>Delete</th>
                 <th>Edit</th>
               </tr>
             </thead>
-            {Array.isArray(genreData) && genreData.length > 0 ? (
+            {Array.isArray(degreeData) && degreeData.length > 0 ? (
               <tbody>
-                {visibleGenres?.map((l, index) => {
-                  const leadIndex = startIndex + index;
+                {visibleDegrees?.map((l, index) => {
                   return (
                     <tr key={l.id}>
                       <td>{l.id}</td>
                       <td>
                         {" "}
                         <div className="flex items-center space-x-3">
-                          <div className="avatar">
-                            <div className="mask mask-squircle w-12 h-12">
-                              <img src={l.image} alt="Avatar" />
-                            </div>
-                          </div>
                           <div>
-                            <div className="font-bold">{l.name}</div>
+                            <div className="font-bold">{l.title}</div>
                           </div>
                         </div>
                       </td>
-                      <td>{l.emotion}</td>
+                      <td>{l.description}</td>
                       <td>{moment(l.createdAt).format("DD/MM/YYYY")}</td>
                       <td>{l.status}</td>
                       <td>
@@ -270,7 +264,7 @@ function Genre() {
             </button>
             <button
               className="btn btn-primary"
-              disabled={startIndex + itemsPerPage >= genreData?.length}
+              disabled={startIndex + itemsPerPage >= degreeData?.length}
               onClick={() => handlePageChange(currentPage + 1)}
             >
               Next
@@ -282,4 +276,4 @@ function Genre() {
   );
 }
 
-export default Genre;
+export default Degree;

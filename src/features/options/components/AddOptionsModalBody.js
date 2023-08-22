@@ -3,17 +3,15 @@ import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import { useQuery } from "@tanstack/react-query";
-import { getMentalHealthList } from "../../../Axios/Apis/mentalHealth/mentalHealth";
+import InputNumber from "../../../components/Input/InputNumber";
 import InputSelect from "../../../components/Input/InputSelect";
-import InputMultipleSelect from "../../../components/Input/InputMultipleSelect";
-import { useCreateQuestion } from "../../../hooks/question.hook";
+import { useCreateOption } from "../../../hooks/option.hook";
 
 const INITIAL_LEAD_OBJ = {
-  question: "",
+  option: "",
   status: "ACTIVE",
-  mentalHealthId: [],
-  ageId: 1,
+  points: 1,
+  questionId: 0,
 };
 
 const statusOptions = [
@@ -21,66 +19,35 @@ const statusOptions = [
   { value: "INACTIVE", label: "INACTIVE" },
 ];
 
-const ageOptions = [
-  { value: "1", label: "13-20" },
-  { value: "2", label: "21-30" },
-  { value: "3", label: "31-50" },
-  { value: "4", label: "51-100" },
-];
-
-function AddQuestionModalBody({ closeModal }) {
+function AddOptionsModalBody({ closeModal }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
-  const { mutate } = useCreateQuestion();
-
-  const { data: mental } = useQuery({
-    queryKey: ["getMentalHealthList"],
-    queryFn: async () => {
-      try {
-        const result = await getMentalHealthList();
-        return result;
-      } catch (error) {
-        throw new Error(`Error fetching mental: ${error.message}`);
-      }
-    },
-  });
-
-  const mentalData = mental?.data;
-
-  let mappedOptions = [];
-
-  if (mentalData) {
-    mappedOptions = mentalData?.map((options) => ({
-      value: options.id,
-      label: options.name,
-    }));
-  }
+  const { mutate } = useCreateOption();
 
   const saveNewLead = async () => {
-    if (leadObj.question.trim() === "") {
-      return setErrorMessage("question is required!");
+    if (leadObj?.option?.trim() === "") {
+      return setErrorMessage("Option is required!");
     } else {
       try {
         const payload = {
-          question: leadObj.question,
+          option: leadObj.option,
           status: leadObj.status,
-          mentalHealthId: leadObj.mentalHealthId,
-          ageId: leadObj.ageId,
+          points: leadObj.points,
+          questionId: leadObj.questionId,
         };
-
+        console.log("payload", payload);
         await mutate(payload);
-        dispatch(
-          showNotification({ message: "New Question Added!", status: 1 })
-        );
+
+        dispatch(showNotification({ message: "New Option added!", status: 1 }));
         closeModal();
         setTimeout(() => {
           window.location.reload();
         }, 2000);
       } catch (error) {
-        console.error("Error adding new Question:", error);
-        setErrorMessage("Error adding new Question. Please try again.");
+        console.error("Error adding new Option:", error);
+        setErrorMessage("Error adding new Option. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -99,10 +66,10 @@ function AddQuestionModalBody({ closeModal }) {
     <>
       <InputText
         type="text"
-        defaultValue={leadObj.question}
-        updateType="question"
+        defaultValue={leadObj.option}
+        updateType="option"
         containerStyle="mt-4"
-        labelTitle="Question"
+        labelTitle="Option Name"
         updateFormValue={updateFormValue}
       />
 
@@ -115,21 +82,21 @@ function AddQuestionModalBody({ closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputMultipleSelect
-        options={mappedOptions}
-        defaultValue={leadObj.mentalHealthId}
-        updateType="mentalHealthId"
+      <InputNumber
+        type="number"
+        defaultValue={leadObj.points}
+        updateType="points"
         containerStyle="mt-4"
-        labelTitle="Mental Health"
+        labelTitle="Points"
         updateFormValue={updateFormValue}
       />
 
-      <InputSelect
-        options={ageOptions}
-        defaultValue={leadObj.ageId}
-        updateType="ageId"
+      <InputNumber
+        type="number"
+        defaultValue={leadObj.questionId}
+        updateType="questionId"
         containerStyle="mt-4"
-        labelTitle="Age Group"
+        labelTitle="Question Id"
         updateFormValue={updateFormValue}
       />
 
@@ -151,4 +118,4 @@ function AddQuestionModalBody({ closeModal }) {
   );
 }
 
-export default AddQuestionModalBody;
+export default AddOptionsModalBody;

@@ -1,22 +1,23 @@
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../common/headerSlice";
+import { deletePlaylistAPI } from "../../../Axios/Apis/playlist/playlist";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { useState } from "react";
-import { deleteMentalHealthAPI } from "../../../Axios/Apis/mentalHealth/mentalHealth";
+import { deletePlanAPI } from "../../../Axios/Apis/plan/plan";
 
-function DeleteMentalHealthModalBody({ extraObject, closeModal }) {
+function DeletePlanModalBody({ extraObject, closeModal }) {
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
 
-  const selectedMentalId = extraObject.selectedMentalId;
+  const selectedPlanId = extraObject.selectedPlanId;
   const message = extraObject.message;
 
   const proceedWithYes = async () => {
     try {
-      await deleteMentalHealthAPI(selectedMentalId);
+      await deletePlanAPI(selectedPlanId);
       dispatch(
         showNotification({
-          message: "Delete Mental Health successfully!",
+          message: "Delete Plan successfully!",
           status: 1,
         })
       );
@@ -26,7 +27,7 @@ function DeleteMentalHealthModalBody({ extraObject, closeModal }) {
       }, 1000);
     } catch (error) {
       console.error("An error occurred:", error);
-      setErrorMessage("Error deleting selected Mental Health!");
+      setErrorMessage("Error deleting selected Plan!");
     }
   };
 
@@ -50,4 +51,4 @@ function DeleteMentalHealthModalBody({ extraObject, closeModal }) {
   );
 }
 
-export default DeleteMentalHealthModalBody;
+export default DeletePlanModalBody;

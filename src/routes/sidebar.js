@@ -81,6 +81,21 @@ const routes = [
     icon: <CalendarDaysIcon className={iconClasses} />, // icon component
     name: "Question", // name that appear in Sidebar
   },
+  {
+    path: "/app/plan", // url
+    icon: <CalendarDaysIcon className={iconClasses} />, // icon component
+    name: "Plan", // name that appear in Sidebar
+  },
+  {
+    path: "/app/degree", // url
+    icon: <CalendarDaysIcon className={iconClasses} />, // icon component
+    name: "Degree", // name that appear in Sidebar
+  },
+  {
+    path: "/app/option", // url
+    icon: <CalendarDaysIcon className={iconClasses} />, // icon component
+    name: "Options", // name that appear in Sidebar
+  },
   // {
   //   path: "", //no url needed as this has submenu
   //   icon: <Cog6ToothIcon className={`${iconClasses} inline`} />, // icon component
