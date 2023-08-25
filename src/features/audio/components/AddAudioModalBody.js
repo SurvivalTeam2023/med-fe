@@ -48,12 +48,28 @@ function AddAudioModalBody({ closeModal }) {
   const genreData = genre?.data;
 
   const handleImageFileChange = async () => {
-    const formData = new FormData();
+    if (!fileAudioUpload || !fileImageUpload) {
+      console.error("Both audio and image files are required.");
+      setErrorMessage("Both audio and image files are required.");
+      return;
+    }
 
+    if (fileImageUpload.type !== "image/jpeg") {
+      console.error("Only JPG images are allowed.");
+      setErrorMessage("Only JPG images are allowed.");
+      return;
+    }
+
+    const formData = new FormData();
     formData.append("audio", fileAudioUpload);
     formData.append("image", fileImageUpload);
 
-    await mutate(formData);
+    try {
+      await mutate(formData); // Assuming mutate is used to make the API request
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      setErrorMessage("Error uploading files. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -95,6 +111,7 @@ function AddAudioModalBody({ closeModal }) {
         };
 
         await mutatee(payload);
+        console.log("payload", payload);
         dispatch(showNotification({ message: "New Audio Added!", status: 1 }));
         closeModal();
       } catch (error) {
@@ -135,7 +152,7 @@ function AddAudioModalBody({ closeModal }) {
       <InputFile
         updateType="imageFile"
         containerStyle="mt-4"
-        labelTitle="Upload Image File"
+        labelTitle="Upload Image File (jpg)"
         updateFormValue={updateFormValue}
       />
 
