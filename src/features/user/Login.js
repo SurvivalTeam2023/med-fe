@@ -37,7 +37,7 @@ function Login() {
           if (userData) {
             setLoading(false);
             dispatch(userActions.setUser(userData));
-            window.location.href = "/app/welcome";
+            window.location.href = "/app/dashboard";
           }
         })
         .catch((error) => {

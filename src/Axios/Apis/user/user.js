@@ -1,4 +1,4 @@
-import { CallAPI, CallAPIMulti } from "../../AxiosBase";
+import { CallAPI, CallAPIMulti, CallDeleteAPI } from "../../AxiosBase";
 import { useSelector } from "react-redux";
 
 export const getUserListApi = (payload) => {
@@ -79,4 +79,9 @@ export const updateUserAPI = (selectedLeadId, payload) => {
     address,
     dob,
   });
+};
+
+export const deleteUserAPI = (selectedUserId) => {
+  const url = `/user/${selectedUserId}`;
+  return CallDeleteAPI.delete(url);
 };
