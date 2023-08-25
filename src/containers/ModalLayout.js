@@ -30,6 +30,7 @@ import EditQuestionModalBody from "../features/question/components/EditQuestionM
 import AddOptionsModalBody from "../features/options/components/AddOptionsModalBody";
 import DeleteOptionModalBody from "../features/options/components/DeleteOptionModalBody";
 import EditOptionModalBody from "../features/options/components/EditOptionModalBody";
+import DeleteUserModalBody from "../features/leads/components/DeleteLeadModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -223,6 +224,12 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.OPTIONS_EDIT]: (
                 <EditOptionModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.LEAD_DELETE]: (
+                <DeleteUserModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />

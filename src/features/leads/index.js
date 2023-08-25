@@ -6,6 +6,7 @@ import { getLeadsContent } from "./leadSlice";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 import SearchBar from "../../components/Input/SearchBar";
+import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 
 const TopSideButtons = ({ applySearch }) => {
   const dispatch = useDispatch();
@@ -98,6 +99,19 @@ function Leads() {
     );
   };
 
+  const deleteCurrentLead = (data) => {
+    dispatch(
+      openModal({
+        title: "Confirmation",
+        bodyType: MODAL_BODY_TYPES.LEAD_DELETE,
+        extraObject: {
+          message: `Are you sure you want to delete this User?`,
+          selectedUserId: data.id,
+        },
+      })
+    );
+  };
+
   return (
     <>
       <TitleCard
@@ -115,7 +129,6 @@ function Leads() {
                 <th>Email </th>
                 <th>First Name </th>
                 <th>Last Name </th>
-
                 <th>Edit</th>
               </tr>
             </thead>
@@ -139,18 +152,7 @@ function Leads() {
                       >
                         <PencilSquareIcon className="w-5" />
                       </button>
-                    </td>
-
-                    <td>
-                      <button
-                        className="btn btn-square btn-ghost"
-                        onClick={() => {
-                          openEditNewLead(l.id);
-                        }}
-                      >
-                        <PencilSquareIcon className="w-5" />
-                      </button>
-                    </td>
+                    </td>                   
                   </tr>
                 );
               })}
