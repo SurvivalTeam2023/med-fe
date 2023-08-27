@@ -196,7 +196,7 @@ function Question() {
   return (
     <>
       <TitleCard
-        title="Mental Health List"
+        title="Question List"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons

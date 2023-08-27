@@ -39,7 +39,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New plan",
+        title: "Add New Plan",
         bodyType: MODAL_BODY_TYPES.PLAN_ADD,
       })
     );
@@ -187,7 +187,7 @@ function Plan() {
   return (
     <>
       <TitleCard
-        title="plan List"
+        title="Plan List"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
