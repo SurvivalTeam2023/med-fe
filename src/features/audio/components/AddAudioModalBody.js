@@ -114,6 +114,9 @@ function AddAudioModalBody({ closeModal }) {
         console.log("payload", payload);
         dispatch(showNotification({ message: "New Audio Added!", status: 1 }));
         closeModal();
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } catch (error) {
         console.error("Error adding new Audio:", error);
         setErrorMessage("Error adding new Audio. Please try again.");
