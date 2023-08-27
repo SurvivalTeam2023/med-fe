@@ -197,7 +197,7 @@ function Options() {
   return (
     <>
       <TitleCard
-        title="Mental Health List"
+        title="Options List"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
