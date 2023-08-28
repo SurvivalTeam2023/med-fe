@@ -9,8 +9,8 @@ import { useCreatePlan } from "../../../hooks/plan.hook";
 const INITIAL_LEAD_OBJ = {
   name: "",
   desc: "",
-  usageTime: 0,
-  cost: 0,
+  usageTime: 1,
+  cost: 1,
 };
 
 function AddPlanModalBody({ closeModal }) {
@@ -18,16 +18,18 @@ function AddPlanModalBody({ closeModal }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
-  const { mutate } = useCreatePlan();
+  const { mutate, isSuccess } = useCreatePlan();
 
   const saveNewLead = async () => {
     if (leadObj?.name?.trim() === "") {
       return setErrorMessage("Name is required!");
     } else if (leadObj?.desc?.trim() === "") {
       return setErrorMessage("Description is required!");
-    } else if (!leadObj?.usageTime) {
-      return setErrorMessage("Usage Time is required!");
-    } else if (!leadObj?.cost) {
+    } else if (leadObj?.usageTime > 12) {
+      return setErrorMessage("Usage Time is should be less than 12 months!");
+    } else if (leadObj?.usageTime === 0) {
+      return setErrorMessage("Usage Time is should be more than 1 months!");
+    } else if (leadObj?.cost <= 0) {
       return setErrorMessage("Cost is required!");
     } else {
       try {
