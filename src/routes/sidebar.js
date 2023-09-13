@@ -96,6 +96,11 @@ const routes = [
     icon: <CalendarDaysIcon className={iconClasses} />, // icon component
     name: "Options", // name that appear in Sidebar
   },
+  {
+    path: "/app/exercise", // url
+    icon: <CalendarDaysIcon className={iconClasses} />, // icon component
+    name: "Exercises", // name that appear in Sidebar
+  },
   // {
   //   path: "", //no url needed as this has submenu
   //   icon: <Cog6ToothIcon className={`${iconClasses} inline`} />, // icon component

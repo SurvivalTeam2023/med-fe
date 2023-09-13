@@ -31,6 +31,7 @@ import AddOptionsModalBody from "../features/options/components/AddOptionsModalB
 import DeleteOptionModalBody from "../features/options/components/DeleteOptionModalBody";
 import EditOptionModalBody from "../features/options/components/EditOptionModalBody";
 import DeleteUserModalBody from "../features/leads/components/DeleteLeadModalBody";
+import AddExercisesModalBody from "../features/exercise/components/AddExerciseModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -223,6 +224,24 @@ function ModalLayout() {
                 />
               ),
               [MODAL_BODY_TYPES.OPTIONS_EDIT]: (
+                <EditOptionModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.EXERCISES_ADD]: (
+                <AddExercisesModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.EXERCISES_DELETE]: (
+                <DeleteOptionModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.EXERCISES_EDIT]: (
                 <EditOptionModalBody
                   closeModal={close}
                   extraObject={extraObject}
