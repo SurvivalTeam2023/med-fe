@@ -191,7 +191,7 @@ function Exercises() {
   return (
     <>
       <TitleCard
-        title="Mental Health List"
+        title="Exercise List"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
