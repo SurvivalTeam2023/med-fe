@@ -102,6 +102,11 @@ const routes = [
     name: "Exercises", // name that appear in Sidebar
   },
   // {
+  //   path: "/app/details", // url
+  //   icon: <CalendarDaysIcon className={iconClasses} />, // icon component
+  //   name: "Details", // name that appear in Sidebar
+  // },
+  // {
   //   path: "", //no url needed as this has submenu
   //   icon: <Cog6ToothIcon className={`${iconClasses} inline`} />, // icon component
   //   name: "Settings", // name that appear in Sidebar

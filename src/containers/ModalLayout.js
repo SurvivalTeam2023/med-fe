@@ -32,6 +32,9 @@ import DeleteOptionModalBody from "../features/options/components/DeleteOptionMo
 import EditOptionModalBody from "../features/options/components/EditOptionModalBody";
 import DeleteUserModalBody from "../features/leads/components/DeleteLeadModalBody";
 import AddExercisesModalBody from "../features/exercise/components/AddExerciseModalBody";
+import EditExerciseModalBody from "../features/exercise/components/EditExerciseModalBody";
+import DeleteExerciseModalBody from "../features/exercise/components/DeleteExerciseModalBody";
+import ViewDetailExerciseModalBody from "../features/markdown/ViewDetailExerciseModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -236,13 +239,19 @@ function ModalLayout() {
                 />
               ),
               [MODAL_BODY_TYPES.EXERCISES_DELETE]: (
-                <DeleteOptionModalBody
+                <DeleteExerciseModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />
               ),
               [MODAL_BODY_TYPES.EXERCISES_EDIT]: (
-                <EditOptionModalBody
+                <EditExerciseModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.MARKDOWN_EXERCISES]: (
+                <ViewDetailExerciseModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />

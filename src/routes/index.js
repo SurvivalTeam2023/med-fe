@@ -27,6 +27,10 @@ const Plan = lazy(() => import("../pages/protected/Plan"));
 const Degree = lazy(() => import("../pages/protected/Degree"));
 const Options = lazy(() => import("../pages/protected/Options"));
 const Exercises = lazy(() => import("../pages/protected/Exercises"));
+
+const ExercisesMarkDown = lazy(() =>
+  import("../pages/protected/MarkdownExercise")
+);
 const GettingStarted = lazy(() => import("../pages/GettingStarted"));
 const DocFeatures = lazy(() => import("../pages/DocFeatures"));
 const DocComponents = lazy(() => import("../pages/DocComponents"));
@@ -128,6 +132,10 @@ const routes = [
   {
     path: "/exercise",
     component: Exercises,
+  },
+  {
+    path: "/detailexercise",
+    component: ExercisesMarkDown,
   },
 ];
 

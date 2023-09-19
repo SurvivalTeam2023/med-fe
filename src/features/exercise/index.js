@@ -2,7 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
-import { openModal } from "../common/modalSlice";
+import { openMarkdownModal, openModal } from "../common/modalSlice";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import { useQuery } from "@tanstack/react-query";
@@ -185,6 +185,31 @@ function Exercises() {
     );
   };
 
+  const openViewDetailExerciseModal = (data) => {
+    dispatch(
+      openModal({
+        title: "View Detail",
+        bodyType: MODAL_BODY_TYPES.MARKDOWN_EXERCISES,
+        size: "full",
+        extraObject: {
+          selectedExerciseId: data.id,
+          name: data.name,
+          content: data.content,
+        },
+      })
+    );
+  };
+
+  // const openViewDetailExercisePage = (data) => {
+  //   // Construct the URL for the new page with query parameters
+  //   const exercisePageUrl = `/exercise-detail?id=${
+  //     data.id
+  //   }&name=${encodeURIComponent(data.name)}`;
+
+  //   // Open the URL in the current window
+  //   window.location.href = exercisePageUrl;
+  // };
+
   return (
     <>
       <TitleCard
@@ -243,7 +268,7 @@ function Exercises() {
                         <button
                           className="btn btn-square btn-ghost"
                           onClick={() => {
-                            openEditNewLead(l);
+                            openViewDetailExerciseModal(l);
                           }}
                         >
                           <InformationCircleIcon className="w-5" />

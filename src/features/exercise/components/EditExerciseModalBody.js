@@ -5,13 +5,14 @@ import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import InputSelect from "../../../components/Input/InputSelect";
 import { useUpdateExercise } from "../../../hooks/exercise.hook";
+import ReactMarkdown from "react-markdown";
 
 const statusOptions = [
   { value: "ACTIVE", label: "ACTIVE" },
   { value: "INACTIVE", label: "INACTIVE" },
 ];
 
-function EditMentalHealthModalBody({ closeModal, extraObject }) {
+function EditExerciseModalBody({ closeModal, extraObject }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -96,4 +97,4 @@ function EditMentalHealthModalBody({ closeModal, extraObject }) {
   );
 }
 
-export default EditMentalHealthModalBody;
+export default EditExerciseModalBody;
