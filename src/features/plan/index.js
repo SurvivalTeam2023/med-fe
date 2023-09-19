@@ -125,7 +125,6 @@ function Plan() {
   const planData = plan?.data;
   const [plans, setPlans] = useState(planData);
   const visiblePlans = plans?.slice(startIndex, startIndex + itemsPerPage);
-  console.log("visiblePlans", visiblePlans);
 
   useEffect(() => {
     setPlans(planData);

@@ -37,8 +37,6 @@ function EditDegreeModalBody({ closeModal, extraObject }) {
         pointEnd: leadObj.pointEnd,
       };
 
-      console.log("payload", payload);
-
       await mutate({ selectedDegreeId, payload });
 
       dispatch(

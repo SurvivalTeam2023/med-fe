@@ -7,8 +7,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { themeChange } from "theme-change";
-import checkAuth from "./app/auth";
 import initializeApp from "./app/init";
+import { useSelector } from "react-redux";
 
 // Importing pages
 const Layout = lazy(() => import("./containers/Layout"));
@@ -17,16 +17,13 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const Register = lazy(() => import("./pages/Register"));
 const Documentation = lazy(() => import("./pages/Documentation"));
 
-// Initializing different libraries
 initializeApp();
-// const token = checkAuth();
 let token;
 function App() {
   useEffect(() => {
-    // 👆 daisy UI themes initialization
     themeChange(false);
   }, []);
-
+  token = useSelector((state) => state.user.token);
   return (
     <>
       <Router>

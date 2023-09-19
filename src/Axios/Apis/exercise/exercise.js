@@ -14,16 +14,22 @@ export const createExerciseAPI = (payload) => {
   });
 };
 
+export const getExercisesByIdAPI = (selectedExerciseId) => {
+  const url = `/exercise/${selectedExerciseId}`;
+  return CallAPI.get(url);
+};
+
 export const deleteExerciseAPI = (selectedExerciseId) => {
   const url = `/exercise/${selectedExerciseId}`;
   return CallDeleteAPI.delete(url);
 };
 
-export const updateExerciseAPI = (selectedExerciseId, payload) => {
-  const url = `/exercise/${selectedExerciseId}`;
-  const { name, content } = payload;
+export const updateExerciseAPI = (id, payload) => {
+  const url = `/exercise/${id}`;
+  const { name, content, status } = payload;
   return CallAPI.put(url, {
     name,
     content,
+    status,
   });
 };

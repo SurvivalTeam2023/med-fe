@@ -11,10 +11,16 @@ import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 import InformationCircleIcon from "@heroicons/react/24/outline/InformationCircleIcon";
-import { getExercisesAPI } from "../../Axios/Apis/exercise/exercise";
+import {
+  getExercisesAPI,
+  getExercisesByIdAPI,
+} from "../../Axios/Apis/exercise/exercise";
+import { useNavigate } from "react-router-dom";
+import { Routing } from "../../constants/routing";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
+
   const [filterParam, setFilterParam] = useState("");
   const [searchText, setSearchText] = useState("");
 
@@ -118,6 +124,7 @@ function Exercises() {
   const dispatch = useDispatch();
   const itemsPerPage = 5; // Number of items to display per page
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -171,44 +178,15 @@ function Exercises() {
     );
   };
 
-  const openEditNewLead = (data) => {
-    dispatch(
-      openModal({
-        title: "Edit Mental Health",
-        bodyType: MODAL_BODY_TYPES.EXERCISES_EDIT,
-        extraObject: {
-          selectedExerciseId: data.id,
-          name: data.name,
-          content: data.content,
-        },
-      })
-    );
+  const handleOnlickEdit = (exercise) => {
+    const { id } = exercise;
+
+    navigate(`${Routing.EXERCISE}/${id}`);
   };
 
   const openViewDetailExerciseModal = (data) => {
-    dispatch(
-      openModal({
-        title: "View Detail",
-        bodyType: MODAL_BODY_TYPES.MARKDOWN_EXERCISES,
-        size: "full",
-        extraObject: {
-          selectedExerciseId: data.id,
-          name: data.name,
-          content: data.content,
-        },
-      })
-    );
+    console.log("l", data.id);
   };
-
-  // const openViewDetailExercisePage = (data) => {
-  //   // Construct the URL for the new page with query parameters
-  //   const exercisePageUrl = `/exercise-detail?id=${
-  //     data.id
-  //   }&name=${encodeURIComponent(data.name)}`;
-
-  //   // Open the URL in the current window
-  //   window.location.href = exercisePageUrl;
-  // };
 
   return (
     <>
@@ -231,9 +209,9 @@ function Exercises() {
                 <th>Id</th>
                 <th>Name</th>
                 <th>Created Date</th>
+                <th>Status</th>
                 <th>Delete</th>
                 <th>Edit</th>
-                <th>Detail</th>
               </tr>
             </thead>
             {exerciseData ? (
@@ -245,7 +223,7 @@ function Exercises() {
                       <td>{l.id}</td>
                       <td>{l.name}</td>
                       <td>{moment(l.createdDate).format("DD/MM/YYYY")}</td>
-
+                      <td>{l.status}</td>
                       <td>
                         <button
                           className="btn btn-square btn-ghost"
@@ -258,22 +236,13 @@ function Exercises() {
                         <button
                           className="btn btn-square btn-ghost"
                           onClick={() => {
-                            openEditNewLead(l);
+                            handleOnlickEdit(l);
                           }}
                         >
                           <PencilSquareIcon className="w-5" />
                         </button>
                       </td>
-                      <td>
-                        <button
-                          className="btn btn-square btn-ghost"
-                          onClick={() => {
-                            openViewDetailExerciseModal(l);
-                          }}
-                        >
-                          <InformationCircleIcon className="w-5" />
-                        </button>
-                      </td>
+                      <td></td>
                     </tr>
                   );
                 })}

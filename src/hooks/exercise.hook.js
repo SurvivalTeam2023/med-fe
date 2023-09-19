@@ -10,8 +10,8 @@ export const useCreateExercise = () =>
   });
 
 export const useUpdateExercise = () => {
-  const updateExercise = async ({ selectedExerciseId, payload }) => {
-    const result = await updateExerciseAPI(selectedExerciseId, payload);
+  const updateExercise = async ({ id, payload }) => {
+    const result = await updateExerciseAPI(id, payload);
     return result;
   };
   return useMutation(updateExercise);

@@ -37,7 +37,6 @@ function AddOptionsModalBody({ closeModal }) {
           points: leadObj.points,
           questionId: leadObj.questionId,
         };
-        console.log("payload", payload);
         await mutate(payload);
 
         dispatch(showNotification({ message: "New Option added!", status: 1 }));

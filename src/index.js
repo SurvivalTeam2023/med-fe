@@ -9,6 +9,7 @@ import SuspenseContent from "./containers/SuspenseContent";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+let isUseQueryDashBoardActive = false;
 const queryClient = new QueryClient();
 const ReactQueryDevtoolsProduction = React.lazy(() =>
   import("@tanstack/react-query-devtools/build/lib/index.prod.js").then(
@@ -25,7 +26,7 @@ root.render(
         <App />
       </Provider>
     </Suspense>
-    <ReactQueryDevtoolsProduction initialIsOpen />
+    <ReactQueryDevtoolsProduction initialIsOpen={isUseQueryDashBoardActive} />
   </QueryClientProvider>
   // </React.StrictMode>
 );

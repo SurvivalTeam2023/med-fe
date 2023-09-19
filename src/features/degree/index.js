@@ -125,7 +125,6 @@ function Degree() {
   const degreeData = degree?.data;
   const [degrees, setDegrees] = useState(degreeData);
   const visibleDegrees = degrees?.slice(startIndex, startIndex + itemsPerPage);
-  console.log("visibleDegrees", visibleDegrees);
 
   useEffect(() => {
     setDegrees(degreeData);

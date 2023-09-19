@@ -4,6 +4,7 @@ import modalSlice from "../features/common/modalSlice";
 import rightDrawerSlice from "../features/common/rightDrawerSlice";
 import leadsSlice from "../features/leads/leadSlice";
 import transSlice from "../features/transactions/tranSlice";
+import { userReducer } from "../redux/slice/user";
 
 const combinedReducer = {
   header: headerSlice,
@@ -11,6 +12,7 @@ const combinedReducer = {
   modal: modalSlice,
   lead: leadsSlice,
   tran: transSlice,
+  user: userReducer,
 };
 
 export default configureStore({

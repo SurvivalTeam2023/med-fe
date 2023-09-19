@@ -5,7 +5,6 @@ import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import InputSelect from "../../../components/Input/InputSelect";
 import { useUpdateExercise } from "../../../hooks/exercise.hook";
-import ReactMarkdown from "react-markdown";
 
 const statusOptions = [
   { value: "ACTIVE", label: "ACTIVE" },

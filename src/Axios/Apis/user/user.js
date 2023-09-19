@@ -1,5 +1,4 @@
 import { CallAPI, CallAPIMulti, CallDeleteAPI } from "../../AxiosBase";
-import { useSelector } from "react-redux";
 
 export const getUserListApi = (payload) => {
   const url = "/user/userList";

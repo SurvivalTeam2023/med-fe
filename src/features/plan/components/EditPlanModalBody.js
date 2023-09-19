@@ -40,8 +40,6 @@ function EditPlanModalBody({ closeModal, extraObject }) {
           cost: leadObj.cost,
         };
 
-        console.log("payload", payload);
-
         await mutate({ selectedPlanId, payload });
 
         dispatch(showNotification({ message: "New Plan added!", status: 1 }));
