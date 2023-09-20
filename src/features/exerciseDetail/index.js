@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import { useQuery } from "@tanstack/react-query";
@@ -6,11 +6,13 @@ import { getExercisesByIdAPI } from "../../Axios/Apis/exercise/exercise";
 import { useDispatch } from "react-redux";
 import { useUpdateExercise } from "../../hooks/exercise.hook";
 import { showNotification } from "../common/headerSlice";
+import { Routing } from "../../constants/routing";
 
 export const DetailExercise = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { mutate } = useUpdateExercise();
+  const navigate = useNavigate();
   const { data: exercise } = useQuery({
     queryKey: ["getExerciseList"],
     queryFn: async () => {
@@ -33,10 +35,6 @@ export const DetailExercise = () => {
   useEffect(() => {
     setContentExercise(exerciseContentData);
   }, [exerciseContentData]);
-
-  const handleBackClick = () => {
-    console.log("Back button clicked");
-  };
 
   const handleSaveClick = async () => {
     try {
@@ -70,7 +68,7 @@ export const DetailExercise = () => {
         <button
           className="btn btn-ghost"
           onClick={() => {
-            console.log("cancel");
+            navigate(Routing.EXERCISE);
           }}
         >
           Back
