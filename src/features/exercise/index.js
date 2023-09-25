@@ -11,6 +11,7 @@ import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 import InformationCircleIcon from "@heroicons/react/24/outline/InformationCircleIcon";
+import PlusCircleIcon from "@heroicons/react/24/outline/PlusCircleIcon";
 import {
   getExercisesAPI,
   getExercisesByIdAPI,
@@ -46,7 +47,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New Mental Health",
+        title: "Add New Exercise",
         bodyType: MODAL_BODY_TYPES.EXERCISES_ADD,
       })
     );
@@ -184,10 +185,6 @@ function Exercises() {
     navigate(`${Routing.EXERCISE}/${id}`);
   };
 
-  const openViewDetailExerciseModal = (data) => {
-    console.log("l", data.id);
-  };
-
   return (
     <>
       <TitleCard
@@ -242,7 +239,6 @@ function Exercises() {
                           <PencilSquareIcon className="w-5" />
                         </button>
                       </td>
-                      <td></td>
                     </tr>
                   );
                 })}

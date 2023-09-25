@@ -137,7 +137,6 @@ function Audio() {
                           </div>
                           <div>
                             <div className="font-bold">{l.name}</div>
-                            <div className="font">{l.artist.artist_name}</div>
                           </div>
                         </div>
                       </td>

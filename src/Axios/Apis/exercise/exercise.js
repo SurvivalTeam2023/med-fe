@@ -19,6 +19,11 @@ export const getExercisesByIdAPI = (selectedExerciseId) => {
   return CallAPI.get(url);
 };
 
+export const getExercisesByMentalHealthIdAPI = (selectedMentalId) => {
+  const url = `/mentalHealth/${selectedMentalId}`;
+  return CallAPI.get(url);
+};
+
 export const deleteExerciseAPI = (selectedExerciseId) => {
   const url = `/exercise/${selectedExerciseId}`;
   return CallDeleteAPI.delete(url);
