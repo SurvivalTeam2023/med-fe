@@ -111,7 +111,6 @@ function AddAudioModalBody({ closeModal }) {
         };
 
         await mutatee(payload);
-        console.log("payload", payload);
         dispatch(showNotification({ message: "New Audio Added!", status: 1 }));
         closeModal();
         if (isSuccess) {

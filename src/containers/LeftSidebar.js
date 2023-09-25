@@ -6,9 +6,6 @@ import { useDispatch } from "react-redux";
 
 function LeftSidebar() {
   const location = useLocation();
-
-  const dispatch = useDispatch();
-
   const close = (e) => {
     document.getElementById("left-sidebar-drawer").click();
   };

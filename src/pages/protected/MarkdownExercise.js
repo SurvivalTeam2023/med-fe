@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../../features/common/headerSlice";
-import Dashboard from "../../features/dashboard/index";
+import MarkdownEditor from "../../features/markdown/ViewDetailExerciseModalBody";
 
 function InternalPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setPageTitle({ title: "Dashboard" }));
+    dispatch(setPageTitle({ title: "Markdown" }));
   }, []);
 
-  return <Dashboard />;
+  return <MarkdownEditor />;
 }
 
 export default InternalPage;

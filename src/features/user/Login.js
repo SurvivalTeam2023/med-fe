@@ -3,9 +3,12 @@ import LandingIntro from "./LandingIntro";
 import ErrorText from "../../components/Typography/ErrorText";
 import InputText from "../../components/Input/InputText";
 import { loginApi } from "../../Axios/Apis/auth";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userActions } from "../../redux/slice/user";
 import { fetchUserData } from "../../redux/action/auth";
+import { useNavigate } from "react-router-dom";
+import { Routing } from "../../constants/routing";
+import { LOCAL_STORAGE_KEY } from "../../constants/app";
 
 function Login() {
   const dispatch = useDispatch();
@@ -13,10 +16,19 @@ function Login() {
     username: "",
     password: "",
   };
-
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [loginObj, setLoginObj] = useState(INITIAL_LOGIN_OBJ);
+
+  const handleFetchUserData = (access_token) => {
+    const userData = fetchUserData(access_token);
+    if (userData) {
+      setLoading(false);
+      dispatch(userActions.setUser(userData));
+      navigate(Routing.DASHBOARD);
+    }
+  };
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -30,15 +42,10 @@ function Login() {
       setLoading(true);
       loginApi(loginObj)
         .then((res) => {
-          localStorage.setItem("token", res.data.access_token);
-          dispatch(userActions.setToken(res.data.access_token));
-          console.log("here");
-          const userData = fetchUserData(res.data.access_token);
-          if (userData) {
-            setLoading(false);
-            dispatch(userActions.setUser(userData));
-            window.location.href = "/app/dashboard";
-          }
+          const { access_token } = res.data;
+          localStorage.setItem(LOCAL_STORAGE_KEY.TOKEN, access_token);
+          dispatch(userActions.setToken(access_token));
+          handleFetchUserData(access_token);
         })
         .catch((error) => {
           console.log(error);

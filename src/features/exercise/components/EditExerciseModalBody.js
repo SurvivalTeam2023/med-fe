@@ -3,54 +3,48 @@ import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import InputNumber from "../../../components/Input/InputNumber";
 import InputSelect from "../../../components/Input/InputSelect";
-import { useUpdateDegree } from "../../../hooks/degree.hook";
+import { useUpdateExercise } from "../../../hooks/exercise.hook";
 
 const statusOptions = [
   { value: "ACTIVE", label: "ACTIVE" },
   { value: "INACTIVE", label: "INACTIVE" },
 ];
 
-function EditDegreeModalBody({ closeModal, extraObject }) {
+function EditExerciseModalBody({ closeModal, extraObject }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const { mutate } = useUpdateExercise();
+  const selectedExerciseId = extraObject.selectedExerciseId;
   const INITIAL_LEAD_OBJ = {
-    title: extraObject.title,
+    name: extraObject.name,
     status: extraObject.status,
-    pointStart: extraObject.pointStart,
-    pointEnd: extraObject.pointEnd,
   };
-  const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
-  const selectedDegreeId = extraObject.selectedDegreeId;
 
-  const { mutate } = useUpdateDegree();
+  const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   const saveNewLead = async () => {
     try {
       const payload = {
-        title: leadObj.title,
+        name: leadObj.name,
         status: leadObj.status,
-        pointStart: leadObj.pointStart,
-        pointEnd: leadObj.pointEnd,
       };
 
-      await mutate({ selectedDegreeId, payload });
-
+      await mutate({ selectedExerciseId, payload });
       dispatch(
-        showNotification({ message: "Edit Degree Success!", status: 1 })
+        showNotification({
+          message: "Edited Mental Health Successfully!",
+          status: 1,
+        })
       );
-
       closeModal();
-
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } catch (error) {
-      console.error("Error edit:", error);
-      setErrorMessage("Error adding new Plan. Please try again.");
+      console.error("Error adding edit Mental Health:", error);
+      setErrorMessage("Error adding edit Mental Health. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -68,10 +62,10 @@ function EditDegreeModalBody({ closeModal, extraObject }) {
     <>
       <InputText
         type="text"
-        defaultValue={leadObj.title}
-        updateType="title"
+        defaultValue={leadObj.name}
+        updateType="name"
         containerStyle="mt-4"
-        labelTitle="Title"
+        labelTitle="Mental Health Problem"
         updateFormValue={updateFormValue}
       />
 
@@ -81,24 +75,6 @@ function EditDegreeModalBody({ closeModal, extraObject }) {
         updateType="status"
         containerStyle="mt-4"
         labelTitle="Status"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputNumber
-        type="number"
-        defaultValue={leadObj.pointStart}
-        updateType="pointStart"
-        containerStyle="mt-4"
-        labelTitle="Point Start"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputNumber
-        type="number"
-        defaultValue={leadObj.pointEnd}
-        updateType="pointEnd"
-        containerStyle="mt-4"
-        labelTitle="Point End"
         updateFormValue={updateFormValue}
       />
 
@@ -120,4 +96,4 @@ function EditDegreeModalBody({ closeModal, extraObject }) {
   );
 }
 
-export default EditDegreeModalBody;
+export default EditExerciseModalBody;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { baseUrl } from "../config/env.config";
-import { AUTH_KEY } from "../constants/app";
+import { AUTH_KEY, LOCAL_STORAGE_KEY } from "../constants/app";
 
 export const CallAPI = axios.create({
   baseURL: baseUrl,
@@ -31,7 +31,6 @@ CallAPI.interceptors.request.use((req) => {
   if (token) {
     req.headers[AUTH_KEY.HEADER_AUTHORIZATION] = `Bearer ${token}`;
   }
-  console.log("request_url:", `${req.baseURL}${req.url}`);
   return req;
 });
 
@@ -44,7 +43,6 @@ CallAPIMulti.interceptors.request.use((req) => {
   if (token) {
     req.headers[AUTH_KEY.HEADER_AUTHORIZATION] = `Bearer ${token}`;
   }
-  console.log("request_url:", `${req.baseURL}${req.url}`);
   return req;
 });
 
@@ -53,11 +51,10 @@ CallAPIMulti.interceptors.response.use(async (res) => {
 });
 
 CallDeleteAPI.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY.TOKEN);
   if (token) {
     req.headers[AUTH_KEY.HEADER_AUTHORIZATION] = `Bearer ${token}`;
   }
-  console.log("request_url:", `${req.baseURL}${req.url}`);
   return req;
 });
 

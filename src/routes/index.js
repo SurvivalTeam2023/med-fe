@@ -1,7 +1,4 @@
-// All components mapping with path for internal routes
-
 import { lazy } from "react";
-
 const Dashboard = lazy(() => import("../pages/protected/Dashboard"));
 const Welcome = lazy(() => import("../pages/protected/Welcome"));
 const Page404 = lazy(() => import("../pages/protected/404"));
@@ -26,18 +23,20 @@ const ProfileSettings = lazy(() =>
 const Plan = lazy(() => import("../pages/protected/Plan"));
 const Degree = lazy(() => import("../pages/protected/Degree"));
 const Options = lazy(() => import("../pages/protected/Options"));
+const Exercises = lazy(() => import("../pages/protected/Exercises"));
+const DetailExercises = lazy(() => import("../pages/protected/ExerciseDetail"));
 const GettingStarted = lazy(() => import("../pages/GettingStarted"));
 const DocFeatures = lazy(() => import("../pages/DocFeatures"));
 const DocComponents = lazy(() => import("../pages/DocComponents"));
 
 const routes = [
   {
-    path: "/dashboard", // the url
-    component: Dashboard, // view rendered
+    path: "/dashboard",
+    component: Dashboard,
   },
   {
-    path: "/welcome", // the url
-    component: Welcome, // view rendered
+    path: "/welcome",
+    component: Welcome,
   },
   {
     path: "/users",
@@ -123,6 +122,14 @@ const routes = [
   {
     path: "/option",
     component: Options,
+  },
+  {
+    path: "/exercise",
+    component: Exercises,
+  },
+  {
+    path: "/exercise/:id",
+    component: DetailExercises,
   },
 ];
 

@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { LOCAL_STORAGE_KEY } from "../../constants/app";
 
 const initialState = {
   isTriedLogin: false,
@@ -6,6 +7,9 @@ const initialState = {
   token: null,
   error: null,
   username: null,
+};
+const handleRemoveAllDataLocalStorage = () => {
+  localStorage.removeItem(LOCAL_STORAGE_KEY.TOKEN);
 };
 
 const reducer = createSlice({
@@ -40,8 +44,12 @@ const reducer = createSlice({
       state.isTriedLogin = false;
       state.error = action.payload;
     },
+    logout: (state, action) => {
+      handleRemoveAllDataLocalStorage();
+    },
   },
 });
+
 export const userActions = {
   ...reducer.actions,
 };

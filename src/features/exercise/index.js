@@ -1,19 +1,27 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
-import { openModal } from "../common/modalSlice";
+import { openMarkdownModal, openModal } from "../common/modalSlice";
 import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import { useQuery } from "@tanstack/react-query";
-import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
 import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
-import { getDegreeList } from "../../Axios/Apis/degree/degree";
+import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
+import InformationCircleIcon from "@heroicons/react/24/outline/InformationCircleIcon";
+import PlusCircleIcon from "@heroicons/react/24/outline/PlusCircleIcon";
+import {
+  getExercisesAPI,
+  getExercisesByIdAPI,
+} from "../../Axios/Apis/exercise/exercise";
+import { useNavigate } from "react-router-dom";
+import { Routing } from "../../constants/routing";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
+
   const [filterParam, setFilterParam] = useState("");
   const [searchText, setSearchText] = useState("");
 
@@ -39,8 +47,8 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Add New degree",
-        bodyType: MODAL_BODY_TYPES.MENTAL_DEGREE_ADD,
+        title: "Add New Exercise",
+        bodyType: MODAL_BODY_TYPES.EXERCISES_ADD,
       })
     );
   };
@@ -102,91 +110,85 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   );
 };
 
-function Degree() {
-  const dispatch = useDispatch();
-  const { data: degree } = useQuery({
-    queryKey: ["getDegreeList"],
+function Exercises() {
+  const { data: exercise } = useQuery({
+    queryKey: ["getMentalHealthList"],
     queryFn: async () => {
       try {
-        const result = await getDegreeList();
+        const result = await getExercisesAPI();
         return result;
       } catch (error) {
-        throw new Error(`Error fetching degree: ${error.message}`);
+        throw new Error(`Error fetching audio: ${error.message}`);
       }
     },
   });
-  const itemsPerPage = 10; // Number of items to display per page
+  const dispatch = useDispatch();
+  const itemsPerPage = 5; // Number of items to display per page
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const degreeData = degree?.data;
-  const [degrees, setDegrees] = useState(degreeData);
-  const visibleDegrees = degrees?.slice(startIndex, startIndex + itemsPerPage);
+  const exerciseData = exercise?.data;
+  const [exercises, setExercises] = useState(exerciseData);
+  const visibleExercises = exercises?.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   useEffect(() => {
-    setDegrees(degreeData);
-  }, [degreeData]);
+    setExercises(exerciseData);
+  }, [exerciseData]);
 
   const removeFilter = () => {
-    setDegrees(degreeData);
+    setExercises(exerciseData);
   };
 
   const applyFilter = (status) => {
-    let filteredDegrees = degreeData.filter((t) => {
+    let filteredTransactions = exerciseData.filter((t) => {
       return t.status === status;
     });
 
-    setDegrees(filteredDegrees);
+    setExercises(filteredTransactions);
   };
 
   // Search according to name
   const applySearch = (value) => {
-    let filteredDegrees = degreeData.filter((degree) => {
+    let filteredExercises = exerciseData.filter((exercise) => {
       return (
-        degree.name.toLowerCase().includes(value.toLowerCase()) ||
-        degree.desc.toLowerCase().includes(value.toLowerCase()) ||
-        degree.id.toString().includes(value.toLowerCase())
+        exercise.name.toLowerCase().includes(value.toLowerCase()) ||
+        exercise.description.toLowerCase().includes(value.toLowerCase()) || // Changed "desc" to "description"
+        exercise.id.toString().includes(value.toLowerCase())
       );
     });
-    setDegrees(filteredDegrees);
+    setExercises(filteredExercises);
   };
 
   const deleteCurrentLead = (data) => {
     dispatch(
       openModal({
         title: "Confirmation",
-        bodyType: MODAL_BODY_TYPES.MENTAL_DEGREE_DELETE,
+        bodyType: MODAL_BODY_TYPES.EXERCISES_DELETE,
         extraObject: {
-          message: `Are you sure you want to delete this degree?`,
-          selectedDegreeId: data.id,
+          message: `Are you sure you want to delete this Mental Health?`,
+          type: MODAL_BODY_TYPES.EXERCISES_DELETE,
+          selectedExerciseId: data.id,
         },
       })
     );
   };
 
-  const openEditNewLead = (data) => {
-    dispatch(
-      openModal({
-        title: "Edit degree",
-        bodyType: MODAL_BODY_TYPES.MENTAL_DEGREE_EDIT,
-        extraObject: {
-          selectedDegreeId: data.id,
-          title: data.title,
-          status: data.status,
-          pointStart: data.pointStart,
-          pointEnd: data.pointEnd,
-        },
-      })
-    );
+  const handleOnlickEdit = (exercise) => {
+    const { id } = exercise;
+
+    navigate(`${Routing.EXERCISE}/${id}`);
   };
 
   return (
     <>
       <TitleCard
-        title="Degree List"
+        title="Exercise List"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
@@ -202,30 +204,22 @@ function Degree() {
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Tilte</th>
-                <th>Description</th>
+                <th>Name</th>
                 <th>Created Date</th>
                 <th>Status</th>
                 <th>Delete</th>
                 <th>Edit</th>
               </tr>
             </thead>
-            {Array.isArray(degreeData) && degreeData.length > 0 ? (
+            {exerciseData ? (
               <tbody>
-                {visibleDegrees?.map((l, index) => {
+                {visibleExercises?.map((l, index) => {
+                  const leadIndex = startIndex + index;
                   return (
                     <tr key={l.id}>
                       <td>{l.id}</td>
-                      <td>
-                        {" "}
-                        <div className="flex items-center space-x-3">
-                          <div>
-                            <div className="font-bold">{l.title}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td>{l.description}</td>
-                      <td>{moment(l.createdAt).format("DD/MM/YYYY")}</td>
+                      <td>{l.name}</td>
+                      <td>{moment(l.createdDate).format("DD/MM/YYYY")}</td>
                       <td>{l.status}</td>
                       <td>
                         <button
@@ -239,7 +233,7 @@ function Degree() {
                         <button
                           className="btn btn-square btn-ghost"
                           onClick={() => {
-                            openEditNewLead(l);
+                            handleOnlickEdit(l);
                           }}
                         >
                           <PencilSquareIcon className="w-5" />
@@ -250,7 +244,7 @@ function Degree() {
                 })}
               </tbody>
             ) : (
-              <p>No value</p>
+              <p> No Value</p>
             )}
           </table>
           <div className="flex justify-center mt-4">
@@ -263,7 +257,7 @@ function Degree() {
             </button>
             <button
               className="btn btn-primary"
-              disabled={startIndex + itemsPerPage >= degreeData?.length}
+              disabled={startIndex + itemsPerPage >= exerciseData?.length}
               onClick={() => handlePageChange(currentPage + 1)}
             >
               Next
@@ -275,4 +269,4 @@ function Degree() {
   );
 }
 
-export default Degree;
+export default Exercises;

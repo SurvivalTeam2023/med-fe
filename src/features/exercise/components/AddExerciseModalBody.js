@@ -3,50 +3,41 @@ import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import InputNumber from "../../../components/Input/InputNumber";
-import InputSelect from "../../../components/Input/InputSelect";
-import { useCreateOption } from "../../../hooks/option.hook";
+import { useCreateExercise } from "../../../hooks/exercise.hook";
 
 const INITIAL_LEAD_OBJ = {
-  option: "",
-  status: "ACTIVE",
-  points: 1,
-  questionId: 0,
+  name: "",
+  content: "",
 };
 
-const statusOptions = [
-  { value: "ACTIVE", label: "ACTIVE" },
-  { value: "INACTIVE", label: "INACTIVE" },
-];
-
-function AddOptionsModalBody({ closeModal }) {
+function AddExercisesModalBody({ closeModal }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
-  const { mutate } = useCreateOption();
+  const { mutate } = useCreateExercise();
 
   const saveNewLead = async () => {
     if (leadObj?.option?.trim() === "") {
-      return setErrorMessage("Option is required!");
+      return setErrorMessage("Exercise is required!");
     } else {
       try {
         const payload = {
-          option: leadObj.option,
-          status: leadObj.status,
-          points: leadObj.points,
-          questionId: leadObj.questionId,
+          name: leadObj.name,
+          content: leadObj.content,
         };
         await mutate(payload);
 
-        dispatch(showNotification({ message: "New Option added!", status: 1 }));
+        dispatch(
+          showNotification({ message: "New Exercise added!", status: 1 })
+        );
         closeModal();
         setTimeout(() => {
           window.location.reload();
         }, 2000);
       } catch (error) {
-        console.error("Error adding new Option:", error);
-        setErrorMessage("Error adding new Option. Please try again.");
+        console.error("Error adding new Exercise:", error);
+        setErrorMessage("Error adding new Exercise. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -65,37 +56,19 @@ function AddOptionsModalBody({ closeModal }) {
     <>
       <InputText
         type="text"
-        defaultValue={leadObj.option}
-        updateType="option"
+        defaultValue={leadObj.name}
+        updateType="name"
         containerStyle="mt-4"
-        labelTitle="Option Name"
+        labelTitle="Name"
         updateFormValue={updateFormValue}
       />
 
-      <InputSelect
-        options={statusOptions}
-        defaultValue={leadObj.status}
-        updateType="status"
+      <InputText
+        type="text"
+        defaultValue={leadObj.content}
+        updateType="content"
         containerStyle="mt-4"
-        labelTitle="Status"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputNumber
-        type="number"
-        defaultValue={leadObj.points}
-        updateType="points"
-        containerStyle="mt-4"
-        labelTitle="Points"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputNumber
-        type="number"
-        defaultValue={leadObj.questionId}
-        updateType="questionId"
-        containerStyle="mt-4"
-        labelTitle="Question Id"
+        labelTitle="Content"
         updateFormValue={updateFormValue}
       />
 
@@ -117,4 +90,4 @@ function AddOptionsModalBody({ closeModal }) {
   );
 }
 
-export default AddOptionsModalBody;
+export default AddExercisesModalBody;

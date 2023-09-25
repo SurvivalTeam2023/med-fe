@@ -1,4 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Select } from "antd";
+
+const { Option } = Select;
 
 function InputMultipleSelect({
   labelTitle,
@@ -24,24 +27,20 @@ function InputMultipleSelect({
           {labelTitle}
         </span>
       </label>
-      <select
-        multiple
+      <Select
+        mode="multiple"
         value={values}
-        onChange={(e) => {
-          const selectedOptions = Array.from(
-            e.target.selectedOptions,
-            (option) => option.value
-          );
-          updateSelectValues(selectedOptions);
-        }}
-        className="select select-bordered w-full"
+        onChange={(selectedValues) => updateSelectValues(selectedValues)}
+        className="w-full"
+        showSearch // Enable search functionality
+        optionFilterProp="children" // Specify the property to use for filtering (default is 'value')
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <Option key={option.value} value={option.value}>
             {option.label}
-          </option>
+          </Option>
         ))}
-      </select>
+      </Select>
     </div>
   );
 }

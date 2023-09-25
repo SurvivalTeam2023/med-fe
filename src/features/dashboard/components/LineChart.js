@@ -8,11 +8,11 @@ import {
   Tooltip,
   Filler,
   Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import TitleCard from '../../../components/Cards/TitleCard';
-import { useQuery } from '@tanstack/react-query';
-import { getUserLog } from '../../../Axios/Apis/user/user';
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import TitleCard from "../../../components/Cards/TitleCard";
+import { useQuery } from "@tanstack/react-query";
+import { getUserLog } from "../../../Axios/Apis/user/user";
 
 ChartJS.register(
   CategoryScale,
@@ -26,28 +26,24 @@ ChartJS.register(
 );
 
 function LineChart() {
-
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
     },
   };
 
   const fetchUserLog = async () => {
-    const res = await getUserLog()
+    const res = await getUserLog();
     const data = res.data;
-    console.log(data);
     return data;
   };
 
-
   const { isLoading, data, isError, isSuccess, error } = useQuery({
-    queryKey: ['activeUser'],
+    queryKey: ["activeUser"],
     queryFn: fetchUserLog,
-
   });
   if (isLoading) {
     // Return loading indicator or message
@@ -58,18 +54,28 @@ function LineChart() {
   }
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June', 'July',
-    'August', 'September', 'October', 'November', 'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
-  const labels = data.map(item => monthNames[item.month - 1]);
+  const labels = data.map((item) => monthNames[item.month - 1]);
   const datasets = [
     {
       fill: true,
-      label: 'MAU',
-      data: data.map(item => item.isActive),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      label: "MAU",
+      data: data.map((item) => item.isActive),
+      borderColor: "rgb(53, 162, 235)",
+      backgroundColor: "rgba(53, 162, 235, 0.5)",
     },
   ];
 
@@ -78,13 +84,11 @@ function LineChart() {
     datasets,
   };
 
-
   return (
     <TitleCard title={"Montly Active Users (in K)"}>
       <Line data={chartData} options={options} />
     </TitleCard>
-  )
+  );
 }
 
-
-export default LineChart
+export default LineChart;

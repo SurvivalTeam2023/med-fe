@@ -3,7 +3,6 @@ import { CallAPI } from "../AxiosBase";
 export const loginApi = (payload) => {
   const { username, password } = payload;
   const url = "/auth/login/token";
-  console.log("payload", payload);
   return CallAPI.post(url, {
     username,
     password,

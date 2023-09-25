@@ -11,6 +11,7 @@ import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
+import PlusCircleIcon from "@heroicons/react/24/outline/PlusCircleIcon";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
@@ -181,6 +182,18 @@ function MentalHealth() {
     );
   };
 
+  const openMentalModal = (data) => {
+    dispatch(
+      openModal({
+        title: "Add Exercise into Mental Health",
+        bodyType: MODAL_BODY_TYPES.EXERCISES_MENTAL_ADD,
+        extraObject: {
+          selectedMentalId: data.id,
+        },
+      })
+    );
+  };
+
   return (
     <>
       <TitleCard
@@ -205,6 +218,7 @@ function MentalHealth() {
                 <th>Status</th>
                 <th>Delete</th>
                 <th>Edit</th>
+                <th>Add Exercise</th>
               </tr>
             </thead>
             {mentalData ? (
@@ -233,6 +247,17 @@ function MentalHealth() {
                           }}
                         >
                           <PencilSquareIcon className="w-5" />
+                        </button>
+                      </td>
+
+                      <td>
+                        <button
+                          className="btn btn-square btn-ghost"
+                          onClick={() => {
+                            openMentalModal(l);
+                          }}
+                        >
+                          <PlusCircleIcon className="w-5" />
                         </button>
                       </td>
                     </tr>
