@@ -5,6 +5,11 @@ export const getOptionsAPI = (currentPage) => {
   return CallAPI.get(url);
 };
 
+export const getOptionsByQuestionIdAPI = (selectedQuestionId) => {
+  const url = `option?status=ACTIVE&questionId=${selectedQuestionId}`;
+  return CallAPI.get(url);
+};
+
 export const createOptionAPI = (payload) => {
   const url = "/option";
   const { option, status, points, questionId } = payload;
