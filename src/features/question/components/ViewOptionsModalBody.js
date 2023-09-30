@@ -38,6 +38,7 @@ function ViewOptionsModalBody({ closeModal, extraObject }) {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [errorMessage, setErrorMessage] = useState("");
+  const [isValueChanged, setIsValueChanged] = useState(false);
 
   const onFinish = (values) => {
     console.log("Form values:", values);
@@ -53,6 +54,13 @@ function ViewOptionsModalBody({ closeModal, extraObject }) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
     setErrorMessage("Please fill in all answer fields.");
+  };
+
+  const handleValueChange = (e, index) => {
+    // Check if the new value is different from the initial value
+    const newValue = e.target.value;
+    const initialValue = mappedData[index]?.points;
+    setIsValueChanged(newValue !== initialValue);
   };
 
   return (
@@ -95,7 +103,6 @@ function ViewOptionsModalBody({ closeModal, extraObject }) {
                       <Form.Item
                         {...restField}
                         name={[name, "points"]}
-                        style={inputStyle}
                         initialValue={mappedData[index]?.points}
                         rules={[
                           {
@@ -104,7 +111,21 @@ function ViewOptionsModalBody({ closeModal, extraObject }) {
                           },
                         ]}
                       >
-                        <TextArea placeholder="Enter your points here" />
+                        <Input.TextArea
+                          placeholder="Enter your points here"
+                          onChange={handleValueChange} // Call this function when the value changes
+                        />
+                        {isValueChanged && (
+                          <Button
+                            type="primary"
+                            icon={<PlusCircleIcon />}
+                            onClick={() => {
+                              setIsValueChanged(false);
+                            }}
+                          >
+                            Save
+                          </Button>
+                        )}
                       </Form.Item>
                     </div>
                   </div>
