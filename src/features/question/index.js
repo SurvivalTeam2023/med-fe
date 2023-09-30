@@ -11,6 +11,8 @@ import SearchBar from "../../components/Input/SearchBar";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import PencilSquareIcon from "@heroicons/react/24/outline/PencilSquareIcon";
+import InformationCircleIcon from "@heroicons/react/24/outline/InformationCircleIcon";
+import { getOptionsByQuestionIdAPI } from "../../Axios/Apis/options/options";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
@@ -193,6 +195,33 @@ function Question() {
     );
   };
 
+  const handleViewOptionsClick = async (data) => {
+    try {
+      const result = await getOptionsByQuestionIdAPI(data.id);
+      const mappedData = result?.data?.items.map((options) => ({
+        value: options.id,
+        label: options.option,
+        points: options.points,
+      }));
+
+      // Dispatch the action to open the modal
+      dispatch(
+        openModal({
+          title: "Options",
+          bodyType: MODAL_BODY_TYPES.OPTIONSNAME_EDIT,
+          size: "lg",
+          extraObject: {
+            question: data.question,
+            status: data.status,
+            mappedData: mappedData,
+          },
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching options:", error);
+    }
+  };
+
   return (
     <>
       <TitleCard
@@ -217,6 +246,7 @@ function Question() {
                 <th>Status</th>
                 <th>Delete</th>
                 <th>Edit</th>
+                <th>Answers</th>
               </tr>
             </thead>
             {questionData ? (
@@ -250,10 +280,10 @@ function Question() {
                         <button
                           className="btn btn-square btn-ghost"
                           onClick={() => {
-                            openEditNewLead(l);
+                            handleViewOptionsClick(l);
                           }}
                         >
-                          <PencilSquareIcon className="w-5" />
+                          <InformationCircleIcon className="w-5" />
                         </button>
                       </td>
                     </tr>
